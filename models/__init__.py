@@ -6,3 +6,7 @@ from models.booking import Booking, BookingType, BookingStatus  # noqa: F401
 from models.expense import Expense, ExpenseSplit, SplitMethod  # noqa: F401
 from models.payment import Payment, Settlement, Refund, PaymentStatus  # noqa: F401
 from models.itinerary import ItineraryItem, ItineraryItemType  # noqa: F401
+from models.associations import (
+    booking_participants,
+    itinerary_participants,
+)
