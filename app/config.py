@@ -4,7 +4,7 @@ from functools import lru_cache
 
 class Settings(BaseSettings):
     # Database
-    DATABASE_URL: str = "sqlite+aiosqlite:///./grouptrip.db"
+    DATABASE_URL: str 
 
     # AI
     GEMINI_API_KEY: str = ""
