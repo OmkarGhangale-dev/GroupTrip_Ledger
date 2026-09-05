@@ -1,10 +1,14 @@
-from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
-from app.database import create_all_tables
 
+from fastapi import  Depends
+from sqlalchemy import text
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.database import get_db
 # Import all models so metadata is populated before create_all_tables
 import models  # noqa: F401
 
@@ -15,12 +19,12 @@ from routers import trips, participants, bookings, expenses, payments, itinerary
 # Lifespan – startup / shutdown
 # ---------------------------------------------------------------------------
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    # Startup: create tables (use Alembic in production)
-    await create_all_tables()
-    yield
-    # Shutdown: nothing to do
+# @asynccontextmanager
+# async def lifespan(app: FastAPI):
+#     # Startup: create tables (use Alembic in production)
+#     await create_all_tables()
+#     yield
+#     # Shutdown: nothing to do
 
 
 # ---------------------------------------------------------------------------
@@ -34,7 +38,7 @@ app = FastAPI(
         "GroupTrip Ledger – manage group trips, split expenses, "
         "track bookings, and settle debts automatically."
     ),
-    lifespan=lifespan,
+    # lifespan=lifespan,
 )
 
 # CORS
@@ -62,11 +66,26 @@ app.include_router(itinerary.router, prefix="/api/v1")
 # Health check
 # ---------------------------------------------------------------------------
 
-@app.get("/", tags=["Health"])
-async def root():
-    return {"status": "ok", "app": settings.APP_NAME, "version": settings.APP_VERSION}
+@app.get("/health/db", tags=["Health"])
+async def database_health(
+    db: AsyncSession = Depends(get_db)
+):
+    try:
 
+        result = await db.execute(
+            text("SELECT 1")
+        )
 
-@app.get("/health", tags=["Health"])
-async def health():
-    return {"status": "healthy"}
+        return {
+            "status": "ok",
+            "database": "PostgreSQL",
+            "result": result.scalar(),
+        }
+
+    except Exception as e:
+
+        return {
+            "status": "error",
+            "database": "PostgreSQL",
+            "error": str(e),
+        }

@@ -1,72 +1,178 @@
 import datetime
-from pydantic import BaseModel, Field
-from typing import Optional, List
+import uuid
+
+from pydantic import BaseModel, ConfigDict, Field
+
 from models.expense import SplitMethod
 
 
-# ── Split schemas ─────────────────────────────────────────────────────────────
+# =========================================================
+# Split Input
+# =========================================================
 
 class ExpenseSplitInput(BaseModel):
-    participant_id: str
-    amount: Optional[float] = Field(default=None, gt=0)
-    percentage: Optional[float] = Field(default=None, gt=0, le=100)
-    shares: Optional[int] = Field(default=None, gt=0)
 
+    participant_id: uuid.UUID
+
+    amount: float | None = Field(
+        default=None,
+        gt=0
+    )
+
+    percentage: float | None = Field(
+        default=None,
+        gt=0,
+        le=100
+    )
+
+    shares: int | None = Field(
+        default=None,
+        gt=0
+    )
+
+
+# =========================================================
+# Split Read
+# =========================================================
 
 class ExpenseSplitRead(BaseModel):
-    id: str
-    expense_id: str
-    participant_id: str
+
+    id: uuid.UUID
+
+    expense_id: uuid.UUID
+
+    participant_id: uuid.UUID
+
     amount: float
-    percentage: Optional[float] = None
-    shares: Optional[int] = None
+
+    percentage: float | None = None
+
+    shares: int | None = None
+
     is_settled: bool
+
     created_at: datetime.datetime
+
     updated_at: datetime.datetime
 
-    model_config = {"from_attributes": True}
+    model_config = ConfigDict(
+        from_attributes=True
+    )
 
 
-# ── Base ──────────────────────────────────────────────────────────────────────
+# =========================================================
+# Base
+# =========================================================
 
 class ExpenseBase(BaseModel):
-    title: str = Field(..., min_length=1, max_length=300)
-    description: Optional[str] = None
-    amount: float = Field(..., gt=0)
-    currency: str = Field(default="USD", max_length=10)
-    category: Optional[str] = Field(default=None, max_length=100)
+
+    title: str = Field(
+        ...,
+        min_length=1,
+        max_length=300
+    )
+
+    description: str | None = None
+
+    amount: float = Field(
+        ...,
+        gt=0
+    )
+
+    currency: str = Field(
+        default="INR",
+        max_length=10
+    )
+
+    category: str | None = Field(
+        default=None,
+        max_length=100
+    )
+
     split_method: SplitMethod = SplitMethod.EQUAL
-    receipt_url: Optional[str] = Field(default=None, max_length=500)
+
+    receipt_url: str | None = Field(
+        default=None,
+        max_length=500
+    )
 
 
-# ── Create ────────────────────────────────────────────────────────────────────
+# =========================================================
+# Create
+# =========================================================
 
 class ExpenseCreate(ExpenseBase):
-    trip_id: str
-    paid_by_id: str
-    splits: Optional[List[ExpenseSplitInput]] = None  # None = auto-split equally
+
+    trip_id: uuid.UUID
+
+    paid_by_id: uuid.UUID
+
+    booking_id: uuid.UUID | None = None
+
+    splits: list[ExpenseSplitInput] | None = None
 
 
-# ── Update ────────────────────────────────────────────────────────────────────
+# =========================================================
+# Update
+# =========================================================
 
 class ExpenseUpdate(BaseModel):
-    title: Optional[str] = Field(default=None, min_length=1, max_length=300)
-    description: Optional[str] = None
-    amount: Optional[float] = Field(default=None, gt=0)
-    currency: Optional[str] = Field(default=None, max_length=10)
-    category: Optional[str] = Field(default=None, max_length=100)
-    split_method: Optional[SplitMethod] = None
-    receipt_url: Optional[str] = Field(default=None, max_length=500)
+
+    title: str | None = Field(
+        default=None,
+        min_length=1,
+        max_length=300
+    )
+
+    description: str | None = None
+
+    amount: float | None = Field(
+        default=None,
+        gt=0
+    )
+
+    currency: str | None = Field(
+        default=None,
+        max_length=10
+    )
+
+    category: str | None = Field(
+        default=None,
+        max_length=100
+    )
+
+    split_method: SplitMethod | None = None
+
+    receipt_url: str | None = Field(
+        default=None,
+        max_length=500
+    )
+
+    booking_id: uuid.UUID | None = None
 
 
-# ── Read ──────────────────────────────────────────────────────────────────────
+# =========================================================
+# Read
+# =========================================================
 
 class ExpenseRead(ExpenseBase):
-    id: str
-    trip_id: str
-    paid_by_id: str
-    splits: List[ExpenseSplitRead] = []
+
+    id: uuid.UUID
+
+    trip_id: uuid.UUID
+
+    paid_by_id: uuid.UUID
+
+    booking_id: uuid.UUID | None = None
+
+    splits: list[ExpenseSplitRead] = Field(
+        default_factory=list
+    )
+
     created_at: datetime.datetime
+
     updated_at: datetime.datetime
 
-    model_config = {"from_attributes": True}
+    model_config = ConfigDict(
+        from_attributes=True
+    )

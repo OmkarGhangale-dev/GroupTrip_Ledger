@@ -1,46 +1,106 @@
 import datetime
-from pydantic import BaseModel, Field
-from typing import Optional
+import uuid
+
+from pydantic import BaseModel, ConfigDict, Field
+
 from models.trip import TripStatus
 
 
-# ── Base ──────────────────────────────────────────────────────────────────────
+# =========================================================
+# Base
+# =========================================================
 
 class TripBase(BaseModel):
-    name: str = Field(..., min_length=1, max_length=200)
-    destination: str = Field(..., min_length=1, max_length=300)
-    description: Optional[str] = None
-    start_date: Optional[datetime.date] = None
-    end_date: Optional[datetime.date] = None
-    currency: str = Field(default="USD", max_length=10)
-    budget: Optional[float] = Field(default=None, gt=0)
+    name: str = Field(
+        ...,
+        min_length=1,
+        max_length=200
+    )
+
+    destination: str = Field(
+        ...,
+        min_length=1,
+        max_length=300
+    )
+
+    description: str | None = None
+
+    start_date: datetime.date | None = None
+
+    end_date: datetime.date | None = None
+
+    currency: str = Field(
+        default="INR",
+        max_length=10
+    )
+
+    budget: float | None = Field(
+        default=None,
+        gt=0
+    )
+
     status: TripStatus = TripStatus.PLANNING
 
 
-# ── Create ────────────────────────────────────────────────────────────────────
+# =========================================================
+# Create
+# =========================================================
 
 class TripCreate(TripBase):
     pass
 
 
-# ── Update ────────────────────────────────────────────────────────────────────
+# =========================================================
+# Update
+# =========================================================
 
 class TripUpdate(BaseModel):
-    name: Optional[str] = Field(default=None, min_length=1, max_length=200)
-    destination: Optional[str] = Field(default=None, min_length=1, max_length=300)
-    description: Optional[str] = None
-    start_date: Optional[datetime.date] = None
-    end_date: Optional[datetime.date] = None
-    currency: Optional[str] = Field(default=None, max_length=10)
-    budget: Optional[float] = Field(default=None, gt=0)
-    status: Optional[TripStatus] = None
+
+    name: str | None = Field(
+        default=None,
+        min_length=1,
+        max_length=200
+    )
+
+    destination: str | None = Field(
+        default=None,
+        min_length=1,
+        max_length=300
+    )
+
+    description: str | None = None
+
+    start_date: datetime.date | None = None
+
+    end_date: datetime.date | None = None
+
+    currency: str | None = Field(
+        default=None,
+        max_length=10
+    )
+
+    budget: float | None = Field(
+        default=None,
+        gt=0
+    )
+
+    status: TripStatus | None = None
 
 
-# ── Read ──────────────────────────────────────────────────────────────────────
+# =========================================================
+# Read
+# =========================================================
 
 class TripRead(TripBase):
-    id: str
+
+    id: uuid.UUID
+
+    organizer_id: uuid.UUID | None = None
+
     created_at: datetime.datetime
+
     updated_at: datetime.datetime
 
-    model_config = {"from_attributes": True}
+    model_config = ConfigDict(
+        from_attributes=True
+    )

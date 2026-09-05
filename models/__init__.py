@@ -10,3 +10,5 @@ from models.associations import (
     booking_participants,
     itinerary_participants,
 )
+from models.user import User
+from models.notification import Notification

@@ -50,11 +50,12 @@ class Booking(Base, TimestampMixin):
     )
 
     booking_type: Mapped[BookingType] = mapped_column(
-        SAEnum(
-            BookingType,
-            values_callable=lambda enum_cls: [e.value for e in enum_cls],
-        ),
-        nullable=False,
+    SAEnum(
+        BookingType,
+        name="booking_type",
+        values_callable=lambda enum_cls: [e.value for e in enum_cls],
+    ),
+    nullable=False,
     )
 
     provider: Mapped[str | None] = mapped_column(
@@ -73,12 +74,13 @@ class Booking(Base, TimestampMixin):
     )
 
     status: Mapped[BookingStatus] = mapped_column(
-        SAEnum(
-            BookingStatus,
-            values_callable=lambda enum_cls: [e.value for e in enum_cls],
-        ),
-        default=BookingStatus.CONFIRMED,
-        nullable=False,
+    SAEnum(
+        BookingStatus,
+        name="booking_status",
+        values_callable=lambda enum_cls: [e.value for e in enum_cls],
+    ),
+    default=BookingStatus.CONFIRMED,
+    nullable=False,
     )
 
     cancellation_policy: Mapped[str | None] = mapped_column(
@@ -132,3 +134,7 @@ class Booking(Base, TimestampMixin):
         back_populates="booking",
         cascade="all, delete-orphan",
     )
+
+    @property
+    def participant_ids(self) -> list[uuid.UUID]:
+        return [participant.id for participant in self.participants]

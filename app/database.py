@@ -14,7 +14,7 @@ engine = create_async_engine(
     future=True,
     connect_args={
         "server_settings": {
-            "search_path": "grouptrip,public"
+            "search_path": "grouptrip,public",
         }
     },
 )
@@ -25,7 +25,6 @@ AsyncSessionLocal = async_sessionmaker(
     class_=AsyncSession,
     expire_on_commit=False,
     autoflush=False,
-    autocommit=False,
 )
 
 

@@ -70,12 +70,13 @@ class Trip(Base, TimestampMixin):
     )
 
     status: Mapped[TripStatus] = mapped_column(
-        SAEnum(
-            TripStatus,
-            values_callable=lambda enum_cls: [e.value for e in enum_cls],
-        ),
-        default=TripStatus.PLANNING,
-        nullable=False,
+    SAEnum(
+        TripStatus,
+        name="trip_status",
+        values_callable=lambda enum_cls: [e.value for e in enum_cls],
+    ),
+    default=TripStatus.PLANNING,
+    nullable=False,
     )
 
     organizer_id: Mapped[uuid.UUID | None] = mapped_column(

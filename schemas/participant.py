@@ -1,39 +1,75 @@
 import datetime
-from pydantic import BaseModel, EmailStr, Field
-from typing import Optional
-from models.participant import ParticipantRole, ParticipantStatus
+import uuid
+
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
+
+from models.participant import (
+    ParticipantRole,
+    ParticipantStatus,
+)
 
 
-# ── Base ──────────────────────────────────────────────────────────────────────
+# =========================================================
+# Base
+# =========================================================
 
 class ParticipantBase(BaseModel):
-    name: str = Field(..., min_length=1, max_length=150)
+
+    name: str = Field(
+        ...,
+        min_length=1,
+        max_length=150
+    )
+
     email: EmailStr
+
     role: ParticipantRole = ParticipantRole.MEMBER
+
     status: ParticipantStatus = ParticipantStatus.ACTIVE
 
 
-# ── Create ────────────────────────────────────────────────────────────────────
+# =========================================================
+# Create
+# =========================================================
 
 class ParticipantCreate(ParticipantBase):
-    trip_id: str
+
+    trip_id: uuid.UUID
 
 
-# ── Update ────────────────────────────────────────────────────────────────────
+# =========================================================
+# Update
+# =========================================================
 
 class ParticipantUpdate(BaseModel):
-    name: Optional[str] = Field(default=None, min_length=1, max_length=150)
-    email: Optional[EmailStr] = None
-    role: Optional[ParticipantRole] = None
-    status: Optional[ParticipantStatus] = None
+
+    name: str | None = Field(
+        default=None,
+        min_length=1,
+        max_length=150
+    )
+
+    email: EmailStr | None = None
+
+    role: ParticipantRole | None = None
+
+    status: ParticipantStatus | None = None
 
 
-# ── Read ──────────────────────────────────────────────────────────────────────
+# =========================================================
+# Read
+# =========================================================
 
 class ParticipantRead(ParticipantBase):
-    id: str
-    trip_id: str
+
+    id: uuid.UUID
+
+    trip_id: uuid.UUID
+
     created_at: datetime.datetime
+
     updated_at: datetime.datetime
 
-    model_config = {"from_attributes": True}
+    model_config = ConfigDict(
+        from_attributes=True
+    )

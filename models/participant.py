@@ -53,21 +53,23 @@ class Participant(Base, TimestampMixin):
     )
 
     role: Mapped[ParticipantRole] = mapped_column(
-        SAEnum(
-            ParticipantRole,
-            values_callable=lambda enum_cls: [e.value for e in enum_cls],
-        ),
-        default=ParticipantRole.MEMBER,
-        nullable=False,
+    SAEnum(
+        ParticipantRole,
+        name="participant_role",
+        values_callable=lambda enum_cls: [e.value for e in enum_cls],
+    ),
+    default=ParticipantRole.MEMBER,
+    nullable=False,
     )
 
     status: Mapped[ParticipantStatus] = mapped_column(
-        SAEnum(
-            ParticipantStatus,
-            values_callable=lambda enum_cls: [e.value for e in enum_cls],
-        ),
-        default=ParticipantStatus.ACTIVE,
-        nullable=False,
+    SAEnum(
+        ParticipantStatus,
+        name="participant_status",
+        values_callable=lambda enum_cls: [e.value for e in enum_cls],
+    ),
+    default=ParticipantStatus.ACTIVE,
+    nullable=False,
     )
 
     joined_at: Mapped[datetime.datetime | None] = mapped_column(

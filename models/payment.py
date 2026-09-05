@@ -68,14 +68,14 @@ class Payment(Base, TimestampMixin):
     )
 
     status: Mapped[PaymentStatus] = mapped_column(
-        SAEnum(
-            PaymentStatus,
-            values_callable=lambda enum_cls: [e.value for e in enum_cls],
-        ),
-        default=PaymentStatus.COMPLETED,
-        nullable=False,
+    SAEnum(
+        PaymentStatus,
+        name="payment_status",
+        values_callable=lambda enum_cls: [e.value for e in enum_cls],
+    ),
+    default=PaymentStatus.COMPLETED,
+    nullable=False,
     )
-
     payment_date: Mapped[datetime.datetime | None] = mapped_column(
     DateTime(timezone=True),
     nullable=True,

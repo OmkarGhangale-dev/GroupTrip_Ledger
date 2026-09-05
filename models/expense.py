@@ -85,14 +85,14 @@ class Expense(Base, TimestampMixin):
     )
 
     split_method: Mapped[SplitMethod] = mapped_column(
-        SAEnum(
-            SplitMethod,
-            values_callable=lambda enum_cls: [e.value for e in enum_cls],
-        ),
-        default=SplitMethod.EQUAL,
-        nullable=False,
+    SAEnum(
+        SplitMethod,
+        name="split_method",
+        values_callable=lambda enum_cls: [e.value for e in enum_cls],
+    ),
+    default=SplitMethod.EQUAL,
+    nullable=False,
     )
-
     receipt_url: Mapped[str | None] = mapped_column(
         String(500),
         nullable=True,

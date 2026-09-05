@@ -16,14 +16,13 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database import Base
 from models.base import TimestampMixin
 
-
 class ItineraryItemType(str, enum.Enum):
-    ACCOMMODATION = "accommodation"
-    TRANSPORT = "transport"
-    ACTIVITY = "activity"
-    MEAL = "meal"
-    FREE_TIME = "free_time"
-    OTHER = "other"
+    ACCOMMODATION = "ACCOMMODATION"
+    TRANSPORT = "TRANSPORT"
+    ACTIVITY = "ACTIVITY"
+    MEAL = "MEAL"
+    FREE_TIME = "FREE_TIME"
+    OTHER = "OTHER"
 
 
 class ItineraryItem(Base, TimestampMixin):
@@ -59,12 +58,13 @@ class ItineraryItem(Base, TimestampMixin):
     )
 
     item_type: Mapped[ItineraryItemType] = mapped_column(
-        SAEnum(
-            ItineraryItemType,
-            values_callable=lambda enum_cls: [e.value for e in enum_cls],
-        ),
-        default=ItineraryItemType.OTHER,
-        nullable=False,
+    SAEnum(
+        ItineraryItemType,
+        name="itineraryitemtype",
+        values_callable=lambda enum_cls: [e.value for e in enum_cls],
+    ),
+    default=ItineraryItemType.OTHER,
+    nullable=False,
     )
 
     date: Mapped[datetime.date | None] = mapped_column(
