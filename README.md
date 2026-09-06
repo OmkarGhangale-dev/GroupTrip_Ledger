@@ -6,7 +6,7 @@ A fully async FastAPI backend for managing group trips, splitting expenses, trac
 
 - **FastAPI** – web framework
 - **SQLAlchemy 2.x async** – ORM
-- **SQLite + aiosqlite** – dev database (swap to PostgreSQL + asyncpg in prod)
+- **Postgresql** – dev database 
 - **Pydantic v2** – schemas and validation
 - **Uvicorn** – ASGI server
 
@@ -102,7 +102,7 @@ When creating an expense, set `split_method`:
 
 Copy `.env` and configure:
 ```env
-DATABASE_URL= # or PostgreSQL
+DATABASE_URL= # PostgreSQL
 GEMINI_API_KEY=...
 GOOGLE_MAPS_API_KEY=...
 EMAIL_API_KEY=...
