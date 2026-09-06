@@ -179,24 +179,33 @@ async def compute_balances(
     # Peer-to-peer payments
     # ────────────────────────────────────────────────────────────────────────
 
+        # ────────────────────────────────────────────────────────────────────────
+# Peer-to-peer payments
+# ────────────────────────────────────────────────────────────────────────
+
     payment_result = await db.execute(
         select(Payment)
-        .where(Payment.trip_id == trip_id)
+        .where(
+            Payment.trip_id == trip_id,
+            Payment.status == "completed"
+        )
     )
 
     payments = payment_result.scalars().all()
 
     for payment in payments:
 
-        # Sender pays
+    # Sender has paid money toward their debt,
+    # so their balance moves UP toward zero.
         if payment.from_participant_id in balances:
-            balances[payment.from_participant_id] -= float(
+            balances[payment.from_participant_id] += float(
                 payment.amount
             )
 
-        # Receiver receives
+    # Receiver has received money,
+    # so the amount they are owed moves DOWN toward zero.
         if payment.to_participant_id in balances:
-            balances[payment.to_participant_id] += float(
+            balances[payment.to_participant_id] -= float(
                 payment.amount
             )
 
