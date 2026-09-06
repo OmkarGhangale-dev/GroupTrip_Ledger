@@ -57,15 +57,11 @@ class ItineraryItem(Base, TimestampMixin):
         nullable=True,
     )
 
-    item_type: Mapped[ItineraryItemType] = mapped_column(
-    SAEnum(
-        ItineraryItemType,
-        name="itineraryitemtype",
-        values_callable=lambda enum_cls: [e.value for e in enum_cls],
-    ),
-    default=ItineraryItemType.OTHER,
+    item_type: Mapped[str] = mapped_column(
+    String(50),
+    default="OTHER",
     nullable=False,
-    )
+)
 
     date: Mapped[datetime.date | None] = mapped_column(
         Date,

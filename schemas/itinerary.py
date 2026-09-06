@@ -20,7 +20,7 @@ class ItineraryItemBase(BaseModel):
 
     description: str | None = None
 
-    item_type: ItineraryItemType = ItineraryItemType.OTHER
+    item_type: str = "OTHER"
 
     date: datetime.date | None = None
 
@@ -70,7 +70,7 @@ class ItineraryItemUpdate(BaseModel):
 
     description: str | None = None
 
-    item_type: ItineraryItemType | None = None
+    item_type: str | None = None
 
     date: datetime.date | None = None
 

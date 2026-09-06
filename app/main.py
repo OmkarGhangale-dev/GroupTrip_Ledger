@@ -12,7 +12,7 @@ from app.database import get_db
 # Import all models so metadata is populated before create_all_tables
 import models  # noqa: F401
 
-from routers import trips, participants, bookings, expenses, payments, itinerary
+from routers import trips, participants, bookings, expenses, payments, itinerary, auth
 
 
 # ---------------------------------------------------------------------------
@@ -54,6 +54,7 @@ app.add_middleware(
 # Routers
 # ---------------------------------------------------------------------------
 
+app.include_router(auth.router, prefix="/api/v1")
 app.include_router(trips.router, prefix="/api/v1")
 app.include_router(participants.router, prefix="/api/v1")
 app.include_router(bookings.router, prefix="/api/v1")
