@@ -26,7 +26,9 @@ import ToastContainer from "./components/modals/Toast";
 
 export default function App() {
   const { loading, error } = useTrip();
-  const [activeTab, setActiveTab] = useState("dashboard");
+  const [activeTab, setActiveTab] = useState(() => {
+    return localStorage.getItem("token") ? "dashboard" : "login";
+  });
 
   // Modal states
   const [tripModal, setTripModal] = useState({ isOpen: false, data: null });
