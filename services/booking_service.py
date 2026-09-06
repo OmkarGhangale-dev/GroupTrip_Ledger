@@ -5,7 +5,7 @@ from sqlalchemy import select, delete
 from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from models.booking import Booking
+from models.booking import Booking, BookingStatus
 from models.participant import Participant
 from models.associations import booking_participants
 
@@ -88,8 +88,13 @@ async def get_bookings_by_trip(
 
     result = await db.execute(
         select(Booking)
-        .where(Booking.trip_id == trip_id)
-        .options(selectinload(Booking.participants))
+        .where(
+            Booking.trip_id == trip_id,
+            Booking.status != BookingStatus.REFUNDED
+        )
+        .options(
+            selectinload(Booking.participants)
+        )
         .order_by(Booking.created_at.desc())
     )
 

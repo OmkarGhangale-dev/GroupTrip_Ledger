@@ -4,7 +4,7 @@ from typing import Dict, List, Optional
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-
+from models.booking import Booking, BookingStatus
 from models.payment import Payment, Settlement, Refund
 from models.participant import Participant, ParticipantStatus
 from models.expense import Expense, ExpenseSplit
@@ -326,14 +326,37 @@ async def create_refund(
     data: RefundCreate
 ) -> Refund:
 
-    refund = Refund(**data.model_dump())
+    # Find the booking
+    booking_result = await db.execute(
+        select(Booking).where(
+            Booking.id == data.booking_id
+        )
+    )
+
+    booking = booking_result.scalar_one_or_none()
+
+    if not booking:
+        raise ValueError("Booking not found")
+
+    # Change booking status to refunded
+    booking.status = BookingStatus.REFUNDED
+
+    # Create refund record
+    refund = Refund(
+        booking_id=data.booking_id,
+        amount=data.amount,
+        reason=data.reason,
+        status="completed",
+        refund_date=datetime.datetime.now(datetime.timezone.utc),
+    )
 
     db.add(refund)
+
+    # Save both changes together
     await db.commit()
     await db.refresh(refund)
 
     return refund
-
 
 async def get_refunds_by_booking(
     db: AsyncSession,
@@ -343,6 +366,17 @@ async def get_refunds_by_booking(
     result = await db.execute(
         select(Refund)
         .where(Refund.booking_id == booking_id)
+        .order_by(Refund.created_at.desc())
+    )
+
+    return list(result.scalars().all())
+
+async def get_all_refunds(
+    db: AsyncSession
+) -> List[Refund]:
+
+    result = await db.execute(
+        select(Refund)
         .order_by(Refund.created_at.desc())
     )
 

@@ -49,7 +49,7 @@ backend/
 │   ├── payments.py
 │   └── itinerary.py
 ├── utils/
-│   └── deps.py         # Shared DB dependency
+│   └── deps.py         # Shared DB dependancy
 ├── .env
 └── requiremnets.txt
 ```
@@ -102,7 +102,7 @@ When creating an expense, set `split_method`:
 
 Copy `.env` and configure:
 ```env
-DATABASE_URL=sqlite+aiosqlite:///./grouptrip.db  # or PostgreSQL
+DATABASE_URL= # or PostgreSQL
 GEMINI_API_KEY=...
 GOOGLE_MAPS_API_KEY=...
 EMAIL_API_KEY=...
