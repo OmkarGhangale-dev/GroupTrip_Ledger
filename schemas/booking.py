@@ -138,3 +138,7 @@ class BookingRead(BookingBase):
     model_config = ConfigDict(
         from_attributes=True
     )
+
+
+class BookingUseRequest(BaseModel):
+    paid_by_id: uuid.UUID

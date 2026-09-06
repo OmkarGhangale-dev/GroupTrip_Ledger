@@ -8,9 +8,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from models.booking import Booking, BookingStatus
 from models.participant import Participant
 from models.associations import booking_participants
-
 from schemas.booking import BookingCreate, BookingUpdate
-
+from models.expense import Expense, ExpenseSplit, SplitMethod
 
 async def create_booking(
     db: AsyncSession,
@@ -168,3 +167,97 @@ async def delete_booking(
     await db.commit()
 
     return True
+
+async def mark_booking_used(
+    db: AsyncSession,
+    booking_id: uuid.UUID,
+    paid_by_id: uuid.UUID,
+):
+    # Get booking and its participants
+    result = await db.execute(
+        select(Booking)
+        .where(Booking.id == booking_id)
+        .options(selectinload(Booking.participants))
+    )
+
+    booking = result.scalar_one_or_none()
+
+    if not booking:
+        raise ValueError("Booking not found")
+
+    # Prevent invalid status changes
+    if booking.status == BookingStatus.COMPLETED:
+        raise ValueError("Booking is already completed")
+
+    if booking.status == BookingStatus.REFUNDED:
+        raise ValueError("Refunded booking cannot be marked as used")
+
+    if booking.status == BookingStatus.CANCELLED:
+        raise ValueError("Cancelled booking cannot be marked as used")
+
+    # Check that payer belongs to this trip
+    payer_result = await db.execute(
+        select(Participant).where(
+            Participant.id == paid_by_id,
+            Participant.trip_id == booking.trip_id
+        )
+    )
+
+    payer = payer_result.scalar_one_or_none()
+
+    if not payer:
+        raise ValueError("Selected payer is not a participant of this trip")
+
+    # Make sure booking has participants
+    participants = list(booking.participants)
+
+    if not participants:
+        raise ValueError("Booking has no participants")
+
+    # Mark booking as completed
+    booking.status = BookingStatus.COMPLETED
+
+    # Create expense
+    expense = Expense(
+        trip_id=booking.trip_id,
+        booking_id=booking.id,
+        paid_by_id=paid_by_id,
+        title=f"{booking.provider or 'Booking'} - {booking.booking_type.value}",
+        description=booking.description,
+        amount=booking.amount,
+        currency="INR",
+        category="Booking",
+        split_method=SplitMethod.EQUAL,
+    )
+
+    db.add(expense)
+
+    # IMPORTANT:
+    # Flush first so expense.id is generated
+    await db.flush()
+
+    # Divide booking amount equally
+    split_amount = float(booking.amount) / len(participants)
+
+    # Create expense splits
+    for participant in participants:
+        split = ExpenseSplit(
+            expense_id=expense.id,
+            participant_id=participant.id,
+            amount=split_amount,
+            is_settled=False,
+        )
+
+        db.add(split)
+
+    # Save everything
+    await db.commit()
+
+    # Reload booking with participants
+    result = await db.execute(
+        select(Booking)
+        .where(Booking.id == booking.id)
+        .options(selectinload(Booking.participants))
+    )
+
+    return result.scalar_one()

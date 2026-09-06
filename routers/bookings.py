@@ -1,4 +1,5 @@
 from typing import List
+import uuid
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -8,9 +9,9 @@ from schemas.booking import (
     BookingCreate,
     BookingUpdate,
     BookingRead,
+    BookingUseRequest,
 )
 import services.booking_service as svc
-
 
 router = APIRouter(
     prefix="/bookings",
@@ -110,4 +111,23 @@ async def delete_booking(
         raise HTTPException(
             status_code=404,
             detail="Booking not found"
+        )
+
+
+@router.post("/{booking_id}/use")
+async def mark_booking_used(
+    booking_id: uuid.UUID,
+    data: BookingUseRequest,
+    db: AsyncSession = Depends(get_db),
+):
+    try:
+        return await svc.mark_booking_used(
+            db,
+            booking_id,
+            data.paid_by_id,
+        )
+    except ValueError as e:
+        raise HTTPException(
+            status_code=400,
+            detail=str(e),
         )

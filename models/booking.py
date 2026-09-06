@@ -31,6 +31,7 @@ class BookingStatus(str, enum.Enum):
     PENDING = "pending"
     CANCELLED = "cancelled"
     REFUNDED = "refunded"
+    COMPLETED = "completed"
 
 
 class Booking(Base, TimestampMixin):
@@ -82,6 +83,7 @@ class Booking(Base, TimestampMixin):
     default=BookingStatus.CONFIRMED,
     nullable=False,
     )
+    
 
     cancellation_policy: Mapped[str | None] = mapped_column(
         Text,
