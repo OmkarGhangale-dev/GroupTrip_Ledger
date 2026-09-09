@@ -11,11 +11,15 @@
   },
   "rewrites": [
     {
-      "source": "/api/:path*",
+      "source": "/api/(.*)",
       "destination": "/api/index.py"
     },
     {
-      "source": "/health/:path*",
+      "source": "/api",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/health/(.*)",
       "destination": "/api/index.py"
     },
     {
@@ -31,7 +35,7 @@
       "destination": "/api/index.py"
     },
     {
-      "source": "/(.*)",
+      "source": "/((?!api/|health|docs|openapi.json).*)",
       "destination": "/index.html"
     }
   ]
