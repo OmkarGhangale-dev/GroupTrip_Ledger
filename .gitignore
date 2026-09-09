@@ -9,3 +9,5 @@ node_modules/
 .vercel/
 __MACOSX/
 *.env.local
+.env
+dist/
