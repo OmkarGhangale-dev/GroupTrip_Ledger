@@ -5,21 +5,12 @@
   "functions": {
     "api/index.py": {
       "maxDuration": 30,
-      "includeFiles": "**/*.py",
-      "excludeFiles": "frontend/**"
+      "includeFiles": "app/**,routers/**,models/**,services/**,schemas/**,utils/**,database/**,*.py"
     }
   },
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api/index.py"
-    },
-    {
-      "source": "/api",
-      "destination": "/api/index.py"
-    },
-    {
-      "source": "/health/(.*)",
+      "source": "/api/:path*",
       "destination": "/api/index.py"
     },
     {
@@ -35,7 +26,7 @@
       "destination": "/api/index.py"
     },
     {
-      "source": "/((?!api/|health|docs|openapi.json).*)",
+      "source": "/:path*",
       "destination": "/index.html"
     }
   ]
