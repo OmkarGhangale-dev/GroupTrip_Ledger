@@ -22,8 +22,7 @@ BEGIN
             'planning',
             'active',
             'completed',
-            'cancelled',
-            'completed'
+            'cancelled'
         );
     END IF;
 

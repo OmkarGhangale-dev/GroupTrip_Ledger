@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useTrip } from "./context/TripContext";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
+import AIChatBot from "./components/AIChatBot";
 
 // Views
 import DashboardView from "./views/DashboardView";
@@ -25,7 +26,7 @@ import ItineraryModal from "./components/modals/ItineraryModal";
 import ToastContainer from "./components/modals/Toast";
 
 export default function App() {
-  const { loading, error } = useTrip();
+  const { loading, error, trip, itinerary, addItineraryItem } = useTrip();
   const [activeTab, setActiveTab] = useState(() => {
     return localStorage.getItem("token") ? "dashboard" : "login";
   });
@@ -56,6 +57,13 @@ export default function App() {
     isOpen: false,
     data: null,
   });
+
+  const [targetPlaceQuery, setTargetPlaceQuery] = useState("");
+
+  const handleAIChatNavigateToMap = (placeName) => {
+    setTargetPlaceQuery(placeName);
+    setActiveTab("itinerary");
+  };
 
   if (activeTab === "login") {
     return (
@@ -161,6 +169,8 @@ export default function App() {
               onOpenItineraryModal={(data = null) =>
                 setItineraryModal({ isOpen: true, data })
               }
+              targetPlaceQuery={targetPlaceQuery}
+              initialTab={targetPlaceQuery ? "map" : "timeline"}
             />
           )}
 
@@ -173,6 +183,14 @@ export default function App() {
           )}
         </main>
       </div>
+
+      {/* AI TRAVEL CHATBOT - Global Floating Widget */}
+      <AIChatBot
+        trip={trip}
+        itinerary={itinerary}
+        onAddToItinerary={addItineraryItem}
+        onNavigateToMap={handleAIChatNavigateToMap}
+      />
 
       {/* MODAL DIALOGS */}
       <TripModal
