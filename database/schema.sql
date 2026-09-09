@@ -63,7 +63,8 @@ BEGIN
             'confirmed',
             'pending',
             'cancelled',
-            'refunded'
+            'refunded',
+            'completed'
         );
     END IF;
 

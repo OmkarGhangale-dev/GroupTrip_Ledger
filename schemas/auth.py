@@ -14,6 +14,10 @@ class UserLogin(BaseModel):
     password: str
 
 
+class GoogleLogin(BaseModel):
+    credential: str = Field(..., min_length=1)
+
+
 class Token(BaseModel):
     access_token: str
     token_type: str = "bearer"

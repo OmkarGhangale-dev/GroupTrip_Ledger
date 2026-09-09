@@ -69,7 +69,12 @@ export default function App() {
     return (
       <div className="app-layout view-login">
         <ToastContainer />
-        <LoginView onLoginSuccess={() => setActiveTab("dashboard")} />
+        <LoginView
+          onLoginSuccess={() => {
+            setActiveTab("dashboard");
+            window.location.reload();
+          }}
+        />
       </div>
     );
   }

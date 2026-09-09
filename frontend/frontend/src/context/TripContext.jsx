@@ -194,7 +194,15 @@ export function TripProvider({ children }) {
   );
 
   // Initial load
+  // Initial load
   useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      setLoading(false);
+      return;
+    }
+
     loadTrips();
   }, [loadTrips]);
 

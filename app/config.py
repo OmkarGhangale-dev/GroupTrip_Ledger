@@ -3,6 +3,8 @@ from functools import lru_cache
 
 
 class Settings(BaseSettings):
+    SECRET_KEY: str = "change-this-secret-key"
+    GOOGLE_CLIENT_ID: str = ""
     # Database
     DATABASE_URL: str 
 

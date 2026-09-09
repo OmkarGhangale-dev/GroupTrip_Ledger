@@ -41,7 +41,11 @@ class Participant(Base, TimestampMixin):
         ForeignKey("trips.id"),
         nullable=False,
     )
-
+    user_id: Mapped[uuid.UUID | None] = mapped_column(
+    UUID(as_uuid=True),
+    ForeignKey("users.id", ondelete="SET NULL"),
+    nullable=True,
+    )
     name: Mapped[str] = mapped_column(
         String(150),
         nullable=False,
