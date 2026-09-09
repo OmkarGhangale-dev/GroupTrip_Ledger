@@ -58,7 +58,8 @@ async def authenticate_user(db: AsyncSession, data: UserLogin):
 
 
 async def authenticate_google_user(db: AsyncSession, data: GoogleLogin):
-    if not settings.GOOGLE_CLIENT_ID:
+    client_id = settings.effective_google_client_id
+    if not client_id:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Google authentication is not configured on the server",
@@ -68,7 +69,7 @@ async def authenticate_google_user(db: AsyncSession, data: GoogleLogin):
         claims = id_token.verify_oauth2_token(
             data.credential,
             google_requests.Request(),
-            settings.GOOGLE_CLIENT_ID,
+            client_id,
         )
     except ValueError:
         raise HTTPException(

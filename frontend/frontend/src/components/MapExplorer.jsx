@@ -9,28 +9,38 @@ import {
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-// Google Maps Tile Providers
+// Google Maps Tile Providers & API Key support
+const GOOGLE_MAPS_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "";
+const MAP_KEY_PARAM = GOOGLE_MAPS_KEY ? `&key=${GOOGLE_MAPS_KEY}` : "";
+
 const MAP_LAYERS = {
   roadmap: {
     name: "Google Roadmap",
     icon: "🗺️",
-    url: "https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}",
+    url: `https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}${MAP_KEY_PARAM}`,
     attribution: "&copy; Google Maps",
     maxZoom: 20,
   },
   satellite: {
     name: "Google Satellite",
     icon: "🛰️",
-    url: "https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}",
+    url: `https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}${MAP_KEY_PARAM}`,
     attribution: "&copy; Google Maps Satellite",
     maxZoom: 20,
   },
   terrain: {
     name: "Google Terrain",
     icon: "⛰️",
-    url: "https://mt1.google.com/vt/lyrs=p&x={x}&y={y}&z={z}",
+    url: `https://mt1.google.com/vt/lyrs=p&x={x}&y={y}&z={z}${MAP_KEY_PARAM}`,
     attribution: "&copy; Google Maps Terrain",
     maxZoom: 20,
+  },
+  osm: {
+    name: "OpenStreetMap",
+    icon: "🌍",
+    url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    attribution: "&copy; OpenStreetMap contributors",
+    maxZoom: 19,
   },
 };
 

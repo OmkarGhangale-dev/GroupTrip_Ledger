@@ -22,9 +22,10 @@ annotated-types==0.7.0
 typing_extensions==4.16.0
 typing-inspection==0.4.2
 
-# Auth — JWT signing + password hashing
+# Auth — JWT signing + password hashing + Google OAuth
 python-jose[cryptography]
 cryptography==49.0.0
+google-auth==2.56.0
 
 # HTTP client
 httpx==0.28.1
