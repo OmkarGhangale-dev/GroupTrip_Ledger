@@ -2,7 +2,6 @@
   "version": 2,
   "buildCommand": "cd frontend/frontend && npm install && npm run build",
   "outputDirectory": "frontend/frontend/dist",
-  "installCommand": "echo 'Python deps installed per-function from api/requirements.txt'",
   "functions": {
     "api/index.py": {
       "maxDuration": 30
@@ -10,15 +9,15 @@
   },
   "rewrites": [
     {
-      "source": "/api/:path*",
-      "destination": "/api/index"
+      "source": "/api/(.*)",
+      "destination": "/api/index.py"
     },
     {
-      "source": "/health/:path*",
-      "destination": "/api/index"
+      "source": "/health/(.*)",
+      "destination": "/api/index.py"
     },
     {
-      "source": "/:path*",
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ]
