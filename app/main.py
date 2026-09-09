@@ -75,7 +75,19 @@ app.include_router(itinerary.router, prefix="/api/v1")
 # Health check
 # ---------------------------------------------------------------------------
 
+@app.get("/health", tags=["Health"])
+@app.get("/api/health", tags=["Health"])
+@app.get("/api/v1/health", tags=["Health"])
+async def root_health():
+    return {
+        "status": "ok",
+        "app": settings.APP_NAME,
+        "version": settings.APP_VERSION,
+    }
+
+
 @app.get("/health/db", tags=["Health"])
+@app.get("/api/v1/health/db", tags=["Health"])
 async def database_health(
     db: AsyncSession = Depends(get_db)
 ):

@@ -6,7 +6,7 @@ class Settings(BaseSettings):
     GOOGLE_CLIENT_ID: str = ""
 
     # Database
-    DATABASE_URL: str
+    DATABASE_URL: str = "postgresql+asyncpg://neondb_owner:npg_EZDL2NKuPFR3@ep-damp-sun-b3qb1oml-pooler.c-4.ap-southeast-1.aws.neon.tech/neondb"
 
     # Auth — MUST be set to a long random string in production.
     # Generate with: python -c "import secrets; print(secrets.token_hex(32))"
