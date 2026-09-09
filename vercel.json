@@ -1,6 +1,7 @@
 {
   "version": 2,
-  "buildCommand": "cd frontend/frontend && npm install && npm run build",
+  "installCommand": "cd frontend/frontend && npm install",
+  "buildCommand": "cd frontend/frontend && npm run build",
   "outputDirectory": "frontend/frontend/dist",
   "functions": {
     "api/index.py": {
