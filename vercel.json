@@ -4,9 +4,9 @@
   "outputDirectory": "frontend/frontend/dist",
   "functions": {
     "api/index.py": {
-      "runtime": "python3.12",
       "maxDuration": 30,
-      "includeFiles": "{app/**,routers/**,models/**,services/**,schemas/**,utils/**,database/**}"
+      "includeFiles": "**/*.py",
+      "excludeFiles": "frontend/**"
     }
   },
   "rewrites": [
@@ -20,6 +20,14 @@
     },
     {
       "source": "/health",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/docs",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/openapi.json",
       "destination": "/api/index.py"
     },
     {

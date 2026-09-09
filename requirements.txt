@@ -10,7 +10,7 @@ uvicorn==0.51.0
 
 # Database — async SQLAlchemy + asyncpg driver
 sqlalchemy==2.0.52
-asyncpg
+asyncpg==0.30.0
 greenlet==3.5.5
 
 # Settings / Config
@@ -23,7 +23,7 @@ typing_extensions==4.16.0
 typing-inspection==0.4.2
 
 # Auth — JWT signing + password hashing + Google OAuth
-python-jose[cryptography]
+python-jose[cryptography]==3.5.0
 cryptography==49.0.0
 google-auth==2.56.0
 
