@@ -64,40 +64,75 @@ def _build_connect_args(db_url: str) -> dict:
     }
 
     if not is_local:
-        ctx = _ssl.create_default_context()
-        ctx.check_hostname = False
-        ctx.verify_mode = _ssl.CERT_NONE
-        args["ssl"] = ctx
+        try:
+            ctx = _ssl.create_default_context()
+            ctx.check_hostname = False
+            ctx.verify_mode = _ssl.CERT_NONE
+            args["ssl"] = ctx
+        except Exception:
+            # If SSL context creation fails (e.g. no CA bundle), fall back
+            args["ssl"] = True
 
     return args
-
-
-_cleaned_db_url = _sanitize_db_url(settings.DATABASE_URL)
-
-# NullPool is the recommended pool for serverless environments:
-# - Each request gets a fresh connection (no stale state between invocations)
-# - Neon's connection pooler (PgBouncer) handles the actual DB-side pooling
-engine = create_async_engine(
-    _cleaned_db_url,
-    echo=settings.DEBUG,
-    future=True,
-    poolclass=NullPool,
-    connect_args=_build_connect_args(_cleaned_db_url),
-)
-
-
-AsyncSessionLocal = async_sessionmaker(
-    bind=engine,
-    class_=AsyncSession,
-    expire_on_commit=False,
-    autoflush=False,
-)
 
 
 class Base(DeclarativeBase):
     pass
 
 
+# ---------------------------------------------------------------------------
+# Lazy engine & session factory — created on first use, not at import time.
+# This prevents crashes during Vercel cold-start module loading.
+# ---------------------------------------------------------------------------
+
+_engine = None
+_session_factory = None
+
+
+def _get_engine():
+    global _engine
+    if _engine is None:
+        cleaned_url = _sanitize_db_url(settings.DATABASE_URL)
+        _engine = create_async_engine(
+            cleaned_url,
+            echo=settings.DEBUG,
+            future=True,
+            poolclass=NullPool,
+            connect_args=_build_connect_args(cleaned_url),
+        )
+    return _engine
+
+
+def _get_session_factory():
+    global _session_factory
+    if _session_factory is None:
+        _session_factory = async_sessionmaker(
+            bind=_get_engine(),
+            class_=AsyncSession,
+            expire_on_commit=False,
+            autoflush=False,
+        )
+    return _session_factory
+
+
+class AsyncSessionLocal:
+    """
+    Drop-in proxy for async_sessionmaker that creates the factory lazily.
+    Usage: async with AsyncSessionLocal() as session: ...
+    """
+    def __call__(self):
+        return _get_session_factory()()
+
+    def __await__(self):
+        raise TypeError("Use 'async with AsyncSessionLocal() as session:'")
+
+
+# Instantiate singleton proxy for backward compatibility
+AsyncSessionLocal = AsyncSessionLocal()
+
+
 async def get_db():
-    async with AsyncSessionLocal() as session:
-        yield session
+    """FastAPI dependency that yields a database session."""
+    factory = _get_session_factory()
+    async with factory() as session:
+        yield session

@@ -2,34 +2,42 @@
 api/index.py
 ------------
 Vercel Python Serverless Function entry point.
-Exposes the FastAPI ASGI application for @vercel/python runtime.
+Uses Mangum as the ASGI-to-WSGI adapter for the @vercel/python runtime.
 """
 import sys
 import os
 import traceback
 
-# Ensure all root modules (app, routers, models, services, schemas, utils)
-# are discoverable in any serverless execution directory
-CWD = os.getcwd()
-if CWD not in sys.path:
-    sys.path.insert(0, CWD)
+# Ensure all root-level packages are discoverable at runtime
+_FILE_DIR = os.path.dirname(os.path.abspath(__file__))
+_ROOT_DIR = os.path.dirname(_FILE_DIR)
 
-ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-if ROOT_DIR not in sys.path:
-    sys.path.insert(0, ROOT_DIR)
+for _p in (_ROOT_DIR, _FILE_DIR):
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
 
 try:
-    from app.main import app  # noqa: E402
-    handler = app
+    from app.main import app
+    from mangum import Mangum
+
+    # Mangum wraps the FastAPI ASGI app into an AWS Lambda/Vercel-compatible handler
+    handler = Mangum(app, lifespan="off")
+
 except Exception as exc:
     err_tb = traceback.format_exc()
     print("FATAL STARTUP ERROR IN api/index.py:\n", err_tb, flush=True)
+
+    # Fallback: return a diagnostic JSON response for every request
     from fastapi import FastAPI
     from fastapi.responses import JSONResponse
+    from mangum import Mangum
 
-    app = FastAPI(title="Error Diagnostic")
+    _diag_app = FastAPI(title="Error Diagnostic")
 
-    @app.api_route("/{full_path:path}", methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"])
+    @_diag_app.api_route(
+        "/{full_path:path}",
+        methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"],
+    )
     async def debug_error(full_path: str):
         return JSONResponse(
             status_code=500,
@@ -40,7 +48,12 @@ except Exception as exc:
                 "traceback": err_tb.splitlines(),
                 "sys_path": sys.path,
                 "cwd": os.getcwd(),
-                "files_in_cwd": os.listdir(os.getcwd()) if os.path.exists(os.getcwd()) else [],
+                "files_in_cwd": (
+                    os.listdir(os.getcwd())
+                    if os.path.exists(os.getcwd())
+                    else []
+                ),
             },
         )
-    handler = app
+
+    handler = Mangum(_diag_app, lifespan="off")

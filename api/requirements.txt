@@ -1,28 +1,20 @@
 # ============================================================
 # GroupTrip Ledger — Production Requirements (Vercel / Linux)
 # ============================================================
-# These are the ONLY packages needed to run the FastAPI backend
-# on Vercel. The root requirements.txt contains Windows-specific
-# packages (pywin32, comtypes, pygame, etc.) that would fail on
-# Vercel's Linux build environment.
-#
-# Local development: continue using `pip install -r requirements.txt`
-# Vercel build: reads THIS file automatically for api/index.py
-# ============================================================
 
 # Web Framework
 fastapi==0.139.2
 starlette==1.3.1
 
 # Serverless ASGI adapter for Vercel
-mangum
+mangum==0.22.0
 
-# ASGI server (needed by some FastAPI internals)
+# ASGI server
 uvicorn==0.51.0
 
 # Database — async SQLAlchemy + asyncpg driver
 sqlalchemy==2.0.52
-asyncpg
+asyncpg==0.30.0
 greenlet==3.5.5
 
 # Settings / Config
@@ -35,11 +27,11 @@ typing_extensions==4.16.0
 typing-inspection==0.4.2
 
 # Auth — JWT signing + password hashing + Google OAuth
-python-jose[cryptography]
+python-jose[cryptography]==3.5.0
 cryptography==49.0.0
 google-auth==2.56.0
 
-# HTTP client (used internally by httpx / FastAPI testing)
+# HTTP client
 httpx==0.28.1
 httpcore==1.0.9
 h11==0.16.0
