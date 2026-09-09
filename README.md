@@ -2,44 +2,44 @@
 
 > **The all-in-one AI-powered group travel planner, expense splitter, and interactive Google Maps itinerary ledger.**
 
-GroupTrip Ledger simplifies group travel coordination. From AI-assisted day-by-day itinerary planning and real-time Google Maps exploration to automated fair expense splitting and debt settlement, it keeps everyone on the same page.
+GroupTrip Ledger simplifies group travel coordination. From AI-assisted day-by-day itinerary planning and interactive map exploration to automated fair expense splitting, debt settlement, and Google Sign-In, it keeps everyone on the same page.
 
 ---
 
-## ✨ Features
+## ✨ Key Features
 
-### 🗺️ Interactive Google Maps Explorer
-- **Google Maps Integration:** Switch seamlessly between **Google Roadmap** 🗺️, **Satellite Hybrid** 🛰️, and **Terrain** ⛰️ views.
-- **Trip Destination Focus:** Automatically centers and flies to your trip's destination (e.g. *Uttarakhand*, *Goa*, *Himachal*, etc.).
-- **Smart Place Search & Autocomplete:** Search for landmarks, restaurants, cafes, and hotels with live autocomplete.
-- **Curated & Nearby Recommendations:** Discover top attractions, viewpoints, local food hotspots, and adventure activities around any selected location.
-- **1-Click Day Assignment:** Pick the exact trip day (`Day 1`, `Day 2`, etc.) and time slot directly from the map.
+### 🔐 Google OAuth 2.0 & JWT Authentication
+- **One-Tap Google Sign-In:** Sign in instantly using your Google account with token verification via `google-auth`.
+- **Email & Password Login:** Standard registration with PBKDF2 SHA-256 salted password hashing.
+- **Secure JWT Sessions:** Stateless, secure JSON Web Token authentication for all protected endpoints.
 
-### 🤖 TravelBot AI Travel Companion
-- **High-Intelligence AI:** Powered by Groq's high-speed LLM models (`openai/gpt-oss-120b`, `qwen/qwen3.8-27b`).
-- **Context-Aware Travel Guide:** Knows your trip dates, destination, budget, group size, and already-planned activities.
-- **Interactive Place Recommendation Cards:** Suggests places formatted with direct action buttons:
-  - **`➕ Add to Day X`**: Instantly schedules the place in your itinerary without leaving the chat.
-  - **`🗺️ Map`**: Automatically navigates to the map tab and centers on the place.
-- **Pre-Built Quick Prompts:** Single-click prompts for top tourist spots, food trails, hotel suggestions, and full day-by-day plans.
+### 🗺️ Interactive Maps Explorer
+- **Multi-Layer Map Engine:** Switch seamlessly between **Roadmap** 🗺️, **Satellite** 🛰️, and **Terrain** ⛰️ views.
+- **Destination Centering:** Automatically flies to and focuses on your trip's destination (e.g., *Goa*, *Himachal*, *Bali*).
+- **Place Search & Autocomplete:** Search for landmarks, restaurants, cafes, and hotels in real time.
+- **1-Click Day Scheduling:** Assign discovered locations directly to `Day 1`, `Day 2`, etc., in your itinerary.
+
+### 🤖 TravelBot AI Companion
+- **High-Speed LLM Intelligence:** Powered by Groq Cloud API (`llama-3.3-70b-versatile`, `mixtral-8x7b-32768`).
+- **Context-Aware Recommendations:** Aware of your trip dates, destination, budget, group size, and current schedule.
+- **Interactive Action Cards:** Suggestions feature `➕ Add to Day X` (instantly schedule into itinerary) and `🗺️ Map` (fly to place on map).
 
 ### 🗓️ Day-by-Day Itinerary Management
-- **Day Filter Tabs:** Switch between viewing `🌟 All Days` or focusing on individual days (`Day 1`, `Day 2`, etc.).
-- **Timeline Cards:** Chronological scheduling with category emojis (🏛️ Activity, 🍽️ Meal, 🏨 Stay, 🚌 Transport).
-- **Manual Event Modal:** Includes quick day-picker pills and 1-click destination recommendations.
+- **Day Filter Tabs:** View `🌟 All Days` or filter by individual days.
+- **Categorized Timeline:** Activities (🏛️), Meals (🍽️), Stays (🏨), and Transport (🚌).
 
 ### 💰 Smart Expense Splitting & Debt Settlement
-- **Flexible Split Methods:**
-  - **Equal** – Split evenly across all group members.
-  - **Custom** – Exact currency amounts per participant.
-  - **Percentage** – Percentage-based distribution (must total 100%).
-  - **Shares** – Proportional weighted shares (e.g., couples, kids).
-- **Minimal Debt Settlement Engine:** Graph-based settlement algorithm calculates the minimum number of transactions needed to settle all debts.
-- **Real-Time Balances:** Instant overview of who is owed money and who needs to pay.
+- **Flexible Splitting Models:**
+  - **Equal** – Split evenly across participants.
+  - **Custom** – Exact amounts per person.
+  - **Percentage** – Percentage-based distribution (totals 100%).
+  - **Shares** – Weighted proportions (couples, families).
+- **Minimal Debt Settlement Engine:** Graph-based transaction minimizer computes the lowest number of transfers to settle all group debts.
+- **Real-Time Balances:** Live calculation of who owes what and who is owed money.
 
-### 🏨 Bookings & Reservations
-- Track flights, hotels, activities, and transport with booking references and confirmation statuses.
-- Full support for refunds and payment tracking.
+### 🏨 Bookings & Payments Tracking
+- Track flights, hotels, activities, confirmation IDs, and statuses.
+- Record settlements, payments, and refunds.
 
 ---
 
@@ -47,10 +47,12 @@ GroupTrip Ledger simplifies group travel coordination. From AI-assisted day-by-d
 
 | Layer | Technologies |
 |---|---|
-| **Frontend** | React 18, Vite, React-Leaflet, Vanilla CSS, Groq AI SDK |
+| **Frontend** | React 19, Vite 8, Leaflet, React-Leaflet, Axios, Vanilla CSS |
 | **Backend** | Python 3.10+, FastAPI, SQLAlchemy 2.0 (Async), Pydantic v2, Uvicorn |
-| **Database** | PostgreSQL with `pgcrypto` & `asyncpg` driver |
-| **AI / Maps** | Groq Cloud API, Google Maps Tile Engine, OpenStreetMap Nominatim API |
+| **Database** | PostgreSQL with `asyncpg` driver (compatible with Neon, Supabase, Vercel Postgres, Local) |
+| **Authentication** | Google OAuth 2.0 (`google-auth`), Python-Jose (JWT), PBKDF2 Password Hashing |
+| **AI & Maps** | Groq Cloud API, OpenStreetMap / Tile Layer Engine |
+| **Deployment** | Vercel (Serverless Python Functions + Static React Bundle) |
 
 ---
 
@@ -58,65 +60,128 @@ GroupTrip Ledger simplifies group travel coordination. From AI-assisted day-by-d
 
 ```
 GroupTrip_Ledger/
+├── api/
+│   ├── index.py              # Vercel serverless entrypoint
+│   └── requirements.txt      # Python dependencies for Vercel functions
 ├── app/
-│   ├── config.py             # Pydantic environment configuration
-│   ├── database.py           # Async SQLAlchemy engine & session factory
-│   └── main.py               # FastAPI application & lifespan setup
+│   ├── config.py             # Pydantic Settings & environment variables
+│   ├── database.py           # Async SQLAlchemy engine with connection pool & SSL handling
+│   └── main.py               # FastAPI application, CORS, & route registration
 ├── database/
-│   └── schema.sql            # PostgreSQL schema (enums, tables, triggers)
-├── models/                   # SQLAlchemy declarative ORM models
+│   ├── schema.sql            # PostgreSQL schema (enums, tables, indices, triggers)
+│   └── migrate_neon.py       # Helper script to apply schema to cloud database
+├── models/                   # SQLAlchemy ORM models
+│   ├── user.py
 │   ├── trip.py
 │   ├── participant.py
 │   ├── booking.py
-│   ├── expense.py            # Expense & ExpenseSplit models
-│   ├── payment.py            # Payment, Settlement & Refund models
-│   └── itinerary.py          # Itinerary schedule items
-├── routers/                  # FastAPI REST API route handlers
-│   ├── auth.py
+│   ├── expense.py
+│   ├── payment.py
+│   └── itinerary.py
+├── routers/                  # FastAPI REST API endpoints
+│   ├── auth.py               # Google OAuth & email registration/login
 │   ├── trips.py
 │   ├── participants.py
 │   ├── bookings.py
 │   ├── expenses.py
 │   ├── payments.py
 │   └── itinerary.py
-├── services/                 # Core business logic & calculation engines
-│   ├── auth_service.py
+├── services/                 # Core business logic
+│   ├── auth_service.py       # Google token verification & JWT generation
 │   ├── trip_service.py
-│   ├── expense_service.py    # Auto-splitting algorithms
-│   └── payment_service.py    # Debt simplification & settlements
+│   ├── expense_service.py
+│   └── payment_service.py
 ├── frontend/
 │   └── frontend/             # Vite + React client
 │       ├── src/
-│       │   ├── components/
-│       │   │   ├── AIChatBot.jsx     # AI travel guide widget
-│       │   │   ├── MapExplorer.jsx   # Google Maps Explorer
-│       │   │   ├── Navbar.jsx
-│       │   │   ├── Sidebar.jsx
-│       │   │   └── modals/           # Creation & edit dialogs
-│       │   ├── views/                # Full-page views
-│       │   │   ├── DashboardView.jsx
-│       │   │   ├── ItineraryView.jsx
-│       │   │   ├── ExpensesView.jsx
-│       │   │   ├── SettlementsView.jsx
-│       │   │   └── BookingsView.jsx
-│       │   ├── context/TripContext.jsx # Global app state & API client
-│       │   ├── index.css
-│       │   └── App.jsx
-│       ├── .env.example
+│       │   ├── components/   # Navbar, Sidebar, AIChatBot, MapExplorer, Modals
+│       │   ├── context/      # TripContext (auth, state, and API client)
+│       │   ├── views/        # Dashboard, Itinerary, Expenses, Settlements, Bookings, Login
+│       │   └── services/
+│       │       └── api.js    # Axios client (auto-detects local dev vs production URL)
+│       ├── .env.example      # Frontend env template
 │       └── package.json
-├── .env                      # Backend environment variables
+├── .env.example              # Root environment variable template
+├── .gitignore                # Protects secrets (.env) and build artifacts (dist/)
 ├── requirements.txt          # Python dependencies
+├── vercel.json               # Vercel build & serverless rewrite configuration
 └── README.md
 ```
 
 ---
 
-## 🚀 Quick Start Guide
+## 🔑 Environment Variables & API Keys Setup
+
+GroupTrip Ledger uses two environment files:
+1. **Root `.env`** (Backend configuration)
+2. **`frontend/frontend/.env`** (Vite frontend configuration)
+
+### 1. PostgreSQL Database (`DATABASE_URL` / `POSTGRES_URL`)
+
+The backend works with any PostgreSQL instance using the `asyncpg` driver:
+
+- **Local PostgreSQL:**
+  ```env
+  DATABASE_URL=postgresql+asyncpg://postgres:your_password@localhost:5432/grouptrip_ledger
+  ```
+- **Cloud PostgreSQL (Neon, Supabase, Vercel Postgres):**
+  Obtain the connection URI from your cloud console (e.g. Neon.tech or Supabase). Standard `postgres://` or `postgresql://` connection strings are automatically normalized to use `postgresql+asyncpg://`:
+  ```env
+  DATABASE_URL=postgresql+asyncpg://user:password@ep-xxxx-pooler.region.neon.tech/neondb
+  ```
+
+### 2. Google OAuth 2.0 Credentials
+
+To enable Google Sign-In:
+1. Go to the [Google Cloud Console](https://console.cloud.google.com/).
+2. Create or select a project.
+3. Navigate to **APIs & Services** > **Credentials**.
+4. Click **Create Credentials** > **OAuth client ID** (Application type: **Web application**).
+5. Under **Authorized JavaScript origins**, add:
+   - `http://localhost:5173` *(for local Vite dev)*
+   - `https://your-vercel-deployment.vercel.app` *(for production)*
+6. Copy the **Client ID** and **Client Secret**:
+   - Backend `.env`:
+     ```env
+     GOOGLE_CLIENT_ID=xxxx.apps.googleusercontent.com
+     GOOGLE_CLIENT_SECRET=xxxx
+     VITE_GOOGLE_CLIENT_ID=xxxx.apps.googleusercontent.com
+     ```
+   - Frontend `frontend/frontend/.env`:
+     ```env
+     VITE_GOOGLE_CLIENT_ID=xxxx.apps.googleusercontent.com
+     ```
+
+### 3. Groq AI API Key
+
+To power the TravelBot AI assistant:
+1. Create a free account at [console.groq.com](https://console.groq.com/).
+2. Create an API key under **API Keys**.
+3. Add to `.env`:
+   ```env
+   GROQ_API_KEY=gsk_your_groq_key_here
+   VITE_GROQ_API_KEY=gsk_your_groq_key_here
+   ```
+
+### 4. JWT Secret Key
+
+Generate a secure random key for signing JWT tokens:
+```bash
+python -c "import secrets; print(secrets.token_urlsafe(32))"
+```
+Set in `.env`:
+```env
+SECRET_KEY=your_generated_secret_key
+```
+
+---
+
+## 🚀 Local Development Setup
 
 ### Prerequisites
 - **Python 3.10+**
 - **Node.js 18+** & `npm`
-- **PostgreSQL 15+** installed and running
+- **PostgreSQL** (running locally or cloud instance)
 
 ---
 
@@ -129,75 +194,85 @@ cd GroupTrip_Ledger
 
 ---
 
-### Step 2: Database Setup (PostgreSQL)
+### Step 2: Set Up Database
 
-1. Ensure your PostgreSQL service is running.
-2. Open terminal/PowerShell and create the database:
-   ```bash
-   createdb -U postgres grouptrip_ledger
-   ```
-3. Apply the database schema:
-   ```bash
-   psql -U postgres -d grouptrip_ledger -f database/schema.sql
-   ```
+#### Option A: Local PostgreSQL
+```bash
+# Create the database
+createdb -U postgres grouptrip_ledger
+
+# Run the schema
+psql -U postgres -d grouptrip_ledger -f database/schema.sql
+```
+
+#### Option B: Cloud PostgreSQL (Neon / Supabase)
+Run the migration helper with your cloud database DSN:
+```bash
+python database/migrate_neon.py "postgresql://user:pass@ep-xxxx.neon.tech/neondb"
+```
 
 ---
 
-### Step 3: Backend Configuration & Startup
+### Step 3: Backend Setup
 
-1. Create your `.env` file in the root directory:
-   ```env
-   # PostgreSQL Connection URL
-   DATABASE_URL=postgresql+asyncpg://postgres:YOUR_PASSWORD@localhost:5432/grouptrip_ledger
-
-   # App Settings
-   APP_NAME=GroupTrip Ledger
-   APP_VERSION=1.0.0
-   DEBUG=False
-
-   # Optional API Keys
-   GEMINI_API_KEY=
-   GOOGLE_MAPS_API_KEY=
-   EMAIL_API_KEY=
+1. Copy the environment template:
+   ```bash
+   cp .env.example .env
    ```
-   *(Replace `YOUR_PASSWORD` with your PostgreSQL password).*
-
-2. Install Python dependencies:
+2. Open `.env` and set your `DATABASE_URL`, `SECRET_KEY`, and Google OAuth keys.
+3. Install Python dependencies:
    ```bash
    pip install -r requirements.txt
    ```
-
-3. Start the FastAPI backend server:
+4. Start the FastAPI development server:
    ```bash
    uvicorn app.main:app --reload --port 8000
    ```
    - **Backend API:** `http://127.0.0.1:8000`
    - **Interactive API Docs (Swagger):** [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+   - **Database Health Check:** [http://127.0.0.1:8000/api/v1/health/db](http://127.0.0.1:8000/api/v1/health/db)
 
 ---
 
-### Step 4: Frontend Configuration & Startup
+### Step 4: Frontend Setup
 
-1. Open a new terminal and navigate to the frontend directory:
+1. Open a new terminal and navigate to the frontend folder:
    ```bash
    cd frontend/frontend
    ```
-
-2. Create `.env.local` for Vite:
-   ```env
-   VITE_GROQ_API_KEY=your_groq_api_key_here
+2. Copy the frontend environment template:
+   ```bash
+   cp .env.example .env
    ```
-
-3. Install npm packages:
+3. Set your `VITE_GOOGLE_CLIENT_ID` and `VITE_GROQ_API_KEY`.
+   *(Leave `VITE_API_BASE_URL` empty to automatically target `http://127.0.0.1:8000` in local dev and relative `/api/v1` in production).*
+4. Install packages and start the Vite dev server:
    ```bash
    npm install
-   ```
-
-4. Run the Vite development server:
-   ```bash
    npm run dev
    ```
-   - **Web App:** [http://localhost:5173/](http://localhost:5173/)
+   - **Frontend App:** [http://localhost:5173](http://localhost:5173)
+
+---
+
+## 🌐 Deploying to Vercel
+
+GroupTrip Ledger is preconfigured for zero-friction Vercel deployment with [vercel.json](file:///c:/Users/Omkar/OneDrive/Desktop/grouptrip_ledger/GroupTrip_Ledger/vercel.json):
+- Frontend: Compiled React static assets.
+- Backend: Serverless Python functions (`api/index.py`).
+
+### Deployment Steps:
+
+1. Push your code to GitHub.
+2. Import your repository into [Vercel](https://vercel.com).
+3. In **Project Settings > Environment Variables**, add:
+   - `DATABASE_URL` (or `POSTGRES_URL`): Your cloud PostgreSQL URI (e.g. from Neon or Supabase).
+   - `SECRET_KEY`: Random 32-character string.
+   - `GOOGLE_CLIENT_ID` & `GOOGLE_CLIENT_SECRET`: Your Google OAuth credentials.
+   - `VITE_GOOGLE_CLIENT_ID`: Same Google Client ID for the frontend button.
+   - `VITE_GROQ_API_KEY`: Your Groq API key.
+   - `ALLOWED_ORIGINS`: Your Vercel production URL (e.g., `https://your-app.vercel.app`).
+4. Click **Deploy**. Vercel will automatically run `npm run build` and route `/api/*` to the FastAPI backend.
 
 ---
 
@@ -205,30 +280,38 @@ cd GroupTrip_Ledger
 
 | Category | Method | Endpoint | Description |
 |---|---|---|---|
+| **Auth** | `POST` | `/api/v1/auth/google` | Sign in / register via Google ID token |
+| | `POST` | `/api/v1/auth/register` | Register with email & password |
+| | `POST` | `/api/v1/auth/login` | Login with email & password |
+| | `GET` | `/api/v1/auth/me` | Get currently authenticated user |
 | **Trips** | `POST` | `/api/v1/trips/` | Create a new trip |
 | | `GET` | `/api/v1/trips/` | List all user trips |
-| | `GET` | `/api/v1/trips/{id}` | Get detailed trip overview |
-| | `PATCH` | `/api/v1/trips/{id}` | Update trip metadata |
+| | `GET` | `/api/v1/trips/{id}` | Get trip details |
+| | `PATCH` | `/api/v1/trips/{id}` | Update trip |
 | | `DELETE` | `/api/v1/trips/{id}` | Delete trip |
-| **Itinerary** | `POST` | `/api/v1/itinerary/` | Add an event to itinerary |
-| | `GET` | `/api/v1/itinerary/trip/{id}` | Get complete trip schedule |
-| | `PATCH` | `/api/v1/itinerary/{id}` | Update event details/day |
-| | `DELETE` | `/api/v1/itinerary/{id}` | Remove event |
+| **Itinerary** | `POST` | `/api/v1/itinerary/` | Add an event to trip itinerary |
+| | `GET` | `/api/v1/itinerary/trip/{id}` | Fetch full trip itinerary |
+| | `PATCH` | `/api/v1/itinerary/{id}` | Update itinerary event |
+| | `DELETE` | `/api/v1/itinerary/{id}` | Remove itinerary event |
 | **Expenses** | `POST` | `/api/v1/expenses/` | Record expense with auto-split |
 | | `GET` | `/api/v1/expenses/trip/{id}` | List trip expenses |
-| | `GET` | `/api/v1/trips/{id}/balances` | Calculate net balances per person |
-| | `GET` | `/api/v1/trips/{id}/settlements`| Get optimized debt settlement plan |
+| | `GET` | `/api/v1/trips/{id}/balances` | Calculate member balances |
+| | `GET` | `/api/v1/trips/{id}/settlements`| Optimized debt settlement transactions |
 | **Participants**| `POST` | `/api/v1/participants/` | Add member to trip |
 | | `GET` | `/api/v1/participants/trip/{id}`| List participants |
-| **Bookings** | `POST` | `/api/v1/bookings/` | Log reservation (flight/hotel) |
-| | `GET` | `/api/v1/bookings/trip/{id}` | List trip bookings |
+| **Bookings** | `POST` | `/api/v1/bookings/` | Record flight/hotel reservation |
+| | `GET` | `/api/v1/bookings/trip/{id}` | List bookings for trip |
+| **Health** | `GET` | `/api/v1/health` | API service status |
+| | `GET` | `/api/v1/health/db` | PostgreSQL connectivity check |
 
 ---
 
 ## 🔒 Security Best Practices
-- Keep your PostgreSQL credentials in `.env` (never commit `.env`).
-- Client-side AI keys reside in `.env.local` which is strictly `.gitignore`'d.
-- Password hashing using `bcrypt` and token authentication via JWT.
+
+- **Never commit `.env` files**: All local `.env` and `.env.*` files are excluded by `.gitignore`.
+- **Credential Separation**: Public client variables use the `VITE_` prefix, while backend server secrets remain private.
+- **Rotate Exposed Secrets**: If any secret was previously committed, regenerate it immediately in Google Cloud Console or your cloud database provider.
+- **SSL Enforcement**: Automatic SSL configuration ensures encrypted connections to cloud PostgreSQL instances like Neon or Supabase.
 
 ---
 

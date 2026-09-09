@@ -8,8 +8,10 @@ class Settings(BaseSettings):
     VITE_GOOGLE_CLIENT_ID: str = ""
     GOOGLE_CLIENT_SECRET: str = ""
 
-    # Database
-    DATABASE_URL: str = "postgresql+asyncpg://neondb_owner:npg_EZDL2NKuPFR3@ep-damp-sun-b3qb1oml-pooler.c-4.ap-southeast-1.aws.neon.tech/neondb"
+    # Database (supports standard DATABASE_URL or Vercel POSTGRES_URL)
+    DATABASE_URL: str = ""
+    POSTGRES_URL: str = ""
+    POSTGRES_PRISMA_URL: str = ""
 
     # Auth — JWT signing secret
     SECRET_KEY: str = "super-secret-key-change-in-production"
@@ -56,6 +58,15 @@ class Settings(BaseSettings):
     @property
     def effective_groq_api_key(self) -> str:
         return self.GROQ_API_KEY or self.VITE_GROQ_API_KEY
+
+    @property
+    def effective_database_url(self) -> str:
+        return (
+            self.DATABASE_URL
+            or self.POSTGRES_URL
+            or self.POSTGRES_PRISMA_URL
+            or "postgresql+asyncpg://postgres:postgres@localhost:5432/grouptrip_ledger"
+        )
 
 
 @lru_cache()

@@ -92,7 +92,7 @@ _session_factory = None
 def _get_engine():
     global _engine
     if _engine is None:
-        cleaned_url = _sanitize_db_url(settings.DATABASE_URL)
+        cleaned_url = _sanitize_db_url(settings.effective_database_url)
         _engine = create_async_engine(
             cleaned_url,
             echo=settings.DEBUG,
