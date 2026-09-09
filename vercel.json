@@ -5,15 +5,7 @@
   "functions": {
     "api/index.py": {
       "maxDuration": 30,
-      "includeFiles": [
-        "app/**",
-        "routers/**",
-        "models/**",
-        "services/**",
-        "schemas/**",
-        "utils/**",
-        "database/**"
-      ]
+      "includeFiles": "{app/**,routers/**,models/**,services/**,schemas/**,utils/**,database/**}"
     }
   },
   "rewrites": [
