@@ -3,10 +3,20 @@ from functools import lru_cache
 
 
 class Settings(BaseSettings):
-    SECRET_KEY: str = "change-this-secret-key"
     GOOGLE_CLIENT_ID: str = ""
+
     # Database
-    DATABASE_URL: str 
+    DATABASE_URL: str
+
+    # Auth — MUST be set to a long random string in production.
+    # Generate with: python -c "import secrets; print(secrets.token_hex(32))"
+    SECRET_KEY: str = "super-secret-key-change-in-production"
+
+    # CORS — comma-separated list of allowed origins.
+    # Set to your Vercel domain in production, e.g.:
+    #   ALLOWED_ORIGINS=https://your-app.vercel.app
+    # Defaults to wildcard for local development.
+    ALLOWED_ORIGINS: str = "*"
 
     # AI
     GEMINI_API_KEY: str = ""

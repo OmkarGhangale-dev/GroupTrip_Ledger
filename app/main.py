@@ -41,10 +41,18 @@ app = FastAPI(
     # lifespan=lifespan,
 )
 
-# CORS
+# CORS — origins driven by ALLOWED_ORIGINS env var.
+# Local dev defaults to "*"; production should be set to your Vercel domain.
+_raw_origins = settings.ALLOWED_ORIGINS.strip()
+_allowed_origins = (
+    [o.strip() for o in _raw_origins.split(",") if o.strip()]
+    if _raw_origins != "*"
+    else ["*"]
+)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Restrict in production
+    allow_origins=_allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
