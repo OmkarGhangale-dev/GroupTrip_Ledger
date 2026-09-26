@@ -7,6 +7,7 @@ from sqlalchemy import (
     Boolean,
     DateTime,
     ForeignKey,
+    text,
 )
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
@@ -70,6 +71,6 @@ class Notification(Base):
 
     created_at: Mapped[datetime.datetime] = mapped_column(
         DateTime(timezone=True),
-        server_default="CURRENT_TIMESTAMP",
+        server_default=text("CURRENT_TIMESTAMP"),
         nullable=False,
     )

@@ -13,7 +13,7 @@ from app.database import get_db
 import models  # noqa: F401
 
 from routers import trips, participants, bookings, expenses, payments, itinerary, auth
-from routers import uber, duffel, razorpay_router
+
 
 
 from contextlib import asynccontextmanager
@@ -77,17 +77,6 @@ app.include_router(itinerary.router, prefix="/api/v1")
 # ---------------------------------------------------------------------------
 # New integration routers
 # ---------------------------------------------------------------------------
-
-# 🚗 Uber Rides Sandbox — ride estimates for transport bookings
-app.include_router(uber.router, prefix="/api/v1")
-
-# ✈️ Duffel Flight Search — search real/sandbox flight offers
-app.include_router(duffel.router, prefix="/api/v1")
-
-# 💳 Razorpay Payments — create orders & verify signatures
-app.include_router(razorpay_router.router, prefix="/api/v1")
-
-
 # ---------------------------------------------------------------------------
 # Health check
 # ---------------------------------------------------------------------------
