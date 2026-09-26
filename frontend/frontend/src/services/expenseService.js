@@ -41,3 +41,8 @@ export const parseExpenseText = async (tripId, text) => {
      });
      return response.data;
    };
+
+   export const splitReceiptWithText = async (payload) => {
+  const response = await api.post("/expenses/receipt-split", payload);
+  return response.data;
+};

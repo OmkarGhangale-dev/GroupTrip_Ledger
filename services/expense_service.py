@@ -207,27 +207,47 @@ async def update_expense(
     data: ExpenseUpdate
 ) -> Optional[Expense]:
 
-    expense = await get_expense(
-        db,
-        expense_id
-    )
+    expense = await get_expense(db, expense_id)
 
     if not expense:
         return None
 
-    update_data = data.model_dump(
-        exclude_unset=True
-    )
+    update_data = data.model_dump(exclude_unset=True)
+    update_data.pop("splits", None)
+    splits_data = data.splits
 
     for key, value in update_data.items():
         setattr(expense, key, value)
 
-    await db.commit()
+    # The edit form always sends the full split, so rebuild it
+    if splits_data is not None:
 
-    return await get_expense(
-        db,
-        expense_id
-    )
+        for old in list(expense.splits):
+            await db.delete(old)
+        await db.flush()
+
+        method = expense.split_method
+        new_splits = []
+
+        if method == SplitMethod.EQUAL:
+            new_splits = await _build_equal_splits(
+                db, expense, expense.trip_id, splits_data
+            )
+        elif splits_data:
+            if method == SplitMethod.CUSTOM:
+                new_splits = await _build_custom_splits(db, expense, splits_data)
+            elif method == SplitMethod.PERCENTAGE:
+                new_splits = await _build_percentage_splits(db, expense, splits_data)
+            elif method == SplitMethod.SHARES:
+                new_splits = await _build_shares_splits(db, expense, splits_data)
+
+        if new_splits:
+            db.add_all(new_splits)
+
+    await db.commit()
+    db.expire_all()
+
+    return await get_expense(db, expense_id)
 
 
 async def delete_expense(

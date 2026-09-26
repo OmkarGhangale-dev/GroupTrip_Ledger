@@ -149,6 +149,9 @@ class ExpenseUpdate(BaseModel):
     )
 
     booking_id: uuid.UUID | None = None
+    paid_by_id: uuid.UUID | None = None
+
+    splits: list[ExpenseSplitInput] | None = None
 
 
 # =========================================================

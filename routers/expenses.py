@@ -8,6 +8,8 @@ from utils.deps import get_current_user
 import services.nl_expense_service as nl_svc
 from schemas.receipt import ReceiptScanResult
 import services.receipt_service as receipt_svc
+from schemas.receipt_split import ReceiptSplitRequest, ReceiptSplitResult
+import services.receipt_split_service as receipt_split_svc
 
 from app.database import get_db
 from schemas.expense import (
@@ -39,6 +41,14 @@ async def scan_receipt(
     if len(raw) > MAX_RECEIPT_BYTES:
         raise HTTPException(413, "Image too large. Max 5 MB.")
     return await receipt_svc.scan_receipt(raw)
+
+@router.post("/receipt-split", response_model=ReceiptSplitResult)
+async def receipt_split(
+    data: ReceiptSplitRequest,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    return await receipt_split_svc.split_receipt(db, current_user, data)
 
 @router.post("/parse", response_model=ParseExpenseResponse)
 async def parse_expense_text(
