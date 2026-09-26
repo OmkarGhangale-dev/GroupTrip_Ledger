@@ -2,29 +2,88 @@ import React, { useState } from "react";
 import { useTrip } from "../context/TripContext";
 
 export default function BookingsView({ onOpenBookingModal, onOpenRefundModal }) {
-  const { bookings, removeBooking, totalBookingsAmount } = useTrip();
+  const { bookings, participants, removeBooking, markBookingUsed } = useTrip();
+
   const [activeTab, setActiveTab] = useState("all");
   const [search, setSearch] = useState("");
 
+  const [useBooking, setUseBooking] = useState(null);
+  const [selectedPayer, setSelectedPayer] = useState("");
+  const [markingUsed, setMarkingUsed] = useState(false);
+  const [useError, setUseError] = useState("");
+
+  const activeMembers = participants.filter((p) => p.status !== "removed");
+
+  const openUse = (b) => {
+    setUseBooking(b);
+    setSelectedPayer("");
+    setUseError("");
+  };
+
+  const closeUse = () => {
+    setUseBooking(null);
+    setSelectedPayer("");
+    setUseError("");
+  };
+
+  const handleMarkAsUsed = async () => {
+    if (!useBooking || !selectedPayer) return;
+    setMarkingUsed(true);
+    setUseError("");
+    try {
+      await markBookingUsed(useBooking.id, selectedPayer);
+      closeUse();
+    } catch (err) {
+      const d = err?.response?.data?.detail;
+      setUseError(
+        typeof d === "string" ? d : "Could not mark this booking as used.",
+      );
+    } finally {
+      setMarkingUsed(false);
+    }
+  };
+
   const money = (val) => `₹${Number(val || 0).toLocaleString("en-IN")}`;
 
+  const totalBookingsAmount = bookings.reduce(
+    (sum, b) => sum + Number(b?.amount || 0),
+    0,
+  );
+
+  const countType = (type) =>
+    bookings.filter(
+      (b) => String(b?.booking_type || "").toLowerCase() === type,
+    ).length;
+
+  // tab ids match the backend booking types: flight, hotel, activity, transport, other
   const categoryTabs = [
     { id: "all", label: "All", icon: "apps", count: bookings.length },
-    { id: "flights", label: "Flights", icon: "flight_takeoff" },
-    { id: "stays", label: "Stays", icon: "hotel" },
-    { id: "activities", label: "Activities", icon: "surfing" },
-    { id: "transport", label: "Transport", icon: "directions_car" },
-    { id: "other", label: "Other", icon: "more_horiz" },
+    { id: "flight", label: "Flights", icon: "flight_takeoff", count: countType("flight") },
+    { id: "hotel", label: "Stays", icon: "hotel", count: countType("hotel") },
+    { id: "activity", label: "Activities", icon: "surfing", count: countType("activity") },
+    { id: "transport", label: "Transport", icon: "directions_car", count: countType("transport") },
+    { id: "other", label: "Other", icon: "more_horiz", count: countType("other") },
   ];
 
   const filtered = bookings.filter((b) => {
+    const q = String(search || "").toLowerCase();
+    const type = String(b?.booking_type || "").toLowerCase();
+
+    const haystack = [
+      b?.provider,
+      b?.description,
+      b?.location,
+      b?.reference_number,
+      b?.booking_type,
+    ]
+      .map((v) => String(v || ""))
+      .join(" ")
+      .toLowerCase();
+
+    const matchesSearch = haystack.includes(q);
     const matchesTab =
-      activeTab === "all" ||
-      (b.booking_type && b.booking_type.toLowerCase().includes(activeTab.slice(0, -1)));
-    const matchesSearch =
-      b.title.toLowerCase().includes(search.toLowerCase()) ||
-      (b.booking_reference &&
-        b.booking_reference.toLowerCase().includes(search.toLowerCase()));
+      activeTab === "all" || type === String(activeTab).toLowerCase();
+
     return matchesTab && matchesSearch;
   });
 
@@ -229,57 +288,85 @@ export default function BookingsView({ onOpenBookingModal, onOpenRefundModal }) 
                 <tr className="border-b border-white/5 bg-surface-container-lowest/50 text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
                   <th className="py-4 px-6">Reservation</th>
                   <th className="py-4 px-6">Type</th>
-                  <th className="py-4 px-6">Provider / PNR</th>
+                  <th className="py-4 px-6">Reference</th>
                   <th className="py-4 px-6">Date</th>
                   <th className="py-4 px-6">Amount</th>
                   <th className="py-4 px-6 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5 font-body-md text-body-md text-on-surface">
-                {filtered.map((b) => (
-                  <tr key={b.id} className="hover:bg-surface-container/30 transition-colors">
-                    <td className="py-4 px-6">
-                      <strong className="text-on-surface font-semibold block">{b.title}</strong>
-                      <span className="text-xs text-on-surface-variant/70">
-                        {b.provider || "Standard Reservation"}
-                      </span>
-                    </td>
-                    <td className="py-4 px-6">
-                      <span className="px-3 py-1 rounded-lg bg-surface-container text-on-surface-variant text-xs capitalize">
-                        {b.booking_type}
-                      </span>
-                    </td>
-                    <td className="py-4 px-6">
-                      <span className="text-primary font-semibold text-xs">
-                        {b.booking_reference || "CONFIRMED"}
-                      </span>
-                    </td>
-                    <td className="py-4 px-6 text-xs text-on-surface-variant">
-                      {b.booking_date ? new Date(b.booking_date).toLocaleDateString("en-IN") : "Upcoming"}
-                    </td>
-                    <td className="py-4 px-6 text-primary font-bold">
-                      {money(b.amount)}
-                    </td>
-                    <td className="py-4 px-6 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <button
-                          type="button"
-                          className="p-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors cursor-pointer"
-                          onClick={() => onOpenBookingModal(b)}
-                        >
-                          <span className="material-symbols-outlined text-lg">edit</span>
-                        </button>
-                        <button
-                          type="button"
-                          className="p-1.5 rounded-lg text-error/80 hover:text-error hover:bg-error-container/20 transition-colors cursor-pointer"
-                          onClick={() => removeBooking(b.id)}
-                        >
-                          <span className="material-symbols-outlined text-lg">delete</span>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                {filtered.map((b) => {
+                  const status = String(b.status || "").toLowerCase();
+                  const finished = ["completed", "cancelled", "refunded"].includes(status);
+
+                  return (
+                    <tr key={b.id} className="hover:bg-surface-container/30 transition-colors">
+                      <td className="py-4 px-6">
+                        <strong className="text-on-surface font-semibold block">
+                          {b.provider || b.description || "Booking"}
+                        </strong>
+                        <span className="text-xs text-on-surface-variant/70">
+                          {b.location || (b.provider ? b.description : "") || "Standard reservation"}
+                        </span>
+                      </td>
+                      <td className="py-4 px-6">
+                        <span className="px-3 py-1 rounded-lg bg-surface-container text-on-surface-variant text-xs capitalize">
+                          {b.booking_type}
+                        </span>
+                        {status && (
+                          <span className="block mt-1 text-[10px] uppercase tracking-wider text-on-surface-variant/70">
+                            {status}
+                          </span>
+                        )}
+                      </td>
+                      <td className="py-4 px-6">
+                        <span className="text-primary font-semibold text-xs">
+                          {b.reference_number || "-"}
+                        </span>
+                      </td>
+                      <td className="py-4 px-6 text-xs text-on-surface-variant">
+                        {b.start_datetime
+                          ? new Date(b.start_datetime).toLocaleDateString("en-IN")
+                          : "Upcoming"}
+                      </td>
+                      <td className="py-4 px-6 text-primary font-bold">
+                        {money(b.amount)}
+                      </td>
+                      <td className="py-4 px-6 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          {status === "completed" && (
+                            <span className="px-3 py-1 rounded-full bg-secondary-container/40 text-on-secondary-container text-xs font-semibold">
+                              Added to expenses
+                            </span>
+                          )}
+                          {!finished && (
+                            <button
+                              type="button"
+                              onClick={() => openUse(b)}
+                              className="px-3 py-1.5 rounded-lg bg-primary-container hover:bg-primary text-on-primary-container font-label-md text-label-md font-bold text-xs cursor-pointer"
+                            >
+                              Mark as used
+                            </button>
+                          )}
+                          <button
+                            type="button"
+                            className="p-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors cursor-pointer"
+                            onClick={() => onOpenBookingModal(b)}
+                          >
+                            <span className="material-symbols-outlined text-lg">edit</span>
+                          </button>
+                          <button
+                            type="button"
+                            className="p-1.5 rounded-lg text-error/80 hover:text-error hover:bg-error-container/20 transition-colors cursor-pointer"
+                            onClick={() => removeBooking(b.id)}
+                          >
+                            <span className="material-symbols-outlined text-lg">delete</span>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -315,6 +402,79 @@ export default function BookingsView({ onOpenBookingModal, onOpenRefundModal }) 
           </div>
         </div>
       </div>
+
+      {/* Mark as used popup */}
+      {useBooking && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/60">
+          <div className="w-full max-w-md flex flex-col gap-4 p-6 rounded-2xl bg-surface-container-low border border-white/10 shadow-2xl">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h3 className="text-on-surface font-headline-sm text-headline-sm font-bold">
+                  Mark booking as used
+                </h3>
+                <p className="text-on-surface-variant text-sm">
+                  {useBooking.provider || useBooking.booking_type} · {money(useBooking.amount)}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={closeUse}
+                disabled={markingUsed}
+                className="text-on-surface-variant hover:text-on-surface text-xl cursor-pointer"
+              >
+                ×
+              </button>
+            </div>
+
+            <p className="text-on-surface-variant text-sm">
+              This adds the booking to your Expenses and splits it equally between the
+              members on the booking (or everyone on the trip if none were chosen).
+            </p>
+
+            <label className="flex flex-col gap-1 text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+              Who paid this amount?
+              <select
+                value={selectedPayer}
+                onChange={(e) => setSelectedPayer(e.target.value)}
+                disabled={markingUsed}
+                className="px-3 py-2.5 rounded-lg bg-surface-container-lowest/80 text-on-surface normal-case tracking-normal border border-white/10"
+              >
+                <option value="">Select participant</option>
+                {activeMembers.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            {useError && (
+              <div className="px-4 py-2.5 rounded-lg bg-error-container/20 text-error border border-error/30 text-sm">
+                {useError}
+              </div>
+            )}
+
+            <div className="flex justify-end gap-2">
+              <button
+                type="button"
+                onClick={closeUse}
+                disabled={markingUsed}
+                className="px-4 py-2.5 rounded-xl bg-surface-container-high/60 text-on-surface-variant font-label-md text-label-md cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleMarkAsUsed}
+                disabled={!selectedPayer || markingUsed}
+                className="px-5 py-2.5 rounded-xl bg-primary-container hover:bg-primary text-on-primary-container font-label-md text-label-md font-bold disabled:opacity-50 cursor-pointer"
+              >
+                {markingUsed ? "Saving..." : "Confirm & add expense"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

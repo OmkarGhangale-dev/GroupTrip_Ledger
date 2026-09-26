@@ -1,5 +1,6 @@
 import api from "./api";
 
+
 export const getBookings = async (tripId) => {
   const response = await api.get(`/bookings/trip/${tripId}`);
   return response.data;

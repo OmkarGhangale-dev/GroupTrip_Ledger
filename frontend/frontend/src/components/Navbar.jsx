@@ -3,7 +3,7 @@ import { useTrip } from "../context/TripContext";
 import api from "../services/api";
 
 export default function Navbar({ onOpenNewTripModal, onOpenLogin, onLogout, isDark, toggleTheme }) {
-  const { trips, trip, setTrip } = useTrip();
+  const { trips, trip, setTrip, participants } = useTrip();
   const [dbStatus, setDbStatus] = useState("checking");
 
   const checkHealth = async () => {
@@ -26,7 +26,22 @@ export default function Navbar({ onOpenNewTripModal, onOpenLogin, onLogout, isDa
     return () => clearInterval(interval);
   }, []);
 
-  const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
+  let currentUser = {};
+  try {
+    currentUser = JSON.parse(localStorage.getItem("user") || "{}");
+  } catch {
+    currentUser = {};
+  }
+
+  // role of the signed-in user in the selected trip
+  const myParticipant = (participants || []).find(
+    (p) =>
+      p.email &&
+      currentUser.email &&
+      p.email.toLowerCase() === currentUser.email.toLowerCase(),
+  );
+  const myRoleLabel =
+    myParticipant?.role === "organizer" ? "Trip Organizer" : "Member";
 
   return (
     <header className="fixed top-0 left-64 right-0 h-16 bg-surface-container-lowest/70 backdrop-blur-xl z-40 shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
@@ -104,7 +119,7 @@ export default function Navbar({ onOpenNewTripModal, onOpenLogin, onLogout, isDa
           >
             <div className="flex flex-col text-right hidden lg:block">
               <span className="font-label-md text-label-md text-on-surface font-semibold leading-none">{currentUser.name || "shreya"}</span>
-              <span className="font-label-sm text-label-sm text-primary tracking-wide block mt-1">Trip Admin</span>
+              <span className="font-label-sm text-label-sm text-primary tracking-wide block mt-1">{myRoleLabel}</span>
             </div>
             <div className="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-sm ring-1 ring-primary/40">
               {(currentUser.name || "S").charAt(0).toUpperCase()}

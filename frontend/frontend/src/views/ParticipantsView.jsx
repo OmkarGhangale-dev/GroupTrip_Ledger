@@ -3,15 +3,38 @@ import { useTrip } from "../context/TripContext";
 import InviteCard from "../components/InviteCard";
 
 export default function ParticipantsView({ onOpenParticipantModal }) {
-  const { participants, removeParticipant } = useTrip();
+  const { trip, participants, balances, removeParticipant } = useTrip();
   const [search, setSearch] = useState("");
 
   const money = (val) => `₹${Number(val || 0).toLocaleString("en-IN")}`;
+  const fmtDate = (d) => (d ? new Date(d).toLocaleDateString("en-IN") : "Recently");
 
+  let me = {};
+  try {
+    me = JSON.parse(localStorage.getItem("user") || "{}");
+  } catch {
+    me = {};
+  }
+  const isMe = (p) =>
+    p.email && me.email && p.email.toLowerCase() === me.email.toLowerCase();
+
+  const getBalance = (id) => {
+    const b = (balances || []).find((x) => x.participant_id === id);
+    return b ? Number(b.net_balance) || 0 : 0;
+  };
+
+  const organizerCount = participants.filter((p) => p.role === "organizer").length;
+  const netOutstanding = (balances || []).reduce(
+    (sum, b) => sum + (Number(b.net_balance) > 0 ? Number(b.net_balance) : 0),
+    0,
+  );
+
+  const q = search.toLowerCase();
   const filtered = participants.filter(
     (p) =>
-      p.name.toLowerCase().includes(search.toLowerCase()) ||
-      (p.email && p.email.toLowerCase().includes(search.toLowerCase()))
+      String(p.name || "").toLowerCase().includes(q) ||
+      String(p.email || "").toLowerCase().includes(q) ||
+      String(p.role || "").toLowerCase().includes(q),
   );
 
   return (
@@ -21,7 +44,7 @@ export default function ParticipantsView({ onOpenParticipantModal }) {
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-2">
             <span className="px-3 py-1 rounded-full bg-surface-container-high/70 text-primary font-label-sm text-label-sm uppercase tracking-widest">
-              • Trip Members • Goa Expedition '24
+              • Trip Members • {trip?.name || "Your trip"}
             </span>
           </div>
 
@@ -31,19 +54,23 @@ export default function ParticipantsView({ onOpenParticipantModal }) {
                 Participants <em className="font-editorial text-primary font-normal">({participants.length})</em>
               </h1>
               <p className="font-body-md text-body-md text-on-surface-variant">
-                Manage everyone travelling in this trip, their expedition roles, and automated settlement balances across the journey.
+                Manage everyone travelling in this trip, their roles, and automated settlement balances across the journey.
               </p>
             </div>
 
             <button
+              type="button"
               onClick={() =>
                 document
                   .getElementById("invite-card")
                   ?.scrollIntoView({ behavior: "smooth" })
               }
-              className="px-4 py-2.5 rounded-xl bg-secondary-container hover:bg-secondary-container/80 text-on-surface font-label-md text-label-md font-semibold transition-all shadow-md"
+              className="group flex items-center bg-primary text-on-primary font-label-md text-label-md tracking-wider uppercase rounded-xl overflow-hidden shadow-lg hover:shadow-[0_0_28px_rgba(255,154,77,0.4)] transition-all cursor-pointer self-start lg:self-auto"
             >
-              Invite Members
+              <span className="px-5 py-3 font-bold">+ Invite Member</span>
+              <span className="w-11 h-11 bg-primary-container flex items-center justify-center text-on-primary-container group-hover:translate-x-0.5 transition-transform">
+                <span className="material-symbols-outlined text-lg">arrow_forward</span>
+              </span>
             </button>
           </div>
         </div>
@@ -66,7 +93,7 @@ export default function ParticipantsView({ onOpenParticipantModal }) {
             </div>
             <div>
               <span className="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant block">Net Outstanding</span>
-              <span className="font-headline-sm text-headline-sm text-on-surface font-semibold">₹0.00</span>
+              <span className="font-headline-sm text-headline-sm text-on-surface font-semibold">{money(netOutstanding)}</span>
             </div>
           </div>
 
@@ -76,7 +103,9 @@ export default function ParticipantsView({ onOpenParticipantModal }) {
             </div>
             <div>
               <span className="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant block">Leadership</span>
-              <span className="font-headline-sm text-headline-sm text-on-surface font-semibold">1 Organizer</span>
+              <span className="font-headline-sm text-headline-sm text-on-surface font-semibold">
+                {organizerCount} Organizer{organizerCount === 1 ? "" : "s"}
+              </span>
             </div>
           </div>
         </div>
@@ -92,17 +121,6 @@ export default function ParticipantsView({ onOpenParticipantModal }) {
               className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-surface-container/80 border border-white/10 text-on-surface font-body-sm text-body-sm focus:border-primary outline-none"
             />
             <span className="material-symbols-outlined text-on-surface-variant text-lg absolute left-3 top-3">search</span>
-          </div>
-
-          <div className="flex items-center gap-3 self-end sm:self-auto">
-            <button className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-surface-container-high/60 text-on-surface font-label-md text-label-md hover:bg-surface-container-high transition-colors">
-              <span className="material-symbols-outlined text-base">filter_list</span>
-              <span>Filter</span>
-            </button>
-            <button className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-surface-container-high/60 text-on-surface font-label-md text-label-md hover:bg-surface-container-high transition-colors">
-              <span className="material-symbols-outlined text-base">download</span>
-              <span>Export</span>
-            </button>
           </div>
         </div>
 
@@ -128,80 +146,115 @@ export default function ParticipantsView({ onOpenParticipantModal }) {
                     </td>
                   </tr>
                 ) : (
-                  filtered.map((p, idx) => (
-                    <tr key={p.id || idx} className="hover:bg-surface-container/50 transition-colors">
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-secondary-container text-on-secondary-container font-bold flex items-center justify-center">
-                            {p.name.charAt(0).toUpperCase()}
-                          </div>
-                          <div>
-                            <div className="flex items-center gap-1.5">
-                              <strong className="font-title-md text-title-md text-on-surface">{p.name}</strong>
-                              {idx === 0 && (
-                                <span className="px-1.5 py-0.5 rounded bg-primary-container text-on-primary-container text-[10px] font-bold">YOU</span>
-                              )}
+                  filtered.map((p) => {
+                    const bal = getBalance(p.id);
+                    const owed = bal > 0.01;
+                    const owes = bal < -0.01;
+                    const isOrganizer = p.role === "organizer";
+                    const removed = p.status === "removed";
+
+                    return (
+                      <tr key={p.id} className="hover:bg-surface-container/50 transition-colors">
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-xl bg-secondary-container text-on-secondary-container font-bold flex items-center justify-center">
+                              {String(p.name || "?").charAt(0).toUpperCase()}
                             </div>
-                            <span className="text-on-surface-variant text-xs block">Expedition Pioneer</span>
+                            <div>
+                              <div className="flex items-center gap-1.5">
+                                <strong className="font-title-md text-title-md text-on-surface">{p.name}</strong>
+                                {isMe(p) && (
+                                  <span className="px-1.5 py-0.5 rounded bg-primary-container text-on-primary-container text-[10px] font-bold">YOU</span>
+                                )}
+                              </div>
+                              <span className="text-on-surface-variant text-xs block">
+                                {isOrganizer ? "Trip organizer" : "Traveler"}
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="text-on-surface block">{p.email || "mhatreshreya111@gmail.com"}</span>
-                        <span className="text-on-surface-variant text-xs flex items-center gap-1">
-                          <span className="material-symbols-outlined text-xs">calendar_today</span>
-                          Joined 26/9/2026
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="px-3 py-1 rounded-full bg-secondary-container/40 text-on-secondary-container font-label-sm text-label-sm font-bold flex items-center gap-1 w-fit">
-                          <span className="material-symbols-outlined text-sm">shield</span>
-                          ORGANIZER
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="flex items-center gap-1.5 text-secondary font-semibold text-xs">
-                          <span className="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
-                          ACTIVE
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <strong className="text-on-surface font-title-md text-title-md block">₹0</strong>
-                        <span className="text-on-surface-variant text-xs font-semibold uppercase">SETTLED</span>
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          <button
-                            onClick={() => onOpenParticipantModal(p)}
-                            className="p-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors"
+                        </td>
+                        <td className="px-6 py-4">
+                          <span className="text-on-surface block">{p.email}</span>
+                          <span className="text-on-surface-variant text-xs flex items-center gap-1">
+                            <span className="material-symbols-outlined text-xs">calendar_today</span>
+                            Joined {fmtDate(p.joined_at || p.created_at)}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4">
+                          <span
+                            className={`px-3 py-1 rounded-full font-label-sm text-label-sm font-bold flex items-center gap-1 w-fit uppercase ${
+                              isOrganizer
+                                ? "bg-secondary-container/40 text-on-secondary-container"
+                                : "bg-surface-container-high/60 text-on-surface-variant"
+                            }`}
                           >
-                            <span className="material-symbols-outlined text-lg">edit</span>
-                          </button>
-                          <button
-                            onClick={() => removeParticipant(p.id)}
-                            className="p-1.5 rounded-lg text-error hover:bg-error-container/20 transition-colors"
+                            <span className="material-symbols-outlined text-sm">
+                              {isOrganizer ? "shield" : "person"}
+                            </span>
+                            {isOrganizer ? "Organizer" : "Member"}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4">
+                          <span
+                            className={`flex items-center gap-1.5 font-semibold text-xs uppercase ${
+                              removed ? "text-error" : "text-secondary"
+                            }`}
                           >
-                            <span className="material-symbols-outlined text-lg">delete</span>
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
+                            <span
+                              className={`w-2 h-2 rounded-full ${
+                                removed ? "bg-error" : "bg-secondary animate-pulse"
+                              }`}
+                            ></span>
+                            {removed ? "Removed" : "Active"}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4">
+                          <strong
+                            className={`font-title-md text-title-md block ${
+                              owed ? "text-primary" : owes ? "text-error" : "text-on-surface"
+                            }`}
+                          >
+                            {owed ? "+" : owes ? "-" : ""}
+                            {money(Math.abs(bal))}
+                          </strong>
+                          <span className="text-on-surface-variant text-xs font-semibold uppercase">
+                            {owed ? "Gets back" : owes ? "Owes" : "Settled"}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <div className="flex items-center justify-end gap-2">
+                            <button
+                              type="button"
+                              onClick={() => onOpenParticipantModal(p)}
+                              className="p-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors cursor-pointer"
+                            >
+                              <span className="material-symbols-outlined text-lg">edit</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => removeParticipant(p.id)}
+                              className="p-1.5 rounded-lg text-error hover:bg-error-container/20 transition-colors cursor-pointer"
+                            >
+                              <span className="material-symbols-outlined text-lg">delete</span>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
                 )}
               </tbody>
             </table>
           </div>
           <div className="px-6 py-4 bg-surface-container-low flex items-center justify-between font-body-sm text-body-sm text-on-surface-variant">
-            <span>Showing {filtered.length} of {participants.length} participant{participants.length === 1 ? "" : "s"}</span>
-            <div className="flex items-center gap-2">
-              <button disabled className="px-3 py-1 rounded-lg bg-surface-container/40 text-on-surface-variant/40 text-xs">Previous</button>
-              <button className="px-3 py-1 rounded-lg bg-secondary-container text-on-surface text-xs font-bold">1</button>
-              <button disabled className="px-3 py-1 rounded-lg bg-surface-container/40 text-on-surface-variant/40 text-xs">Next</button>
-            </div>
+            <span>
+              Showing {filtered.length} of {participants.length} participant
+              {participants.length === 1 ? "" : "s"}
+            </span>
           </div>
         </div>
 
-                {/* BOTTOM INVITE BANNER */}
+        {/* INVITE */}
         <div id="invite-card">
           <InviteCard />
         </div>
