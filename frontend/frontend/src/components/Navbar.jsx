@@ -44,68 +44,85 @@ export default function Navbar({ onOpenNewTripModal, onOpenLogin, onLogout, isDa
     myParticipant?.role === "organizer" ? "Trip Organizer" : "Member";
 
   return (
-    <header className="fixed top-0 left-64 right-0 h-16 bg-surface-container-lowest/70 backdrop-blur-xl z-40 shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+    <header className="fixed top-0 left-64 right-0 h-16 bg-surface-container-lowest/80 backdrop-blur-xl z-40 border-b border-black/5">
       <div className="h-16 w-full px-6 flex items-center justify-between">
+        {/* Left tagline & Trip Selector */}
         <div className="flex items-center gap-6">
           <div className="flex flex-col">
-            <span className="font-headline-sm text-headline-sm text-on-surface tracking-tight font-semibold leading-none">Pomaii</span>
-            <span className="font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase mt-1">Explore. Dream. Discover.</span>
-          </div>
-          <div className="hidden md:flex items-center gap-2 pl-4">
-            <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-surface-container/70 text-on-surface">
-              <span className="material-symbols-outlined text-base text-primary">pin_drop</span>
-              <select
-                className="bg-transparent border-none text-on-surface font-label-md text-label-md outline-none cursor-pointer capitalize"
-                value={trip?.id || ""}
-                onChange={(e) => {
-                  const selected = trips.find((t) => t.id === e.target.value);
-                  if (selected) setTrip(selected);
-                }}
-              >
-                {trips.map((t) => (
-                  <option key={t.id} value={t.id} className="bg-surface-container text-on-surface">
-                    {t.name} ({t.destination})
-                  </option>
-                ))}
-              </select>
-            </div>
-            <button
-              onClick={onOpenNewTripModal}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-primary-container hover:bg-primary text-on-primary-container transition-all shadow-[0_0_16px_rgba(255,154,77,0.35)] cursor-pointer"
-            >
-              <span className="material-symbols-outlined text-base">add</span>
-              <span className="font-label-md text-label-md font-bold tracking-wide">New Trip</span>
-            </button>
-          </div>
-        </div>
-        <div className="flex items-center gap-4">
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-secondary-container/30">
-            <span className="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
-            <span className="font-label-sm text-label-sm text-secondary font-semibold uppercase tracking-wider">
-              {dbStatus === "connected" ? "DB Connected" : "Connecting..."}
+            <span className="font-instrument italic text-lg text-black leading-none">
+              Explore. Dream. Discover.
             </span>
           </div>
+
+          {/* Search bar input */}
+          <div className="relative hidden md:flex items-center w-72">
+            <span className="material-symbols-outlined text-base text-black/40 absolute left-3 pointer-events-none">
+              search
+            </span>
+            <input
+              type="text"
+              placeholder="Search Goa Expedition..."
+              className="w-full pl-9 pr-4 py-1.5 rounded-full bg-black/5 border border-black/10 text-xs text-black placeholder:text-black/40 focus:outline-none focus:ring-1 focus:ring-black"
+            />
+          </div>
+        </div>
+
+        {/* Right Action Group */}
+        <div className="flex items-center gap-3">
+          {/* Select Trip dropdown */}
+          <div className="hidden lg:flex items-center gap-2 px-3 py-1 rounded-full bg-black/5 border border-black/10 text-xs">
+            <span className="material-symbols-outlined text-sm text-primary">pin_drop</span>
+            <select
+              className="bg-transparent border-none text-black font-medium text-xs outline-none cursor-pointer capitalize"
+              value={trip?.id || ""}
+              onChange={(e) => {
+                const selected = trips.find((t) => t.id === e.target.value);
+                if (selected) setTrip(selected);
+              }}
+            >
+              {trips.map((t) => (
+                <option key={t.id} value={t.id} className="bg-white text-black">
+                  {t.name} ({t.destination})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Notification Bell */}
+          <button
+            aria-label="Notifications"
+            className="w-9 h-9 rounded-full flex items-center justify-center text-black/60 hover:text-black hover:bg-black/5 transition-colors relative cursor-pointer"
+          >
+            <span className="material-symbols-outlined text-lg">notifications</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-black absolute top-2.5 right-2.5"></span>
+          </button>
+
+          {/* Theme Toggle Button */}
           {toggleTheme && (
             <button
               aria-label="Toggle theme"
               onClick={toggleTheme}
-              className="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container/50 transition-colors cursor-pointer"
+              className="w-9 h-9 rounded-full flex items-center justify-center text-black/60 hover:text-black hover:bg-black/5 transition-colors cursor-pointer"
               title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
             >
-              <span className="material-symbols-outlined text-xl text-primary">
+              <span className="material-symbols-outlined text-lg">
                 {isDark ? "light_mode" : "dark_mode"}
               </span>
             </button>
           )}
-          <button aria-label="Search records" className="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container/50 transition-colors">
-            <span className="material-symbols-outlined text-xl">search</span>
+
+          {/* + New Trip Button */}
+          <button
+            onClick={onOpenNewTripModal}
+            className="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-black text-white text-xs font-medium hover:scale-105 transition-transform cursor-pointer shadow-sm"
+          >
+            <span className="material-symbols-outlined text-sm">add</span>
+            <span>+ New Trip</span>
           </button>
-          <button aria-label="Notifications" className="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container/50 transition-colors relative">
-            <span className="material-symbols-outlined text-xl">notifications</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-primary absolute top-2 right-2"></span>
-          </button>
+
+          {/* User Profile Pill */}
           <div
-            className="flex items-center gap-3 pl-2 cursor-pointer"
+            className="flex items-center gap-2 pl-2 cursor-pointer hover:opacity-80 transition-opacity"
             onClick={() => {
               localStorage.removeItem("token");
               localStorage.removeItem("user");
@@ -117,12 +134,16 @@ export default function Navbar({ onOpenNewTripModal, onOpenLogin, onLogout, isDa
             }}
             title="Click to Sign Out"
           >
-            <div className="flex flex-col text-right hidden lg:block">
-              <span className="font-label-md text-label-md text-on-surface font-semibold leading-none">{currentUser.name || "shreya"}</span>
-              <span className="font-label-sm text-label-sm text-primary tracking-wide block mt-1">{myRoleLabel}</span>
+            <div className="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center font-bold text-xs shadow-sm">
+              {(currentUser.name || "A").charAt(0).toUpperCase()}
             </div>
-            <div className="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-sm ring-1 ring-primary/40">
-              {(currentUser.name || "S").charAt(0).toUpperCase()}
+            <div className="hidden lg:flex flex-col text-left">
+              <span className="text-xs font-bold text-black leading-none">
+                {currentUser.name || "Alex Morgan"}
+              </span>
+              <span className="text-[10px] text-black/50 font-medium">
+                {myRoleLabel}
+              </span>
             </div>
           </div>
         </div>

@@ -114,7 +114,7 @@ export default function ItineraryView({
                 <span className="text-secondary/60 text-xs">•</span>
                 <span className="font-label-sm text-label-sm text-secondary">GOA EXPEDITION '24</span>
               </div>
-              <h1 className="font-headline-xl text-headline-xl text-on-surface tracking-tight leading-none mb-3">
+              <h1 className="font-instrument text-5xl md:text-6xl text-on-surface font-normal tracking-tight leading-none mb-3">
                 Trip Itinerary <span className="text-primary italic font-normal text-3xl">({itinerary.length} Events)</span>
               </h1>
               <p className="font-body-md text-body-md text-on-surface-variant max-w-xl">

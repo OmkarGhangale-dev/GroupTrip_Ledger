@@ -1,0 +1,231 @@
+@keyframes fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-rise {
+  animation: fade-rise 0.8s ease-out both;
+}
+
+.animate-fade-rise-delay {
+  animation: fade-rise 0.8s ease-out 0.2s both;
+}
+
+.animate-fade-rise-delay-2 {
+  animation: fade-rise 0.8s ease-out 0.4s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-rise,
+  .animate-fade-rise-delay,
+  .animate-fade-rise-delay-2 {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Typography Family Overrides */
+.font-instrument,
+h1.font-instrument,
+h2.font-instrument,
+h3.font-instrument,
+h4.font-instrument {
+  font-family: 'Instrument Serif', Georgia, serif !important;
+}
+
+.font-inter {
+  font-family: 'Inter', sans-serif !important;
+}
+
+/* =========================================================
+   1. LIGHT MODE STYLING (default / html.light)
+   ========================================================= */
+html.light body,
+html.light html,
+html.light #root,
+html.light .app-main-layout {
+  background-color: #FAFAFA !important;
+  color: #000000 !important;
+}
+
+html.light aside,
+html.light aside.fixed {
+  background-color: #FFFFFF !important;
+  border-right: 1px solid rgba(0, 0, 0, 0.08) !important;
+  color: #000000 !important;
+}
+
+html.light header,
+html.light header.fixed {
+  background-color: #FFFFFF !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+  color: #000000 !important;
+}
+
+html.light .bg-white,
+html.light [class*="bg-surface-container"],
+html.light .bg-surface-container-low,
+html.light .bg-surface-container-lowest,
+html.light .bg-surface-container-high,
+html.light .bg-surface-container-highest {
+  background-color: #FFFFFF !important;
+  color: #000000 !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Table Header & Cell Contrast in Light Mode */
+html.light table thead,
+html.light thead tr,
+html.light .bg-\[\#F4F4F5\] {
+  background-color: #F4F4F5 !important;
+  color: #000000 !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+html.light table th,
+html.light thead th {
+  color: #000000 !important;
+  font-weight: 700 !important;
+}
+
+html.light table td,
+html.light tbody td {
+  color: #111111 !important;
+  border-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+html.light header input,
+html.light header select,
+html.light main input,
+html.light main select,
+html.light main textarea,
+html.light .page-transition input,
+html.light .page-transition select,
+html.light .page-transition textarea,
+html.light .view-login input,
+html.light .view-login select,
+html.light .view-login textarea {
+  background-color: #F4F4F5 !important;
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+  color: #000000 !important;
+}
+
+html.light input::placeholder,
+html.light textarea::placeholder {
+  color: rgba(0, 0, 0, 0.4) !important;
+}
+
+
+/* =========================================================
+   2. NIGHT / DARK MODE STYLING (html.dark)
+   ========================================================= */
+html.dark body,
+html.dark html,
+html.dark #root,
+html.dark .app-main-layout {
+  background-color: #09090B !important;
+  color: #FFFFFF !important;
+}
+
+html.dark aside,
+html.dark aside.fixed {
+  background-color: #18181B !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #FFFFFF !important;
+}
+
+html.dark header,
+html.dark header.fixed {
+  background-color: #18181B !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #FFFFFF !important;
+}
+
+html.dark .bg-white,
+html.dark [class*="bg-surface-container"],
+html.dark .bg-surface-container-low,
+html.dark .bg-surface-container-lowest,
+html.dark .bg-surface-container-high,
+html.dark .bg-surface-container-highest {
+  background-color: #18181B !important;
+  color: #FFFFFF !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Table Header & Cell Contrast in Night/Dark Mode */
+html.dark table thead,
+html.dark thead tr,
+html.dark .bg-\[\#F4F4F5\] {
+  background-color: #27272A !important;
+  color: #FFFFFF !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+html.dark table th,
+html.dark thead th {
+  color: #FFFFFF !important;
+  font-weight: 700 !important;
+}
+
+html.dark table td,
+html.dark tbody td {
+  color: #F1F5F9 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+html.dark header input,
+html.dark header select,
+html.dark main input,
+html.dark main select,
+html.dark main textarea,
+html.dark .page-transition input,
+html.dark .page-transition select,
+html.dark .page-transition textarea,
+html.dark .view-login input,
+html.dark .view-login select,
+html.dark .view-login textarea {
+  background-color: #27272A !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  color: #FFFFFF !important;
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Hero Scoped Overrides */
+.aethera-hero {
+  background: #FFFFFF !important;
+  color: #000000 !important;
+  font-family: 'Inter', sans-serif !important;
+}
+
+.aethera-hero h1 {
+  font-family: 'Instrument Serif', serif !important;
+  color: #000000 !important;
+}
+
+.aethera-hero h1 em {
+  color: #6F6F6F !important;
+  font-style: italic;
+}
+
+.aethera-hero header,
+html.light .aethera-hero header {
+  background: transparent !important;
+  border: 0 !important;
+  color: inherit !important;
+  backdrop-filter: none !important;
+}
+
+.aethera-hero-fade {
+  background: linear-gradient(to bottom, #FFFFFF 0%, transparent 50%, #FFFFFF 100%);
+}

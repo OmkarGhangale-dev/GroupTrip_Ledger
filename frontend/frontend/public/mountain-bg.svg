@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="peakGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff9a56"/>
+      <stop offset="25%" stop-color="#db4e56"/>
+      <stop offset="60%" stop-color="#692248"/>
+      <stop offset="100%" stop-color="#2d0b30"/>
+    </linearGradient>
+
+    <linearGradient id="blueHills" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#42579e"/>
+      <stop offset="50%" stop-color="#2a386c"/>
+      <stop offset="100%" stop-color="#181e42"/>
+    </linearGradient>
+
+    <linearGradient id="snowHighlight" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#ffbfa3" stop-opacity="0.3"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Giant Sunset Mountain Peak (Right Side matching reference 1) -->
+  <path d="M750,680 L1350,180 L1950,580 L1950,1080 L750,1080 Z" fill="url(#peakGrad)"/>
+
+  <!-- Mountain Peak Snow Highlight -->
+  <path d="M1350,180 L1450,260 L1390,320 L1480,410 L1350,380 L1260,450 Z" fill="url(#snowHighlight)"/>
+
+  <!-- Blue Midground Ridge (Left side matching reference 1) -->
+  <path d="M-100,740 Q250,560 650,680 Q1050,800 1450,640 Q1750,520 2020,620 L2020,1080 L-100,1080 Z" fill="url(#blueHills)"/>
+</svg>

@@ -118,7 +118,7 @@ export default function BookingsView({ onOpenBookingModal, onOpenRefundModal }) 
           </div>
 
           <div className="max-w-2xl">
-            <h1 className="font-headline-xl text-headline-xl text-on-surface tracking-tight leading-none mb-3">
+            <h1 className="font-instrument text-5xl md:text-6xl text-on-surface font-normal tracking-tight leading-none mb-3">
               Bookings &amp; Refunds
             </h1>
             <p className="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
@@ -284,14 +284,14 @@ export default function BookingsView({ onOpenBookingModal, onOpenRefundModal }) 
         <div className="rounded-xl bg-surface-container-low/60 backdrop-blur-xl shadow-md border border-white/5 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="border-b border-white/5 bg-surface-container-lowest/50 text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
-                  <th className="py-4 px-6">Reservation</th>
-                  <th className="py-4 px-6">Type</th>
-                  <th className="py-4 px-6">Reference</th>
-                  <th className="py-4 px-6">Date</th>
-                  <th className="py-4 px-6">Amount</th>
-                  <th className="py-4 px-6 text-right">Actions</th>
+              <thead className="bg-[#F4F4F5]">
+                <tr className="border-b border-black/10 bg-[#F4F4F5] text-black font-semibold text-[10px] uppercase tracking-wider">
+                  <th className="py-4 px-6 text-black font-bold">RESERVATION</th>
+                  <th className="py-4 px-6 text-black font-bold">TYPE</th>
+                  <th className="py-4 px-6 text-black font-bold">REFERENCE</th>
+                  <th className="py-4 px-6 text-black font-bold">DATE</th>
+                  <th className="py-4 px-6 text-black font-bold">AMOUNT</th>
+                  <th className="py-4 px-6 text-right text-black font-bold">ACTIONS</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5 font-body-md text-body-md text-on-surface">

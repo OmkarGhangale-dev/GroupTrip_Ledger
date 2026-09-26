@@ -113,27 +113,34 @@ export default function LoginView({ onLoginSuccess }) {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-surface-container-lowest via-surface-dim to-background p-6 relative overflow-hidden">
-      {/* Background Decorative Alpenglow Glows */}
-      <div className="absolute top-1/4 -left-20 w-[420px] h-[340px] bg-secondary-container/20 rounded-full blur-3xl pointer-events-none"></div>
-      <div className="absolute bottom-1/4 -right-20 w-[420px] h-[340px] bg-primary-container/20 rounded-full blur-3xl pointer-events-none"></div>
+    <div className="min-h-screen w-full flex items-center justify-center bg-zinc-50 dark:bg-zinc-950 p-6 relative overflow-hidden">
+      {/* Mountain Background Image */}
+      <div 
+        className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat opacity-55 dark:opacity-60 pointer-events-none scale-105"
+        style={{ backgroundImage: "url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1600&q=80'), url('/mountain-bg.svg')" }}
+      ></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-zinc-50/30 via-transparent to-zinc-50/20 dark:from-zinc-950/40 dark:to-zinc-950/30 pointer-events-none"></div>
 
-      <div className="relative z-10 w-full max-w-md bg-surface-container-low/70 backdrop-blur-2xl rounded-2xl p-8 shadow-2xl border border-white/10 text-on-surface">
+      {/* Decorative Glows */}
+      <div className="absolute top-1/4 -left-20 w-[420px] h-[340px] bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="absolute bottom-1/4 -right-20 w-[420px] h-[340px] bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div className="relative z-10 w-full max-w-md bg-white/95 dark:bg-zinc-900/95 backdrop-blur-2xl rounded-3xl p-8 shadow-2xl border border-black/10 dark:border-white/10 text-black dark:text-white">
         {/* BRAND HEADER */}
         <div className="text-center mb-6">
-          <div className="w-12 h-12 rounded-xl bg-secondary-container flex items-center justify-center text-primary shadow-[0_0_24px_rgba(255,154,77,0.28)] mx-auto mb-3">
+          <div className="w-12 h-12 rounded-2xl bg-secondary-container flex items-center justify-center text-primary shadow-[0_0_24px_rgba(255,154,77,0.28)] mx-auto mb-3">
             <span className="material-symbols-outlined text-2xl">landscape</span>
           </div>
-          <h2 className="font-headline-sm text-headline-sm font-bold text-on-surface tracking-tight mb-1">
-            Pomaii
-          </h2>
+          <span className="font-instrument text-4xl tracking-tight text-on-surface block mb-1">
+            FareShare<sup>®</sup>
+          </span>
           <span className="font-label-sm text-label-sm uppercase tracking-widest text-primary font-bold block">
             EXPEDITION LEDGER
           </span>
         </div>
 
         <div className="text-center mb-6">
-          <h3 className="font-headline-sm text-headline-sm text-on-surface font-semibold mb-1">
+          <h3 className="font-instrument text-3xl text-on-surface font-normal mb-1">
             {isRegister ? "Create an Account" : "Welcome Back"}
           </h3>
           <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">

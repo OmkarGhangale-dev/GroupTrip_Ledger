@@ -218,59 +218,59 @@ export default function ExpensesView({ onOpenExpenseModal }) {
             </div>
           </div>
         ) : (
-          <div className="rounded-xl bg-surface-container-low/60 backdrop-blur-xl shadow-md border border-white/5 overflow-hidden">
+          <div className="rounded-3xl bg-white border border-black/10 shadow-sm overflow-hidden font-inter text-black">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="border-b border-white/5 bg-surface-container-lowest/50 text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
-                    <th className="py-4 px-6">Expense</th>
-                    <th className="py-4 px-6">Category</th>
-                    <th className="py-4 px-6">Paid By</th>
-                    <th className="py-4 px-6">Split Method</th>
-                    <th className="py-4 px-6">Amount</th>
-                    <th className="py-4 px-6 text-right">Actions</th>
+                <thead className="bg-[#F4F4F5]">
+                  <tr className="border-b border-black/10 bg-[#F4F4F5] text-black font-semibold text-[10px] uppercase tracking-wider">
+                    <th className="py-4 px-6 text-black font-bold">EXPENSE</th>
+                    <th className="py-4 px-6 text-black font-bold">CATEGORY</th>
+                    <th className="py-4 px-6 text-black font-bold">PAID BY</th>
+                    <th className="py-4 px-6 text-black font-bold">SPLIT METHOD</th>
+                    <th className="py-4 px-6 text-black font-bold">AMOUNT</th>
+                    <th className="py-4 px-6 text-right text-black font-bold">ACTIONS</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/5 font-body-md text-body-md text-on-surface">
+                <tbody className="divide-y divide-black/5 font-inter text-xs text-black">
                   {filtered.map((exp) => (
-                    <tr key={exp.id} className="hover:bg-surface-container/30 transition-colors">
+                    <tr key={exp.id} className="hover:bg-black/5 transition-colors">
                       <td className="py-4 px-6">
-                        <strong className="text-on-surface font-semibold block">{exp.title}</strong>
-                        <span className="text-xs text-on-surface-variant/70">
+                        <strong className="text-black font-bold text-sm block">{exp.title}</strong>
+                        <span className="text-xs text-black/50">
                           {exp.created_at ? new Date(exp.created_at).toLocaleDateString("en-IN") : "Today"}
                         </span>
                       </td>
                       <td className="py-4 px-6">
-                        <span className="px-3 py-1 rounded-lg bg-surface-container text-on-surface-variant text-xs capitalize">
+                        <span className="px-3 py-1 rounded-full bg-black/5 text-black/70 text-xs font-medium capitalize">
                           {exp.category || "General"}
                         </span>
                       </td>
-                      <td className="py-4 px-6 text-on-surface">
+                      <td className="py-4 px-6 text-black font-medium">
                         {exp.paid_by_participant?.name || "Member"}
                       </td>
                       <td className="py-4 px-6">
-                        <span className="px-3 py-1 rounded-full bg-secondary-container/50 text-on-secondary-container text-xs font-semibold capitalize shadow-[0_0_12px_rgba(85,45,170,0.3)]">
+                        <span className="px-3 py-1 rounded-full bg-black/5 text-black text-xs font-semibold capitalize">
                           {exp.split_method}
                         </span>
                       </td>
-                      <td className="py-4 px-6 text-primary font-bold">
+                      <td className="py-4 px-6 text-black font-bold font-instrument text-base">
                         {money(exp.amount)}
                       </td>
                       <td className="py-4 px-6 text-right">
                         <div className="flex items-center justify-end gap-2">
                           <button
                             type="button"
-                            className="p-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors cursor-pointer"
+                            className="p-1.5 rounded-full text-black/60 hover:text-black hover:bg-black/5 transition-colors cursor-pointer"
                             onClick={() => onOpenExpenseModal(exp)}
                           >
-                            <span className="material-symbols-outlined text-lg">edit</span>
+                            <span className="material-symbols-outlined text-base">edit</span>
                           </button>
                           <button
                             type="button"
-                            className="p-1.5 rounded-lg text-error/80 hover:text-error hover:bg-error-container/20 transition-colors cursor-pointer"
+                            className="p-1.5 rounded-full text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
                             onClick={() => removeExpense(exp.id)}
                           >
-                            <span className="material-symbols-outlined text-lg">delete</span>
+                            <span className="material-symbols-outlined text-base">delete</span>
                           </button>
                         </div>
                       </td>
@@ -281,6 +281,73 @@ export default function ExpensesView({ onOpenExpenseModal }) {
             </div>
           </div>
         )}
+
+        {/* Expedition Spending Journey Section */}
+        <div className="p-6 md:p-8 rounded-2xl bg-surface-container-low/60 backdrop-blur-xl border border-white/5 flex flex-col gap-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-headline-sm text-headline-sm text-on-surface font-semibold">
+                Expedition Spending Journey
+              </h3>
+              <p className="font-body-sm text-body-sm text-on-surface-variant">
+                Visual receipt records &amp; location memories linked to expenses
+              </p>
+            </div>
+            <span className="font-label-sm text-label-sm text-primary font-medium">
+              4 of 12 receipts geotagged
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="relative h-48 rounded-2xl overflow-hidden group border border-white/10 shadow-lg cursor-pointer">
+              <img
+                src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80"
+                alt="Fisherman's Table Dinner"
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent p-5 flex flex-col justify-end">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-primary-container">
+                  SEP 28 • ANJUNA
+                </span>
+                <h4 className="font-headline-sm text-lg text-white font-bold">
+                  Fisherman's Table Dinner
+                </h4>
+              </div>
+            </div>
+
+            <div className="relative h-48 rounded-2xl overflow-hidden group border border-white/10 shadow-lg cursor-pointer">
+              <img
+                src="https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=600&q=80"
+                alt="Coastal Fleet Scooters"
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent p-5 flex flex-col justify-end">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-primary-container">
+                  SEP 26 • BAGA
+                </span>
+                <h4 className="font-headline-sm text-lg text-white font-bold">
+                  Coastal Fleet Scooters
+                </h4>
+              </div>
+            </div>
+
+            <div className="relative h-48 rounded-2xl overflow-hidden group border border-white/10 shadow-lg cursor-pointer">
+              <img
+                src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=600&q=80"
+                alt="Sunset River Catamaran"
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent p-5 flex flex-col justify-end">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-primary-container">
+                  SEP 27 • MANDOVI
+                </span>
+                <h4 className="font-headline-sm text-lg text-white font-bold">
+                  Sunset River Catamaran
+                </h4>
+              </div>
+            </div>
+          </div>
+        </div>
 
         {/* Waypoint Bottom Card */}
         <div className="relative w-full rounded-xl overflow-hidden p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl bg-gradient-to-r from-surface-container-low via-surface-container-high to-surface-container-lowest border border-white/5">

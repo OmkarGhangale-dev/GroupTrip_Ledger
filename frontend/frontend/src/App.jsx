@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
 import AIChatBot from "./components/AIChatBot";
 import ParallaxScrollWorld from "./components/landing/ParallaxScrollWorld";
+import AetheraHero from "./components/landing/AetheraHero";
 
 // Views
 import DashboardView from "./views/DashboardView";
@@ -32,7 +33,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState(() => {
     return localStorage.getItem("token") ? "dashboard" : "landing";
   });
-  const [isDark, setIsDark] = useState(true);
+  const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
     if (isDark) {
@@ -93,9 +94,9 @@ export default function App() {
 
   if (activeTab === "landing") {
     return (
-      <div className="min-h-screen bg-background text-on-surface">
+      <div className="min-h-screen bg-white">
         <ToastContainer />
-        <ParallaxScrollWorld
+        <AetheraHero
           onOpenLogin={() => setActiveTab("login")}
           onOpenRegister={() => setActiveTab("login")}
           isDark={isDark}
@@ -107,7 +108,7 @@ export default function App() {
 
   if (activeTab === "login") {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-surface-container-lowest via-surface-dim to-background">
+      <div className="view-login min-h-screen bg-gradient-to-br from-surface-container-lowest via-surface-dim to-background">
         <ToastContainer />
         <LoginView
           onLoginSuccess={() => {
@@ -120,7 +121,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-surface-container-lowest via-surface-dim to-background text-on-surface selection:bg-primary-container selection:text-on-primary-container">
+    <div className="app-main-layout min-h-screen bg-[#FAFAFA] text-black selection:bg-black selection:text-white">
       {/* GLOBAL TOAST ALERTS */}
       <ToastContainer />
 

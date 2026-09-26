@@ -26,7 +26,7 @@ export default function ParticipantsView({ onOpenParticipantModal }) {
   const organizerCount = participants.filter((p) => p.role === "organizer").length;
   const netOutstanding = (balances || []).reduce(
     (sum, b) => sum + (Number(b.net_balance) > 0 ? Number(b.net_balance) : 0),
-    0,
+    0
   );
 
   const q = search.toLowerCase();
@@ -34,26 +34,26 @@ export default function ParticipantsView({ onOpenParticipantModal }) {
     (p) =>
       String(p.name || "").toLowerCase().includes(q) ||
       String(p.email || "").toLowerCase().includes(q) ||
-      String(p.role || "").toLowerCase().includes(q),
+      String(p.role || "").toLowerCase().includes(q)
   );
 
   return (
-    <div className="w-full min-h-screen px-6 lg:px-12 py-8">
+    <div className="w-full min-h-screen px-6 lg:px-12 py-8 font-inter text-black">
       <div className="max-w-7xl mx-auto flex flex-col gap-8">
         {/* HEADER SECTION */}
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-2">
-            <span className="px-3 py-1 rounded-full bg-surface-container-high/70 text-primary font-label-sm text-label-sm uppercase tracking-widest">
-              • Trip Members • {trip?.name || "Your trip"}
+            <span className="px-3 py-1 rounded-full bg-black/5 border border-black/10 text-black font-label-sm text-xs uppercase tracking-widest font-semibold">
+              • TRIP MEMBERS • {trip?.name || "GOA TRIP"}
             </span>
           </div>
 
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
             <div className="space-y-2 max-w-2xl">
-              <h1 className="font-display-hero text-display-hero text-on-surface tracking-tight leading-none">
-                Participants <em className="font-editorial text-primary font-normal">({participants.length})</em>
+              <h1 className="font-instrument text-5xl md:text-6xl text-black tracking-tight leading-none font-normal">
+                Participants <em className="italic text-black/60">({participants.length})</em>
               </h1>
-              <p className="font-body-md text-body-md text-on-surface-variant">
+              <p className="text-sm text-black/60 leading-relaxed">
                 Manage everyone travelling in this trip, their roles, and automated settlement balances across the journey.
               </p>
             </div>
@@ -65,11 +65,11 @@ export default function ParticipantsView({ onOpenParticipantModal }) {
                   .getElementById("invite-card")
                   ?.scrollIntoView({ behavior: "smooth" })
               }
-              className="group flex items-center bg-primary text-on-primary font-label-md text-label-md tracking-wider uppercase rounded-xl overflow-hidden shadow-lg hover:shadow-[0_0_28px_rgba(255,154,77,0.4)] transition-all cursor-pointer self-start lg:self-auto"
+              className="group flex items-center bg-black text-white text-xs font-semibold uppercase tracking-wider rounded-full overflow-hidden shadow-md hover:scale-105 transition-all cursor-pointer self-start lg:self-auto"
             >
               <span className="px-5 py-3 font-bold">+ Invite Member</span>
-              <span className="w-11 h-11 bg-primary-container flex items-center justify-center text-on-primary-container group-hover:translate-x-0.5 transition-transform">
-                <span className="material-symbols-outlined text-lg">arrow_forward</span>
+              <span className="w-10 h-10 bg-white/20 flex items-center justify-center text-white group-hover:translate-x-0.5 transition-transform">
+                <span className="material-symbols-outlined text-base">arrow_forward</span>
               </span>
             </button>
           </div>
@@ -77,33 +77,33 @@ export default function ParticipantsView({ onOpenParticipantModal }) {
 
         {/* METRIC SUMMARY DECK */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="rounded-xl p-5 bg-surface-container/60 backdrop-blur-xl border border-white/5 flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-secondary-container/30 flex items-center justify-center text-secondary">
+          <div className="rounded-2xl p-5 bg-white border border-black/10 shadow-sm flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-black/5 flex items-center justify-center text-black">
               <span className="material-symbols-outlined text-2xl">groups</span>
             </div>
             <div>
-              <span className="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant block">Party Roster</span>
-              <span className="font-headline-sm text-headline-sm text-on-surface font-semibold">{participants.length} Confirmed</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-black/50 block">Party Roster</span>
+              <span className="font-instrument text-2xl text-black font-bold">{participants.length} Confirmed</span>
             </div>
           </div>
 
-          <div className="rounded-xl p-5 bg-surface-container/60 backdrop-blur-xl border border-white/5 flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-primary-container/20 flex items-center justify-center text-primary">
+          <div className="rounded-2xl p-5 bg-white border border-black/10 shadow-sm flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-black/5 flex items-center justify-center text-black">
               <span className="material-symbols-outlined text-2xl">account_balance</span>
             </div>
             <div>
-              <span className="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant block">Net Outstanding</span>
-              <span className="font-headline-sm text-headline-sm text-on-surface font-semibold">{money(netOutstanding)}</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-black/50 block">Net Outstanding</span>
+              <span className="font-instrument text-2xl text-black font-bold">{money(netOutstanding)}</span>
             </div>
           </div>
 
-          <div className="rounded-xl p-5 bg-surface-container/60 backdrop-blur-xl border border-white/5 flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-secondary-container/40 flex items-center justify-center text-secondary">
+          <div className="rounded-2xl p-5 bg-white border border-black/10 shadow-sm flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-black/5 flex items-center justify-center text-black">
               <span className="material-symbols-outlined text-2xl">shield</span>
             </div>
             <div>
-              <span className="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant block">Leadership</span>
-              <span className="font-headline-sm text-headline-sm text-on-surface font-semibold">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-black/50 block">Leadership</span>
+              <span className="font-instrument text-2xl text-black font-bold">
                 {organizerCount} Organizer{organizerCount === 1 ? "" : "s"}
               </span>
             </div>
@@ -112,36 +112,36 @@ export default function ParticipantsView({ onOpenParticipantModal }) {
 
         {/* SEARCH & FILTER BAR */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="w-full sm:w-80 relative">
+          <div className="w-full sm:w-80 relative flex items-center">
+            <span className="material-symbols-outlined text-black/40 text-lg absolute left-3 pointer-events-none">search</span>
             <input
               type="text"
               placeholder="Search by name, email, or role..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-surface-container/80 border border-white/10 text-on-surface font-body-sm text-body-sm focus:border-primary outline-none"
+              className="w-full pl-10 pr-4 py-2.5 rounded-full bg-white border border-black/15 text-black placeholder:text-black/40 text-xs focus:outline-none focus:ring-1 focus:ring-black shadow-sm"
             />
-            <span className="material-symbols-outlined text-on-surface-variant text-lg absolute left-3 top-3">search</span>
           </div>
         </div>
 
         {/* PARTICIPANTS TABLE */}
-        <div className="rounded-2xl bg-surface-container/60 backdrop-blur-xl border border-white/5 overflow-hidden">
+        <div className="rounded-3xl bg-white border border-black/10 shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left font-body-sm text-body-sm">
-              <thead className="bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
-                <tr>
-                  <th className="px-6 py-4">MEMBER</th>
-                  <th className="px-6 py-4">EMAIL</th>
-                  <th className="px-6 py-4">ROLE</th>
-                  <th className="px-6 py-4">STATUS</th>
-                  <th className="px-6 py-4">NET BALANCE</th>
-                  <th className="px-6 py-4 text-right">ACTIONS</th>
+            <table className="w-full text-left text-xs border-collapse">
+              <thead className="bg-[#F4F4F5]">
+                <tr className="bg-[#F4F4F5] text-black font-semibold uppercase text-[10px] tracking-wider border-b border-black/10">
+                  <th className="px-6 py-4 text-black font-bold">MEMBER</th>
+                  <th className="px-6 py-4 text-black font-bold">EMAIL</th>
+                  <th className="px-6 py-4 text-black font-bold">ROLE</th>
+                  <th className="px-6 py-4 text-black font-bold">STATUS</th>
+                  <th className="px-6 py-4 text-black font-bold">NET BALANCE</th>
+                  <th className="px-6 py-4 text-right text-black font-bold">ACTIONS</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5">
+              <tbody className="divide-y divide-black/5">
                 {filtered.length === 0 ? (
                   <tr>
-                    <td colSpan="6" className="px-6 py-12 text-center text-on-surface-variant">
+                    <td colSpan="6" className="px-6 py-12 text-center text-black/50">
                       No travelers found in roster.
                     </td>
                   </tr>
@@ -154,41 +154,41 @@ export default function ParticipantsView({ onOpenParticipantModal }) {
                     const removed = p.status === "removed";
 
                     return (
-                      <tr key={p.id} className="hover:bg-surface-container/50 transition-colors">
+                      <tr key={p.id} className="hover:bg-black/5 transition-colors">
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl bg-secondary-container text-on-secondary-container font-bold flex items-center justify-center">
+                            <div className="w-9 h-9 rounded-full bg-black/10 text-black font-bold flex items-center justify-center text-xs">
                               {String(p.name || "?").charAt(0).toUpperCase()}
                             </div>
                             <div>
                               <div className="flex items-center gap-1.5">
-                                <strong className="font-title-md text-title-md text-on-surface">{p.name}</strong>
+                                <strong className="font-bold text-black text-sm">{p.name}</strong>
                                 {isMe(p) && (
-                                  <span className="px-1.5 py-0.5 rounded bg-primary-container text-on-primary-container text-[10px] font-bold">YOU</span>
+                                  <span className="px-1.5 py-0.5 rounded bg-black text-white text-[9px] font-bold">YOU</span>
                                 )}
                               </div>
-                              <span className="text-on-surface-variant text-xs block">
+                              <span className="text-black/50 text-[11px] block">
                                 {isOrganizer ? "Trip organizer" : "Traveler"}
                               </span>
                             </div>
                           </div>
                         </td>
                         <td className="px-6 py-4">
-                          <span className="text-on-surface block">{p.email}</span>
-                          <span className="text-on-surface-variant text-xs flex items-center gap-1">
+                          <span className="text-black font-medium block">{p.email}</span>
+                          <span className="text-black/50 text-[11px] flex items-center gap-1">
                             <span className="material-symbols-outlined text-xs">calendar_today</span>
                             Joined {fmtDate(p.joined_at || p.created_at)}
                           </span>
                         </td>
                         <td className="px-6 py-4">
                           <span
-                            className={`px-3 py-1 rounded-full font-label-sm text-label-sm font-bold flex items-center gap-1 w-fit uppercase ${
+                            className={`px-3 py-1 rounded-full text-[10px] font-bold flex items-center gap-1 w-fit uppercase ${
                               isOrganizer
-                                ? "bg-secondary-container/40 text-on-secondary-container"
-                                : "bg-surface-container-high/60 text-on-surface-variant"
+                                ? "bg-black/10 text-black"
+                                : "bg-black/5 text-black/70"
                             }`}
                           >
-                            <span className="material-symbols-outlined text-sm">
+                            <span className="material-symbols-outlined text-xs">
                               {isOrganizer ? "shield" : "person"}
                             </span>
                             {isOrganizer ? "Organizer" : "Member"}
@@ -196,13 +196,13 @@ export default function ParticipantsView({ onOpenParticipantModal }) {
                         </td>
                         <td className="px-6 py-4">
                           <span
-                            className={`flex items-center gap-1.5 font-semibold text-xs uppercase ${
-                              removed ? "text-error" : "text-secondary"
+                            className={`flex items-center gap-1.5 font-semibold text-[11px] uppercase ${
+                              removed ? "text-rose-600" : "text-emerald-700"
                             }`}
                           >
                             <span
                               className={`w-2 h-2 rounded-full ${
-                                removed ? "bg-error" : "bg-secondary animate-pulse"
+                                removed ? "bg-rose-500" : "bg-emerald-500 animate-pulse"
                               }`}
                             ></span>
                             {removed ? "Removed" : "Active"}
@@ -210,14 +210,14 @@ export default function ParticipantsView({ onOpenParticipantModal }) {
                         </td>
                         <td className="px-6 py-4">
                           <strong
-                            className={`font-title-md text-title-md block ${
-                              owed ? "text-primary" : owes ? "text-error" : "text-on-surface"
+                            className={`text-sm font-bold block ${
+                              owed ? "text-emerald-700" : owes ? "text-rose-600" : "text-black"
                             }`}
                           >
                             {owed ? "+" : owes ? "-" : ""}
                             {money(Math.abs(bal))}
                           </strong>
-                          <span className="text-on-surface-variant text-xs font-semibold uppercase">
+                          <span className="text-black/50 text-[10px] font-semibold uppercase">
                             {owed ? "Gets back" : owes ? "Owes" : "Settled"}
                           </span>
                         </td>
@@ -226,16 +226,16 @@ export default function ParticipantsView({ onOpenParticipantModal }) {
                             <button
                               type="button"
                               onClick={() => onOpenParticipantModal(p)}
-                              className="p-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors cursor-pointer"
+                              className="p-1.5 rounded-full text-black/60 hover:text-black hover:bg-black/5 transition-colors cursor-pointer"
                             >
-                              <span className="material-symbols-outlined text-lg">edit</span>
+                              <span className="material-symbols-outlined text-base">edit</span>
                             </button>
                             <button
                               type="button"
                               onClick={() => removeParticipant(p.id)}
-                              className="p-1.5 rounded-lg text-error hover:bg-error-container/20 transition-colors cursor-pointer"
+                              className="p-1.5 rounded-full text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
                             >
-                              <span className="material-symbols-outlined text-lg">delete</span>
+                              <span className="material-symbols-outlined text-base">delete</span>
                             </button>
                           </div>
                         </td>
@@ -246,7 +246,7 @@ export default function ParticipantsView({ onOpenParticipantModal }) {
               </tbody>
             </table>
           </div>
-          <div className="px-6 py-4 bg-surface-container-low flex items-center justify-between font-body-sm text-body-sm text-on-surface-variant">
+          <div className="px-6 py-3.5 bg-[#F4F4F5] border-t border-black/10 flex items-center justify-between text-xs text-black/60">
             <span>
               Showing {filtered.length} of {participants.length} participant
               {participants.length === 1 ? "" : "s"}

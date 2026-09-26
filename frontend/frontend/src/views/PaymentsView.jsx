@@ -23,64 +23,57 @@ export default function PaymentsView({ onOpenPaymentModal }) {
   const money = (val) => `₹${Number(val || 0).toLocaleString("en-IN")}`;
 
   return (
-    <div className="flex flex-col w-full">
-      {/* Immersive Hero Header */}
-      <div className="relative w-full overflow-hidden -mt-16 pt-24 pb-14 px-6 md:px-12 bg-gradient-to-b from-surface-container-lowest via-surface-container-low to-background">
-        <div className="absolute -top-24 right-1/4 w-[520px] h-[340px] bg-gradient-to-br from-primary-container/20 to-tertiary-container/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div className="relative z-10 max-w-7xl mx-auto flex flex-col gap-10">
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
-            <div className="flex flex-col max-w-2xl">
-              <div className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-secondary-container/40 backdrop-blur-md w-fit mb-4">
-                <span className="w-1.5 h-1.5 rounded-full bg-primary animate-ping"></span>
-                <span className="font-label-sm text-label-sm uppercase tracking-widest text-primary font-bold">FINANCIAL LEDGER</span>
-                <span className="text-secondary/60 text-xs">•</span>
-                <span className="font-label-sm text-label-sm text-secondary">GOA EXPEDITION '24</span>
-              </div>
-              <h1 className="font-headline-xl text-headline-xl text-on-surface tracking-tight leading-none mb-3">
-                Payments &amp; Balances
+    <div className="flex flex-col w-full font-inter text-black px-6 md:px-12 py-8">
+      <div className="max-w-7xl mx-auto w-full flex flex-col gap-8">
+        {/* HEADER SECTION */}
+        <div className="flex flex-col gap-4 border-b border-black/10 pb-6">
+          <div className="flex items-center gap-2">
+            <span className="px-3 py-1 rounded-full bg-black/5 border border-black/10 text-black font-label-sm text-xs uppercase tracking-widest font-semibold">
+              • FINANCIAL TRANSFERS •
+            </span>
+          </div>
+
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+            <div className="space-y-2 max-w-2xl">
+              <h1 className="font-instrument text-5xl md:text-6xl text-black font-normal tracking-tight leading-none">
+                Payments &amp; <em className="italic text-black/60">Balances</em>
               </h1>
-              <p className="font-body-md text-body-md text-on-surface-variant max-w-xl">
-                Live net balances and history of peer-to-peer payments and debt settlements under the twilight ledger.
+              <p className="text-sm text-black/60 leading-relaxed">
+                Live net balances and history of peer-to-peer payments and debt settlements under the ledger.
               </p>
             </div>
-            <div className="flex flex-wrap items-center gap-4 sm:self-start lg:self-end">
-              <div className="flex items-center gap-3.5 px-5 py-3 rounded-xl bg-surface-container/60 backdrop-blur-xl shadow-lg border border-white/5">
-                <div className="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center text-primary shadow-[0_0_16px_rgba(255,154,77,0.2)]">
-                  <span className="material-symbols-outlined text-2xl">swap_horiz</span>
-                </div>
+
+            <div className="flex flex-wrap items-center gap-4">
+              <div className="flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-white border border-black/10 shadow-sm">
+                <span className="material-symbols-outlined text-black/60 text-lg">swap_horiz</span>
                 <div className="flex flex-col">
-                  <span className="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">TOTAL TRANSFERRED</span>
-                  <span className="font-headline-sm text-headline-sm text-on-surface font-bold leading-tight">{money(totalPaymentsAmount)}</span>
+                  <span className="text-[10px] uppercase font-bold text-black/50">TOTAL TRANSFERRED</span>
+                  <span className="font-bold text-sm text-black">{money(totalPaymentsAmount)}</span>
                 </div>
               </div>
               <button
-                className="group flex items-center gap-3 px-6 py-3.5 rounded-xl bg-primary-container hover:bg-primary text-on-primary-container font-label-md text-label-md transition-all duration-300 shadow-[0_0_24px_rgba(255,154,77,0.32)] hover:shadow-[0_0_32px_rgba(255,154,77,0.48)] cursor-pointer disabled:opacity-50"
+                className="flex items-center gap-2 px-5 py-3 rounded-full bg-black text-white text-xs font-semibold uppercase tracking-wider shadow-md hover:scale-105 transition-all cursor-pointer disabled:opacity-50"
                 onClick={() => onOpenPaymentModal()}
                 disabled={participants.length < 2}
               >
-                <span className="font-bold tracking-wide">+ Record Payment</span>
-                <div className="w-6 h-6 rounded-lg bg-on-primary-container/15 flex items-center justify-center transition-transform group-hover:translate-x-0.5">
-                  <span className="material-symbols-outlined text-base">arrow_forward</span>
-                </div>
+                <span className="material-symbols-outlined text-base">add</span>
+                <span>+ Record Payment</span>
               </button>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Main Content Area */}
-      <div className="w-full px-6 md:px-12 py-8 max-w-7xl mx-auto flex flex-col gap-10">
-        {/* Net Balances Section */}
+        {/* Live Net Balances Section */}
         <div className="flex flex-col gap-4">
-          <div className="flex flex-col">
-            <h2 className="font-headline-sm text-headline-sm text-on-surface font-semibold">Live Net Balances</h2>
-            <p className="font-body-sm text-body-sm text-on-surface-variant">Calculated from expenses paid, splits owed, and transfers sent/received.</p>
+          <div>
+            <h2 className="font-instrument text-3xl text-black font-normal">Live Net Balances</h2>
+            <p className="text-xs text-black/60">Calculated from expenses paid, splits owed, and transfers sent/received.</p>
           </div>
 
           {balances.length === 0 ? (
-            <div className="rounded-xl bg-surface-container-low/60 backdrop-blur-xl p-8 text-center text-on-surface-variant border border-white/5">
-              <span className="material-symbols-outlined text-4xl text-secondary mb-2">account_balance</span>
-              <p>No balances to display yet. Add expenses to calculate standing.</p>
+            <div className="rounded-3xl bg-white border border-black/10 p-8 text-center text-black/60 shadow-sm">
+              <span className="material-symbols-outlined text-4xl text-black/40 mb-2">account_balance</span>
+              <p className="text-sm">No balances to display yet. Add expenses to calculate standing.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -89,32 +82,32 @@ export default function PaymentsView({ onOpenPaymentModal }) {
                 const isNegative = b.net_balance < -0.01;
 
                 return (
-                  <div key={b.participant_id} className="p-5 rounded-xl bg-surface-container-low/70 backdrop-blur-md shadow-md border border-white/5 flex flex-col justify-between gap-4">
+                  <div key={b.participant_id} className="p-5 rounded-2xl bg-white border border-black/10 shadow-sm flex flex-col justify-between gap-4">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-full bg-secondary-container text-on-surface font-bold flex items-center justify-center text-sm shadow-[0_0_12px_rgba(85,45,170,0.3)]">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-8 h-8 rounded-full bg-black/10 text-black font-bold flex items-center justify-center text-xs">
                           {b.participant_name.charAt(0).toUpperCase()}
                         </div>
-                        <strong className="text-on-surface font-semibold">{b.participant_name}</strong>
+                        <strong className="text-black font-bold text-sm">{b.participant_name}</strong>
                       </div>
-                      <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
+                      <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${
                         isPositive
-                          ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                          ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
                           : isNegative
-                          ? "bg-rose-500/20 text-rose-400 border border-rose-500/30"
-                          : "bg-surface-container text-on-surface-variant"
+                          ? "bg-rose-100 text-rose-800 border border-rose-300"
+                          : "bg-black/5 text-black/60"
                       }`}>
                         {isPositive ? "Gets Back" : isNegative ? "Owes" : "Settled"}
                       </span>
                     </div>
 
                     <div>
-                      <div className={`font-headline-lg text-headline-lg font-bold ${
-                        isPositive ? "text-emerald-400" : isNegative ? "text-rose-400" : "text-on-surface"
+                      <div className={`font-instrument text-2xl font-bold ${
+                        isPositive ? "text-emerald-700" : isNegative ? "text-rose-600" : "text-black"
                       }`}>
                         {isPositive ? `+${money(b.net_balance)}` : money(b.net_balance)}
                       </div>
-                      <p className="font-body-sm text-body-sm text-on-surface-variant mt-1">
+                      <p className="text-xs text-black/60 mt-1">
                         {isPositive
                           ? `Should receive ${money(b.net_balance)} from group`
                           : isNegative
@@ -125,7 +118,7 @@ export default function PaymentsView({ onOpenPaymentModal }) {
 
                     {isNegative && (
                       <button
-                        className="w-full py-2 px-3 rounded-xl bg-secondary-container hover:bg-secondary-container/80 text-on-surface font-label-md text-label-md font-semibold transition-all shadow-[0_0_12px_rgba(85,45,170,0.3)] cursor-pointer"
+                        className="w-full py-2 px-3 rounded-full bg-black text-white text-xs font-semibold hover:scale-105 transition-all cursor-pointer shadow-sm"
                         onClick={() =>
                           onOpenPaymentModal({
                             from_participant_id: b.participant_id,
@@ -145,22 +138,22 @@ export default function PaymentsView({ onOpenPaymentModal }) {
 
         {/* Payment History Section */}
         <div className="flex flex-col gap-4">
-          <div className="flex flex-col">
-            <h2 className="font-headline-sm text-headline-sm text-on-surface font-semibold">Payment History</h2>
-            <p className="font-body-sm text-body-sm text-on-surface-variant">Log of all settled transfers between participants.</p>
+          <div>
+            <h2 className="font-instrument text-3xl text-black font-normal">Payment History</h2>
+            <p className="text-xs text-black/60">Log of all settled transfers between participants.</p>
           </div>
 
           {payments.length === 0 ? (
-            <div className="rounded-xl bg-surface-container-low/60 backdrop-blur-xl p-12 text-center flex flex-col items-center justify-center gap-3 border border-white/5">
-              <div className="w-16 h-16 rounded-full bg-secondary-container/40 flex items-center justify-center text-primary shadow-[0_0_24px_rgba(255,154,77,0.2)]">
+            <div className="rounded-3xl bg-white border border-black/10 p-12 text-center flex flex-col items-center justify-center gap-3 shadow-sm">
+              <div className="w-16 h-16 rounded-full bg-black/5 flex items-center justify-center text-black">
                 <span className="material-symbols-outlined text-3xl">history_edu</span>
               </div>
-              <h3 className="font-headline-sm text-headline-sm text-on-surface font-semibold">No Payments Recorded Yet</h3>
-              <p className="font-body-md text-body-md text-on-surface-variant max-w-md">
+              <h3 className="font-instrument text-2xl text-black font-normal">No Payments Recorded Yet</h3>
+              <p className="text-xs text-black/60 max-w-md">
                 When someone settles up via cash or UPI, record the transaction here to update balances.
               </p>
               <button
-                className="mt-2 px-6 py-3 rounded-xl bg-secondary-container text-on-surface font-label-md text-label-md font-bold shadow-[0_0_18px_rgba(85,45,170,0.4)] hover:bg-secondary-container/80 transition-all cursor-pointer disabled:opacity-50"
+                className="mt-2 px-6 py-2.5 rounded-full bg-black text-white text-xs font-semibold hover:scale-105 transition-all cursor-pointer disabled:opacity-50"
                 onClick={() => onOpenPaymentModal()}
                 disabled={participants.length < 2}
               >
@@ -168,45 +161,45 @@ export default function PaymentsView({ onOpenPaymentModal }) {
               </button>
             </div>
           ) : (
-            <div className="rounded-xl bg-surface-container-low/60 backdrop-blur-xl shadow-md border border-white/5 overflow-hidden">
+            <div className="rounded-3xl bg-white border border-black/10 shadow-sm overflow-hidden">
               <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="border-b border-white/5 bg-surface-container-lowest/50 text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
-                      <th className="py-4 px-6">Payer (From)</th>
-                      <th className="py-4 px-6">Payee (To)</th>
-                      <th className="py-4 px-6">Amount</th>
-                      <th className="py-4 px-6">Status</th>
-                      <th className="py-4 px-6">Date</th>
-                      <th className="py-4 px-6">Note</th>
-                      <th className="py-4 px-6 text-right">Actions</th>
+                <table className="w-full text-left font-inter text-xs border-collapse">
+                  <thead className="bg-[#F4F4F5]">
+                    <tr className="bg-[#F4F4F5] text-black font-semibold text-[10px] uppercase tracking-wider border-b border-black/10">
+                      <th className="py-4 px-6 text-black font-bold">PAYER (FROM)</th>
+                      <th className="py-4 px-6 text-black font-bold">PAYEE (TO)</th>
+                      <th className="py-4 px-6 text-black font-bold">AMOUNT</th>
+                      <th className="py-4 px-6 text-black font-bold">STATUS</th>
+                      <th className="py-4 px-6 text-black font-bold">DATE</th>
+                      <th className="py-4 px-6 text-black font-bold">NOTE</th>
+                      <th className="py-4 px-6 text-right text-black font-bold">ACTIONS</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-white/5 font-body-md text-body-md text-on-surface">
+                  <tbody className="divide-y divide-black/5">
                     {payments.map((p) => {
                       const fromName = getParticipantName(p.from_participant_id);
                       const toName = getParticipantName(p.to_participant_id);
 
                       return (
-                        <tr key={p.id} className="hover:bg-surface-container/30 transition-colors">
-                          <td className="py-4 px-6 font-semibold text-on-surface">{fromName}</td>
-                          <td className="py-4 px-6 font-semibold text-on-surface">{toName}</td>
-                          <td className="py-4 px-6 font-bold text-primary">{money(p.amount)}</td>
+                        <tr key={p.id} className="hover:bg-black/5 transition-colors">
+                          <td className="py-4 px-6 font-bold text-black">{fromName}</td>
+                          <td className="py-4 px-6 font-bold text-black">{toName}</td>
+                          <td className="py-4 px-6 font-bold text-black font-instrument text-base">{money(p.amount)}</td>
                           <td className="py-4 px-6">
-                            <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold uppercase border border-emerald-500/30">
-                              {p.status}
+                            <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold uppercase border border-emerald-300">
+                              {p.status || "COMPLETED"}
                             </span>
                           </td>
-                          <td className="py-4 px-6 text-xs text-on-surface-variant">
+                          <td className="py-4 px-6 text-xs text-black/60">
                             {p.payment_date
                               ? new Date(p.payment_date).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })
                               : "Recently"}
                           </td>
-                          <td className="py-4 px-6 text-xs text-on-surface-variant">{p.note || "Settlement"}</td>
+                          <td className="py-4 px-6 text-xs text-black/60">{p.note || "Settlement"}</td>
                           <td className="py-4 px-6 text-right">
                             <button
                               type="button"
-                              className="p-1.5 rounded-lg text-error/80 hover:text-error hover:bg-error-container/20 transition-colors cursor-pointer text-xs font-semibold"
+                              className="p-1.5 rounded-full text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer text-xs font-semibold"
                               onClick={() => handleDelete(p)}
                             >
                               Delete

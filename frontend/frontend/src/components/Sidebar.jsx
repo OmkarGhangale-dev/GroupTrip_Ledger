@@ -23,7 +23,7 @@ export default function Sidebar({ activeTab, setActiveTab }) {
             <span className="material-symbols-outlined text-xl">landscape</span>
           </div>
           <div>
-            <span className="font-headline-sm text-headline-sm text-on-surface tracking-tight block leading-none">Notosan</span>
+            <span className="font-headline-sm text-headline-sm text-on-surface tracking-tight block leading-none">FareShare</span>
             <span className="font-label-sm text-label-sm uppercase tracking-widest text-primary block mt-1">Expedition Ledger</span>
           </div>
         </div>
@@ -45,16 +45,16 @@ export default function Sidebar({ activeTab, setActiveTab }) {
               onClick={() => setActiveTab(item.id)}
               className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl cursor-pointer transition-all duration-200 group text-left w-full ${
                 activeTab === item.id
-                  ? "bg-secondary-container text-on-surface font-semibold shadow-[0_0_20px_rgba(85,45,170,0.4)]"
-                  : "text-on-surface-variant hover:bg-surface-container hover:text-on-surface"
+                  ? "bg-black text-white font-semibold shadow-md"
+                  : "text-on-surface-variant hover:bg-black/5 hover:text-black"
               }`}
             >
-              <span className="material-symbols-outlined text-lg text-secondary group-hover:text-primary transition-colors">
+              <span className={`material-symbols-outlined text-lg transition-colors ${activeTab === item.id ? "text-white" : "text-black/60 group-hover:text-black"}`}>
                 {item.iconName}
               </span>
               <span className="font-body-md text-body-md flex-1">{item.label}</span>
               {item.count > 0 && (
-                <span className="px-2 py-0.5 rounded-full bg-surface-container-high text-xs font-bold text-on-surface">
+                <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${activeTab === item.id ? "bg-white/20 text-white" : "bg-black/10 text-black"}`}>
                   {item.count}
                 </span>
               )}
@@ -64,15 +64,15 @@ export default function Sidebar({ activeTab, setActiveTab }) {
       </div>
 
       <div className="px-4 flex flex-col gap-3">
-        <div className="p-3.5 rounded-xl bg-surface-container-high/40 backdrop-blur-md flex items-center justify-between">
+        <div className="p-3.5 rounded-xl bg-surface-container-high/40 backdrop-blur-md flex items-center justify-between border border-black/5">
           <div className="flex items-center gap-2.5">
-            <div className="w-2.5 h-2.5 rounded-full bg-primary-container shadow-[0_0_8px_rgba(255,154,77,0.6)]"></div>
+            <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]"></div>
             <span className="font-label-sm text-label-sm text-on-surface uppercase tracking-wider font-semibold">Cloud Sync</span>
           </div>
-          <span className="font-label-sm text-label-sm text-secondary">Live</span>
+          <span className="font-label-sm text-label-sm text-emerald-600 font-bold">Live</span>
         </div>
         <div className="px-2 py-1 text-center">
-          <p className="font-label-sm text-label-sm text-on-surface-variant/60 uppercase tracking-widest">Pomaii Ledger v2.4</p>
+          <p className="font-label-sm text-label-sm text-black/40 uppercase tracking-widest font-semibold">FareShare v2.4</p>
         </div>
       </div>
     </aside>

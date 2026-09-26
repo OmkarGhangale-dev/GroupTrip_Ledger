@@ -539,12 +539,12 @@ export default function ReceiptScanner() {
             ) : (
               <div className="overflow-x-auto mt-2 rounded-lg border border-white/5">
                 <table className="w-full text-left font-body-sm text-body-sm">
-                  <thead className="bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm uppercase">
-                    <tr>
-                      <th className="px-4 py-2">Item</th>
-                      <th className="px-4 py-2">Qty</th>
-                      <th className="px-4 py-2">Price</th>
-                      <th className="px-4 py-2 text-right">Total</th>
+                  <thead className="bg-[#F4F4F5]">
+                    <tr className="border-b border-black/10 bg-[#F4F4F5] text-black font-semibold uppercase text-[10px] tracking-wider">
+                      <th className="px-4 py-2 text-black font-bold">ITEM</th>
+                      <th className="px-4 py-2 text-black font-bold">QTY</th>
+                      <th className="px-4 py-2 text-black font-bold">PRICE</th>
+                      <th className="px-4 py-2 text-right text-black font-bold">TOTAL</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/5 text-on-surface">
