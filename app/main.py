@@ -1,4 +1,3 @@
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -18,7 +17,7 @@ from routers import trips, participants, bookings, expenses, payments, itinerary
 
 from contextlib import asynccontextmanager
 from app.database import create_all_tables
-
+from routers import  invites
 # ---------------------------------------------------------------------------
 # Lifespan – startup / shutdown
 # ---------------------------------------------------------------------------
@@ -73,10 +72,13 @@ app.include_router(bookings.router, prefix="/api/v1")
 app.include_router(expenses.router, prefix="/api/v1")
 app.include_router(payments.router, prefix="/api/v1")
 app.include_router(itinerary.router, prefix="/api/v1")
-
+app.include_router(invites.router, prefix="/api/v1")
 # ---------------------------------------------------------------------------
 # New integration routers
 # ---------------------------------------------------------------------------
+
+
+
 # ---------------------------------------------------------------------------
 # Health check
 # ---------------------------------------------------------------------------

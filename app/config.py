@@ -69,6 +69,8 @@ class Settings(BaseSettings):
     DEBUG: bool = False
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
+        # Where invite links point to (your frontend's public address)
+    FRONTEND_URL: str = "http://localhost:5173"
 
     @property
     def effective_google_client_id(self) -> str:

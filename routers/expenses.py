@@ -2,6 +2,10 @@ from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
+from models.user import User
+from schemas.nl_expense import ParseExpenseRequest, ParseExpenseResponse
+from utils.deps import get_current_user
+import services.nl_expense_service as nl_svc
 
 from app.database import get_db
 from schemas.expense import (
@@ -16,6 +20,13 @@ router = APIRouter(
     prefix="/expenses",
     tags=["Expenses"]
 )
+@router.post("/parse", response_model=ParseExpenseResponse)
+async def parse_expense_text(
+    data: ParseExpenseRequest,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    return await nl_svc.parse_expense(db, current_user, data.trip_id, data.text)
 
 
 @router.post(

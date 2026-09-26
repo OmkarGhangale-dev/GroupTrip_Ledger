@@ -16,37 +16,32 @@ from schemas.expense import (
 async def _build_equal_splits(
     db: AsyncSession,
     expense: Expense,
-    trip_id: uuid.UUID
+    trip_id: uuid.UUID,
+    splits_data=None,
 ) -> List[ExpenseSplit]:
 
-    result = await db.execute(
-        select(Participant).where(
-            Participant.trip_id == trip_id
+    if splits_data:
+        participant_ids = [item.participant_id for item in splits_data]
+    else:
+        result = await db.execute(
+            select(Participant.id).where(Participant.trip_id == trip_id)
         )
-    )
+        participant_ids = list(result.scalars().all())
 
-    participants = list(result.scalars().all())
-
-    if not participants:
+    if not participant_ids:
         return []
 
-    per_person = round(
-        float(expense.amount) / len(participants),
-        2
-    )
+    cents = round(float(expense.amount) * 100)
+    base, rem = divmod(cents, len(participant_ids))
 
-    splits = []
-
-    for participant in participants:
-        splits.append(
-            ExpenseSplit(
-                expense_id=expense.id,
-                participant_id=participant.id,
-                amount=per_person,
-            )
+    return [
+        ExpenseSplit(
+            expense_id=expense.id,
+            participant_id=pid,
+            amount=(base + (1 if i < rem else 0)) / 100,
         )
-
-    return splits
+        for i, pid in enumerate(participant_ids)
+    ]
 
 
 async def _build_custom_splits(
@@ -106,47 +101,6 @@ async def _build_percentage_splits(
     return splits
 
 
-async def _build_shares_splits(
-    db: AsyncSession,
-    expense: Expense,
-    splits_data
-) -> List[ExpenseSplit]:
-
-    valid_items = [
-        item for item in splits_data
-        if item.shares is not None
-    ]
-
-    if not valid_items:
-        return []
-
-    total_shares = sum(
-        item.shares for item in valid_items
-    )
-
-    splits = []
-
-    for item in valid_items:
-
-        amount = round(
-            float(expense.amount) *
-            item.shares /
-            total_shares,
-            2
-        )
-
-        splits.append(
-            ExpenseSplit(
-                expense_id=expense.id,
-                participant_id=item.participant_id,
-                amount=amount,
-                shares=item.shares,
-            )
-        )
-
-    return splits
-
-
 async def create_expense(
     db: AsyncSession,
     data: ExpenseCreate
@@ -164,16 +118,17 @@ async def create_expense(
 
     splits = []
 
-    if data.splits:
+    if data.split_method == SplitMethod.EQUAL:
+        splits = await _build_equal_splits(
+            db,
+            expense,
+            data.trip_id,
+            data.splits
+        )
 
-        if data.split_method == SplitMethod.EQUAL:
-            splits = await _build_equal_splits(
-                db,
-                expense,
-                data.trip_id
-            )
+    elif data.splits:
 
-        elif data.split_method == SplitMethod.CUSTOM:
+        if data.split_method == SplitMethod.CUSTOM:
             splits = await _build_custom_splits(
                 db,
                 expense,
