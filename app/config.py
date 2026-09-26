@@ -40,6 +40,29 @@ class Settings(BaseSettings):
     SMTP_PASSWORD: str = ""
     EMAIL_FROM: str = ""
 
+    # ------------------------------------------------------------------
+    # 🚗 Uber Rides API (Sandbox)
+    # Get keys at: https://developer.uber.com/
+    # ------------------------------------------------------------------
+    UBER_CLIENT_ID: str = ""
+    UBER_CLIENT_SECRET: str = ""
+    UBER_SERVER_TOKEN: str = ""
+    UBER_SANDBOX: bool = True  # True = sandbox, False = production
+
+    # ------------------------------------------------------------------
+    # ✈️ Duffel Flight Search API (free sandbox)
+    # Get token at: https://app.duffel.com/join
+    # Token starts with "duffel_test_" for sandbox mode
+    # ------------------------------------------------------------------
+    DUFFEL_ACCESS_TOKEN: str = ""
+
+    # ------------------------------------------------------------------
+    # 💳 Razorpay Payment Gateway (test mode)
+    # Get keys at: https://razorpay.com (Dashboard → API Keys)
+    # ------------------------------------------------------------------
+    RAZORPAY_KEY_ID: str = ""
+    RAZORPAY_KEY_SECRET: str = ""
+
     # App
     APP_NAME: str = "GroupTrip Ledger"
     APP_VERSION: str = "1.0.0"

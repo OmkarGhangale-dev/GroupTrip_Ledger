@@ -13,18 +13,22 @@ from app.database import get_db
 import models  # noqa: F401
 
 from routers import trips, participants, bookings, expenses, payments, itinerary, auth
+from routers import uber, duffel, razorpay_router
 
+
+from contextlib import asynccontextmanager
+from app.database import create_all_tables
 
 # ---------------------------------------------------------------------------
 # Lifespan – startup / shutdown
 # ---------------------------------------------------------------------------
 
-# @asynccontextmanager
-# async def lifespan(app: FastAPI):
-#     # Startup: create tables (use Alembic in production)
-#     await create_all_tables()
-#     yield
-#     # Shutdown: nothing to do
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup: create tables (Auto-create for hackathon / Supabase)
+    await create_all_tables()
+    yield
+    # Shutdown: nothing to do
 
 
 # ---------------------------------------------------------------------------
@@ -38,7 +42,7 @@ app = FastAPI(
         "GroupTrip Ledger – manage group trips, split expenses, "
         "track bookings, and settle debts automatically."
     ),
-    # lifespan=lifespan,
+    lifespan=lifespan,
 )
 
 # CORS — origins driven by ALLOWED_ORIGINS env var.
@@ -69,6 +73,19 @@ app.include_router(bookings.router, prefix="/api/v1")
 app.include_router(expenses.router, prefix="/api/v1")
 app.include_router(payments.router, prefix="/api/v1")
 app.include_router(itinerary.router, prefix="/api/v1")
+
+# ---------------------------------------------------------------------------
+# New integration routers
+# ---------------------------------------------------------------------------
+
+# 🚗 Uber Rides Sandbox — ride estimates for transport bookings
+app.include_router(uber.router, prefix="/api/v1")
+
+# ✈️ Duffel Flight Search — search real/sandbox flight offers
+app.include_router(duffel.router, prefix="/api/v1")
+
+# 💳 Razorpay Payments — create orders & verify signatures
+app.include_router(razorpay_router.router, prefix="/api/v1")
 
 
 # ---------------------------------------------------------------------------

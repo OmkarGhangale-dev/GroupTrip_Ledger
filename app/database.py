@@ -136,3 +136,15 @@ async def get_db():
     factory = _get_session_factory()
     async with factory() as session:
         yield session
+
+
+async def create_all_tables():
+    """Create all tables in the database (used for auto-initialization)."""
+    from sqlalchemy import text
+    # Import models here so Base.metadata is populated if not already done
+    import models  # noqa: F401
+    
+    engine = _get_engine()
+    async with engine.begin() as conn:
+        await conn.execute(text("CREATE SCHEMA IF NOT EXISTS grouptrip"))
+        await conn.run_sync(Base.metadata.create_all)
