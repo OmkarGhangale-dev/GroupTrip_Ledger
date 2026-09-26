@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <!-- Sky Gradient matching Image 1 -->
+    <linearGradient id="skyGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e1035"/>
+      <stop offset="25%" stop-color="#3d1847"/>
+      <stop offset="50%" stop-color="#732552"/>
+      <stop offset="70%" stop-color="#b84550"/>
+      <stop offset="85%" stop-color="#e27441"/>
+      <stop offset="100%" stop-color="#f7b748"/>
+    </linearGradient>
+
+    <!-- Mountain Gradient -->
+    <linearGradient id="heroMtnGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f8a055"/>
+      <stop offset="30%" stop-color="#c14352"/>
+      <stop offset="65%" stop-color="#641f48"/>
+      <stop offset="100%" stop-color="#2d0d33"/>
+    </linearGradient>
+
+    <!-- Cloud Glow Gradient -->
+    <linearGradient id="cloudGlow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffebd4" stop-opacity="0.9"/>
+      <stop offset="50%" stop-color="#fca56a" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#80264d" stop-opacity="0.2"/>
+    </linearGradient>
+
+    <!-- Water & Reflection Gradient -->
+    <linearGradient id="waterGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#3b2b63"/>
+      <stop offset="40%" stop-color="#211b42"/>
+      <stop offset="100%" stop-color="#0f0c24"/>
+    </linearGradient>
+
+    <radialGradient id="sunSpot" cx="80%" cy="40%" r="40%">
+      <stop offset="0%" stop-color="#fff5db" stop-opacity="1"/>
+      <stop offset="30%" stop-color="#f7b748" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#3d1847" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Sky Base -->
+  <rect width="1920" height="1080" fill="url(#skyGrad1)"/>
+  <rect width="1920" height="1080" fill="url(#sunSpot)"/>
+
+  <!-- Volumetric Clouds behind mountains -->
+  <path d="M600,450 Q800,280 1100,320 Q1300,220 1550,290 Q1750,200 1950,300 L1950,600 L600,600 Z" fill="url(#cloudGlow)" opacity="0.85"/>
+  <path d="M400,380 Q650,260 900,340 Q1150,250 1400,320 L1950,420 L1950,600 L400,600 Z" fill="url(#cloudGlow)" opacity="0.5"/>
+
+  <!-- Flock of Flying Cranes / Birds in V-Formation (matching reference picture 1) -->
+  <g fill="#ffffff" opacity="0.9">
+    <!-- Bird 1 -->
+    <path d="M1020,240 Q1035,225 1050,235 Q1040,242 1020,240 Q1000,242 990,235 Q1005,225 1020,240 Z"/>
+    <!-- Bird 2 -->
+    <path d="M1070,220 Q1082,208 1095,216 Q1087,222 1070,220 Q1053,222 1045,216 Q1058,208 1070,220 Z" transform="scale(0.85) translate(190, 30)"/>
+    <!-- Bird 3 -->
+    <path d="M1120,200 Q1132,188 1145,196 Q1137,202 1120,200 Q1103,202 1095,196 Q1108,188 1120,200 Z" transform="scale(0.75) translate(370, 70)"/>
+    <!-- Bird 4 -->
+    <path d="M970,255 Q982,243 995,251 Q987,257 970,255 Q953,257 945,251 Q958,243 970,255 Z" transform="scale(0.8) translate(120, 40)"/>
+    <!-- Bird 5 -->
+    <path d="M920,270 Q932,258 945,266 Q937,272 920,270 Q903,272 895,266 Q908,258 920,270 Z" transform="scale(0.7) translate(280, 80)"/>
+    <!-- Bird 6 -->
+    <path d="M1170,185 Q1182,173 1195,181 Q1187,187 1170,185 Q1153,187 1145,181 Q1158,173 1170,185 Z" transform="scale(0.65) translate(600, 120)"/>
+  </g>
+</svg>

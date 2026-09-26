@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="nightMtnGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#12162d"/>
+      <stop offset="100%" stop-color="#080a18"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Night Mountain Silhouettes -->
+  <path d="M-50,650 L150,510 L350,600 L580,440 L820,570 L1080,410 L1350,560 L1620,430 L1850,520 L1970,460 L1970,1080 L-50,1080 Z" fill="url(#nightMtnGrad)"/>
+</svg>

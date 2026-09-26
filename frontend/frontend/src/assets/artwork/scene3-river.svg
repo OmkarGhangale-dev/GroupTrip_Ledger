@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="riverGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0284c7"/>
+      <stop offset="60%" stop-color="#0369a1"/>
+      <stop offset="100%" stop-color="#075985"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Winding River Stream -->
+  <path d="M880,750 Q960,780 920,850 Q850,920 980,1080 L1150,1080 Q980,920 1040,850 Q1080,780 1000,750 Z" fill="url(#riverGrad)"/>
+
+  <!-- Wooden Footbridge Crossing -->
+  <g fill="#2d0b0e" stroke="#1f0408">
+    <path d="M840,870 L1120,860 L1125,875 L845,885 Z"/>
+    <line x1="840" y1="840" x2="840" y2="885" stroke-width="4"/>
+    <line x1="1120" y1="830" x2="1120" y2="875" stroke-width="4"/>
+    <line x1="840" y1="850" x2="1120" y2="840" stroke-width="3"/>
+  </g>
+</svg>

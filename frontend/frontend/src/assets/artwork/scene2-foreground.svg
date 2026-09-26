@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="deerCoat" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="40%" stop-color="#d97706"/>
+      <stop offset="80%" stop-color="#92400e"/>
+      <stop offset="100%" stop-color="#451a03"/>
+    </linearGradient>
+
+    <radialGradient id="flowerGlowPurple" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#d8b4fe" stop-opacity="1"/>
+      <stop offset="50%" stop-color="#c084fc" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#7e22ce" stop-opacity="0"/>
+    </radialGradient>
+
+    <radialGradient id="flowerGlowTeal" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#99f6e4" stop-opacity="1"/>
+      <stop offset="50%" stop-color="#2dd4bf" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#0f766e" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Foreground Dark Ledge & Moss -->
+  <path d="M-50,880 Q450,800 960,860 Q1470,920 1970,840 L1970,1080 L-50,1080 Z" fill="#060712"/>
+
+  <!-- Bioluminescent Plants & Flowers (Left & Center matching reference photo 2) -->
+  <!-- Purple Bioluminescent Ferns & Flowers -->
+  <g fill="url(#flowerGlowPurple)">
+    <circle cx="250" cy="820" r="18"/>
+    <circle cx="280" cy="790" r="14"/>
+    <circle cx="230" cy="840" r="12"/>
+    <circle cx="310" cy="830" r="16"/>
+
+    <circle cx="750" cy="780" r="20"/>
+    <circle cx="780" cy="750" r="15"/>
+    <circle cx="720" cy="800" r="12"/>
+  </g>
+
+  <!-- Teal Bioluminescent Blooms -->
+  <g fill="url(#flowerGlowTeal)">
+    <circle cx="480" cy="850" r="15"/>
+    <circle cx="510" cy="820" r="12"/>
+    <circle cx="450" cy="870" r="10"/>
+
+    <circle cx="1650" cy="820" r="22"/>
+    <circle cx="1690" cy="790" r="16"/>
+    <circle cx="1620" cy="850" r="14"/>
+  </g>
+
+  <!-- Graceful Spotted Deer / Fawn (Center Right Foreground matching reference photo 2) -->
+  <g transform="translate(1080, 560) scale(1.4)">
+    <!-- Legs -->
+    <rect x="45" y="140" width="10" height="90" rx="4" fill="#78350f"/>
+    <rect x="65" y="140" width="10" height="90" rx="4" fill="#451a03"/>
+    <rect x="135" y="140" width="10" height="90" rx="4" fill="#78350f"/>
+    <rect x="155" y="140" width="10" height="90" rx="4" fill="#451a03"/>
+
+    <!-- Body -->
+    <path d="M40,110 Q90,70 170,95 Q180,140 150,150 Q90,165 40,150 Z" fill="url(#deerCoat)"/>
+
+    <!-- White Spots on Back (matching reference 2) -->
+    <g fill="#ffffff" opacity="0.9">
+      <circle cx="85" cy="105" r="4"/>
+      <circle cx="105" cy="100" r="4.5"/>
+      <circle cx="125" cy="102" r="4"/>
+      <circle cx="145" cy="108" r="3.5"/>
+      <circle cx="95" cy="118" r="3.5"/>
+      <circle cx="115" cy="115" r="4"/>
+      <circle cx="135" cy="118" r="4"/>
+      <circle cx="155" cy="122" r="3"/>
+    </g>
+
+    <!-- Neck & Head turning gracefully -->
+    <path d="M45,110 Q25,70 40,30 Q60,25 70,50 Q65,85 60,110 Z" fill="url(#deerCoat)"/>
+    <!-- Head -->
+    <ellipse cx="35" cy="35" rx="22" ry="14" fill="#d97706" transform="rotate(-15, 35, 35)"/>
+    <!-- Ears -->
+    <path d="M45,22 Q60,5 55,25 Z" fill="#92400e"/>
+    <path d="M30,22 Q15,5 25,25 Z" fill="#b45309"/>
+    <!-- Snout & Nose -->
+    <ellipse cx="18" cy="40" rx="6" ry="5" fill="#451a03"/>
+    <!-- Eye -->
+    <circle cx="32" cy="32" r="3.5" fill="#0f172a"/>
+    <circle cx="33" cy="31" r="1" fill="#ffffff"/>
+  </g>
+
+  <!-- Floating White Moths/Butterflies (matching reference 2) -->
+  <g fill="#ffffff" opacity="0.85">
+    <!-- Moth 1 -->
+    <path d="M220,740 Q230,730 240,740 Q230,750 220,740 Q210,750 220,740 Z"/>
+    <!-- Moth 2 -->
+    <path d="M680,720 Q690,710 700,720 Q690,730 680,720 Q670,730 680,720 Z" transform="scale(0.8) translate(120, 50)"/>
+    <!-- Moth 3 -->
+    <path d="M1020,680 Q1030,670 1040,680 Q1030,690 1020,680 Q1010,690 1020,680 Z" transform="scale(0.7) translate(400, 100)"/>
+  </g>
+</svg>

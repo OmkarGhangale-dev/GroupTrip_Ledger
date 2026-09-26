@@ -113,29 +113,30 @@ export default function LoginView({ onLoginSuccess }) {
   };
 
   return (
-    <div className="login-page-wrapper">
-      <div className="login-card-container">
+    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-surface-container-lowest via-surface-dim to-background p-6 relative overflow-hidden">
+      {/* Background Decorative Alpenglow Glows */}
+      <div className="absolute top-1/4 -left-20 w-[420px] h-[340px] bg-secondary-container/20 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="absolute bottom-1/4 -right-20 w-[420px] h-[340px] bg-primary-container/20 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div className="relative z-10 w-full max-w-md bg-surface-container-low/70 backdrop-blur-2xl rounded-2xl p-8 shadow-2xl border border-white/10 text-on-surface">
         {/* BRAND HEADER */}
-        <div className="login-brand-header">
-          <div className="login-logo-icon">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-            >
-              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-            </svg>
+        <div className="text-center mb-6">
+          <div className="w-12 h-12 rounded-xl bg-secondary-container flex items-center justify-center text-primary shadow-[0_0_24px_rgba(255,154,77,0.28)] mx-auto mb-3">
+            <span className="material-symbols-outlined text-2xl">landscape</span>
           </div>
-          <h2>Pomaii</h2>
-          <span className="brand-tagline">Explore. Dream. Discover.</span>
+          <h2 className="font-headline-sm text-headline-sm font-bold text-on-surface tracking-tight mb-1">
+            Pomaii
+          </h2>
+          <span className="font-label-sm text-label-sm uppercase tracking-widest text-primary font-bold block">
+            EXPEDITION LEDGER
+          </span>
         </div>
 
-        <div className="login-title-section">
-          <h3>{isRegister ? "Create an Account" : "Welcome Back"}</h3>
-          <p>
+        <div className="text-center mb-6">
+          <h3 className="font-headline-sm text-headline-sm text-on-surface font-semibold mb-1">
+            {isRegister ? "Create an Account" : "Welcome Back"}
+          </h3>
+          <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
             {isRegister
               ? "Register to start managing group trip ledgers, splitting expenses, and tracking bookings."
               : "Sign in to access your group trip ledger, track expenses, and manage bookings."}
@@ -143,69 +144,57 @@ export default function LoginView({ onLoginSuccess }) {
         </div>
 
         {error && (
-          <div
-            style={{
-              padding: "10px 14px",
-              marginBottom: "16px",
-              borderRadius: "6px",
-              backgroundColor: "rgba(239, 68, 68, 0.15)",
-              color: "#ef4444",
-              fontSize: "14px",
-              border: "1px solid rgba(239, 68, 68, 0.3)",
-            }}
-          >
+          <div className="p-3 mb-4 rounded-xl bg-error-container/20 border border-error/30 text-error text-xs font-medium">
             {error}
           </div>
         )}
 
         {successMsg && (
-          <div
-            style={{
-              padding: "10px 14px",
-              marginBottom: "16px",
-              borderRadius: "6px",
-              backgroundColor: "rgba(34, 197, 94, 0.15)",
-              color: "#22c55e",
-              fontSize: "14px",
-              border: "1px solid rgba(34, 197, 94, 0.3)",
-            }}
-          >
+          <div className="p-3 mb-4 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs font-medium">
             {successMsg}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="login-form">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           {isRegister && (
-            <div className="form-group">
-              <label>Full Name</label>
+            <div>
+              <label className="block font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1.5">
+                Full Name
+              </label>
               <input
                 type="text"
                 placeholder="Alex Morgan"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
+                className="w-full px-4 py-3 rounded-xl bg-surface-container-lowest/80 text-on-surface font-body-md text-body-md focus:outline-none focus:ring-1 focus:ring-primary shadow-inner border border-white/5"
               />
             </div>
           )}
 
-          <div className="form-group">
-            <label>Email Address</label>
+          <div>
+            <label className="block font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1.5">
+              Email Address
+            </label>
             <input
               type="email"
               placeholder="alex.morgan@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              className="w-full px-4 py-3 rounded-xl bg-surface-container-lowest/80 text-on-surface font-body-md text-body-md focus:outline-none focus:ring-1 focus:ring-primary shadow-inner border border-white/5"
             />
           </div>
 
-          <div className="form-group">
-            <div className="label-row">
-              <label>Password</label>
+          <div>
+            <div className="flex justify-between items-center mb-1.5">
+              <label className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">
+                Password
+              </label>
               {!isRegister && (
                 <a
                   href="#forgot"
-                  className="forgot-link"
+                  className="font-label-sm text-label-sm text-primary hover:underline"
                   onClick={(e) => e.preventDefault()}
                 >
                   Forgot Password?
@@ -218,25 +207,28 @@ export default function LoginView({ onLoginSuccess }) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              className="w-full px-4 py-3 rounded-xl bg-surface-container-lowest/80 text-on-surface font-body-md text-body-md focus:outline-none focus:ring-1 focus:ring-primary shadow-inner border border-white/5"
             />
           </div>
 
           {!isRegister && (
-            <div className="login-options-row">
-              <label className="checkbox-label">
-                <input
-                  type="checkbox"
-                  checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
-                />
-                <span>Remember me on this device</span>
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="rememberMe"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                className="rounded text-primary focus:ring-0 bg-surface-container border-white/10"
+              />
+              <label htmlFor="rememberMe" className="font-body-sm text-body-sm text-on-surface-variant cursor-pointer">
+                Remember me on this device
               </label>
             </div>
           )}
 
           <button
             type="submit"
-            className="btn btn-login-submit"
+            className="w-full py-3.5 rounded-xl bg-primary-container hover:bg-primary text-on-primary-container font-label-md text-label-md font-bold shadow-[0_0_24px_rgba(255,154,77,0.35)] transition-all cursor-pointer disabled:opacity-50 mt-2"
             disabled={loading}
           >
             {loading
@@ -247,43 +239,37 @@ export default function LoginView({ onLoginSuccess }) {
           </button>
         </form>
 
-        <div className="login-divider">
-          <span>OR</span>
+        <div className="relative flex py-5 items-center">
+          <div className="flex-grow border-t border-white/10"></div>
+          <span className="shrink mx-4 font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant/60 font-bold">
+            OR
+          </span>
+          <div className="flex-grow border-t border-white/10"></div>
         </div>
 
-        <div className="social-login-actions">
+        <div className="flex justify-center mb-4">
           {import.meta.env.VITE_GOOGLE_CLIENT_ID ? (
             <div
               ref={googleButtonRef}
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                minHeight: "44px",
-              }}
+              className="flex justify-center w-full min-h-[44px]"
             />
           ) : (
-            <div
-              style={{
-                padding: "10px 14px",
-                borderRadius: "6px",
-                color: "#b45309",
-                background: "rgba(245, 158, 11, 0.12)",
-                fontSize: "14px",
-                textAlign: "center",
-              }}
-            >
-              Google Sign-In is not configured. Add VITE_GOOGLE_CLIENT_ID to the
-              frontend .env file.
+            <div className="p-3 rounded-xl bg-primary-container/10 border border-primary/20 text-primary text-xs text-center w-full font-medium">
+              Google Sign-In is available when VITE_GOOGLE_CLIENT_ID is set.
             </div>
           )}
         </div>
 
-        <div className="login-footer-text">
+        <div className="text-center font-body-sm text-body-sm text-on-surface-variant">
           <p>
             {isRegister
               ? "Already have an account? "
               : "Don't have an account? "}
-            <a href="#toggle" onClick={toggleMode}>
+            <a
+              href="#toggle"
+              onClick={toggleMode}
+              className="text-primary font-bold hover:underline cursor-pointer"
+            >
               {isRegister ? "Sign in" : "Create an account"}
             </a>
           </p>

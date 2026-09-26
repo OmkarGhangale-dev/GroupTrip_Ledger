@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="canyonCliff" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#4a0e17"/>
+      <stop offset="100%" stop-color="#1f0408"/>
+    </linearGradient>
+    <linearGradient id="waterfallGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
+      <stop offset="50%" stop-color="#bae6fd" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.7"/>
+    </linearGradient>
+    <radialGradient id="sprayMist" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#bae6fd" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Left & Right Canyon Walls -->
+  <path d="M-50,0 L450,0 L380,450 L520,700 L320,1080 L-50,1080 Z" fill="url(#canyonCliff)"/>
+  <path d="M1970,0 L1450,0 L1520,380 L1400,680 L1620,1080 L1970,1080 Z" fill="url(#canyonCliff)"/>
+
+  <!-- Cascading Waterfall in Center Canyon Fall -->
+  <polygon points="940,320 980,320 995,780 925,780" fill="url(#waterfallGrad)"/>
+  
+  <!-- Mist spray at bottom of waterfall -->
+  <ellipse cx="960" cy="770" rx="140" ry="45" fill="url(#sprayMist)"/>
+</svg>

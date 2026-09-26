@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="canyonSkyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#2d132c"/>
+      <stop offset="40%" stop-color="#801336"/>
+      <stop offset="70%" stop-color="#c72c41"/>
+      <stop offset="100%" stop-color="#ee4540"/>
+    </linearGradient>
+    <linearGradient id="lightRay" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffb38a" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#ee4540" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1920" height="1080" fill="url(#canyonSkyGrad)"/>
+
+  <!-- Light Rays filtering through Canyon -->
+  <polygon points="960,0 1150,0 1400,1080 1100,1080" fill="url(#lightRay)"/>
+  <polygon points="800,0 920,0 1100,1080 900,1080" fill="url(#lightRay)" opacity="0.6"/>
+</svg>

@@ -26,3 +26,18 @@ export const updateExpense = async (expenseId, expenseData) => {
 export const deleteExpense = async (expenseId) => {
   await api.delete(`/expenses/${expenseId}`);
 };
+export const parseExpenseText = async (tripId, text) => {
+  const response = await api.post("/expenses/parse", {
+    trip_id: tripId,
+    text,
+  });
+  return response.data;
+};
+   export const scanReceipt = async (file) => {
+     const form = new FormData();
+     form.append("file", file);
+     const response = await api.post("/expenses/scan-receipt", form, {
+       headers: { "Content-Type": "multipart/form-data" },
+     });
+     return response.data;
+   };

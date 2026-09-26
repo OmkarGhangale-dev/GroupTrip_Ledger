@@ -1,36 +1,72 @@
-/* =========================================================
+.quick-add {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  margin-bottom: 20px;
+}
+.quick-add-row { display: flex; gap: 10px; }
+.quick-add-row input {
+  flex: 1;
+  padding: 12px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: 15px;
+}
+.quick-add-auto {
+  display: flex; align-items: center; gap: 8px;
+  margin-top: 10px; font-size: 13px; color: var(--text-muted);
+}
+.quick-add-error {
+  margin-top: 12px; padding: 10px 14px;
+  background: var(--danger-bg); color: var(--danger);
+  border: 1px solid var(--danger-border);
+  border-radius: var(--radius-md); font-size: 14px;
+}
+.quick-add-preview {
+  margin-top: 14px; padding: 14px;
+  border: 1px solid var(--primary-border);
+  background: var(--primary-light);
+  border-radius: var(--radius-md);
+}
+.quick-add-head { display: flex; justify-content: space-between; font-size: 16px; }
+.quick-add-meta { color: var(--text-muted); font-size: 13px; margin: 4px 0 10px; }
+.quick-add-splits { list-style: none; display: grid; gap: 4px; margin-bottom: 12px; }
+.quick-add-splits li { display: flex; justify-content: space-between; font-size: 14px; }
+.quick-add-actions { display: flex; justify-content: flex-end; gap: 8px; }
+@media (max-width: 600px) { .quick-add-row { flex-direction: column; } }/* =========================================================
    GROUPTRIP LEDGER - MODERN DESIGN SYSTEM & STYLES
    ========================================================= */
 
 :root {
-  --primary: #1b4332; /* Dark green */
-  --primary-hover: #081c15;
-  --primary-light: #e8f5e9;
-  --primary-border: #b7e4c7;
+  --primary: #ff9a4d;
+  --primary-hover: #f97316;
+  --primary-light: rgba(255, 154, 77, 0.15);
+  --primary-border: rgba(255, 154, 77, 0.3);
 
-  --bg-app: rgba(244, 247, 245, 0.85);
-  --bg-card: rgba(255, 255, 255, 0.94);
-  --bg-sidebar: #0b2b20;
-  --bg-sidebar-hover: #153e30;
+  --bg-app: #180e29;
+  --bg-card: rgba(32, 22, 50, 0.92);
+  --bg-sidebar: rgba(19, 9, 36, 0.95);
+  --bg-sidebar-hover: rgba(85, 45, 170, 0.4);
 
-  --text-main: #111827;
-  --text-muted: #4b5563;
-  --text-subtle: #9ca3af;
+  --text-main: #ebdcff;
+  --text-muted: #dbc2b3;
+  --text-subtle: #8a7b9c;
 
-  --border-color: #e5e7eb;
-  --border-light: #f3f4f6;
+  --border-color: rgba(255, 255, 255, 0.1);
+  --border-light: rgba(255, 255, 255, 0.06);
 
-  --success: #1b4332;
-  --success-bg: #e8f5e9;
-  --success-border: #b7e4c7;
+  --success: #34d399;
+  --success-bg: rgba(52, 211, 153, 0.15);
+  --success-border: rgba(52, 211, 153, 0.3);
 
-  --danger: #ef4444;
-  --danger-bg: #fef2f2;
-  --danger-border: #fecaca;
+  --danger: #f87171;
+  --danger-bg: rgba(239, 68, 68, 0.15);
+  --danger-border: rgba(239, 68, 68, 0.3);
 
-  --warning: #eab308;
-  --warning-bg: #fef9c3;
-  --warning-border: #fde047;
+  --warning: #f59e0b;
+  --warning-bg: rgba(245, 158, 11, 0.15);
+  --warning-border: rgba(245, 158, 11, 0.3);
 
   --radius-sm: 6px;
   --radius-md: 10px;
@@ -38,11 +74,8 @@
   --radius-xl: 20px;
   --radius-full: 9999px;
 
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md:
-    0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
-  --shadow-lg:
-    0 10px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --font-headline: 'Noto Serif', Georgia, serif;
+  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 * {
@@ -52,12 +85,8 @@
 }
 
 body {
-  font-family:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
-    Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-  background: url("https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2400&auto=format&fit=crop")
-    no-repeat center center fixed;
-  background-size: cover;
+  font-family: var(--font-body);
+  background: #180e29;
   color: var(--text-main);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
@@ -4488,3 +4517,397 @@ textarea {
     width: 100%;
   }
 }
+
+
+/* Twilight Purple Custom Overrides */
+h1, h2, h3, .page-header h1, .serif-title {
+  font-family: 'Noto Serif', Georgia, serif !important;
+  color: #ffffff !important;
+}
+
+input, select, textarea {
+  background: #241a36 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #ffffff !important;
+  border-radius: 10px !important;
+  padding: 10px 14px !important;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  outline: none !important;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #ff9a4d !important;
+  box-shadow: 0 0 0 3px rgba(255, 154, 77, 0.2) !important;
+}
+
+.btn-primary, .btn-gold-action {
+  background: linear-gradient(135deg, #ff9a4d 0%, #f97316 100%) !important;
+  color: #130924 !important;
+  font-weight: 700 !important;
+  border: none !important;
+  box-shadow: 0 4px 16px rgba(255, 154, 77, 0.35) !important;
+}
+
+.btn-secondary, .btn-purple-action {
+  background: #6c3ce9 !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  border: none !important;
+  box-shadow: 0 4px 16px rgba(85, 45, 170, 0.4) !important;
+}
+
+.btn-outline, .btn-glass-subtle {
+  background: rgba(58, 48, 76, 0.5) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+.nav-item.active {
+  background: #6c3ce9 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 20px rgba(85, 45, 170, 0.4) !important;
+}
+
+.dashboard-card, .stat-card, .table-card, .settings-card, .settlements-header-banner, .settlement-full-card, .empty-card-state, .empty-state-large, .empty-twilight-card, .settled-celebration-card {
+  background: rgba(32, 22, 50, 0.92) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #ebdcff !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2) !important;
+}
+
+.data-table th, table th {
+  background: #241a36 !important;
+  color: #dbc2b3 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.data-table td, table td {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+  color: #ebdcff !important;
+}
+
+.data-table tr:hover td, table tr:hover td {
+  background: rgba(47, 37, 65, 0.4) !important;
+}
+
+.navbar {
+  background: rgba(19, 9, 36, 0.85) !important;
+  backdrop-filter: blur(20px) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.sidebar {
+  background: rgba(19, 9, 36, 0.95) !important;
+  backdrop-filter: blur(24px) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+/* =========================================================
+   LIGHT MODE DYNAMIC THEME OVERRIDES
+   ========================================================= */
+html.light, html.light body {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+html.light .bg-background,
+html.light .bg-surface-dim {
+  background-color: #f1f5f9 !important;
+}
+
+html.light .bg-surface-container-lowest {
+  background-color: #ffffff !important;
+}
+
+html.light .bg-surface-container-low {
+  background-color: #f8fafc !important;
+}
+
+html.light .bg-surface-container {
+  background-color: #f1f5f9 !important;
+}
+
+html.light .bg-surface-container-high {
+  background-color: #e2e8f0 !important;
+}
+
+html.light .text-on-surface,
+html.light h1,
+html.light h2,
+html.light h3,
+html.light strong,
+html.light .font-headline-xl,
+html.light .font-headline-lg,
+html.light .font-headline-sm {
+  color: #0f172a !important;
+}
+
+html.light .text-on-surface-variant {
+  color: #475569 !important;
+}
+
+html.light input,
+html.light select,
+html.light textarea {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+html.light input::placeholder,
+html.light textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+html.light header {
+  background-color: rgba(255, 255, 255, 0.85) !important;
+  color: #0f172a !important;
+  border-bottom-color: #e2e8f0 !important;
+}
+
+html.light aside.sidebar {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  color: #0f172a !important;
+  border-right-color: #e2e8f0 !important;
+}
+
+html.light .notosan-world-wrapper {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+html.light .notosan-brand-logo,
+html.light .hero-title-massive {
+  color: #0f172a !important;
+}
+
+html.light .hero-description-notosan {
+  color: #475569 !important;
+}
+
+html.light .btn-pill-notosan {
+  background-color: #0f172a !important;
+  color: #ffffff !important;
+}
+
+
+/* =========================================================
+   NOTOSAN PARALLAX LANDING PAGE STYLES
+   ========================================================= */
+.notosan-world-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: #130924;
+  color: #ebdcff;
+}
+
+.notosan-top-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 72px;
+  padding: 0 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 100;
+  backdrop-filter: blur(16px);
+  background: rgba(19, 9, 36, 0.4);
+}
+
+.notosan-brand-logo {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.notosan-nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.notosan-nav-item {
+  background: transparent;
+  color: rgba(235, 220, 255, 0.7);
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.notosan-nav-item:hover {
+  color: #ffffff;
+}
+
+.btn-outlined-notosan {
+  padding: 8px 24px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.btn-outlined-notosan:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #ffffff;
+}
+
+.notosan-scroll-container {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 20;
+}
+
+.notosan-viewport-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.notosan-scene-fixed {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+
+.notosan-scene-fixed.scene-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.scene-artwork-layer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.layer-svg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-content, .scene-content {
+  position: absolute;
+  z-index: 30;
+  pointer-events: auto;
+}
+
+.hero-content {
+  top: 22%;
+  left: 8%;
+  max-width: 620px;
+}
+
+.scene-tag-notosan {
+  font-size: 14px;
+  color: rgba(235, 220, 255, 0.85);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.hero-title-massive {
+  font-family: 'Noto Serif', serif;
+  font-size: 110px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  margin-bottom: 24px;
+}
+
+.hero-description-notosan, .scene-body-notosan {
+  font-size: 15px;
+  color: rgba(235, 220, 255, 0.8);
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+
+.btn-pill-notosan {
+  padding: 14px 28px;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #130924;
+  font-weight: 700;
+  font-size: 15px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-pill-notosan:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(255, 255, 255, 0.25);
+}
+
+.side-content-notosan {
+  top: 25%;
+  left: 10%;
+  max-width: 500px;
+}
+
+.side-content-notosan.right-aligned {
+  left: auto;
+  right: 10%;
+  text-align: left;
+}
+
+.center-content-notosan {
+  top: 25%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  max-width: 550px;
+}
+
+.scene-title-underlined {
+  font-family: 'Noto Serif', serif;
+  font-size: 48px;
+  color: #ffffff;
+  margin-bottom: 12px;
+}
+
+.section-label-notosan {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #ff9a4d;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.btn-link-notosan {
+  background: transparent;
+  color: #ff9a4d;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.btn-loop-top-notosan {
+  background: transparent;
+  color: rgba(235, 220, 255, 0.6);
+  font-size: 13px;
+  margin-top: 24px;
+  cursor: pointer;
+}
+

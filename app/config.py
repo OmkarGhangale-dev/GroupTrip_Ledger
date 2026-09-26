@@ -71,6 +71,10 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
         # Where invite links point to (your frontend's public address)
     FRONTEND_URL: str = "http://localhost:5173"
+        # Receipt scanning: must be a Groq model that can read images
+    RECEIPT_OCR_MODEL: str = "qwen/qwen3.8-27b"
+    RECEIPT_OCR_BASE_URL: str = "https://api.groq.com/openai/v1"
+    RECEIPT_OCR_API_KEY: str = ""  # empty = use the Groq key
 
     @property
     def effective_google_client_id(self) -> str:

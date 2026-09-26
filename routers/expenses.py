@@ -1,11 +1,13 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from models.user import User
 from schemas.nl_expense import ParseExpenseRequest, ParseExpenseResponse
 from utils.deps import get_current_user
 import services.nl_expense_service as nl_svc
+from schemas.receipt import ReceiptScanResult
+import services.receipt_service as receipt_svc
 
 from app.database import get_db
 from schemas.expense import (
@@ -20,6 +22,24 @@ router = APIRouter(
     prefix="/expenses",
     tags=["Expenses"]
 )
+
+MAX_RECEIPT_BYTES = 4 * 1024 * 1024
+
+
+@router.post("/scan-receipt", response_model=ReceiptScanResult)
+async def scan_receipt(
+    file: UploadFile = File(...),
+    current_user: User = Depends(get_current_user),
+):
+    if not (file.content_type or "").startswith("image/"):
+        raise HTTPException(400, "Please upload an image (JPG or PNG).")
+    raw = await file.read()
+    if not raw:
+        raise HTTPException(400, "The uploaded file is empty.")
+    if len(raw) > MAX_RECEIPT_BYTES:
+        raise HTTPException(413, "Image too large. Max 5 MB.")
+    return await receipt_svc.scan_receipt(raw)
+
 @router.post("/parse", response_model=ParseExpenseResponse)
 async def parse_expense_text(
     data: ParseExpenseRequest,

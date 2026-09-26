@@ -5,6 +5,105 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pomaii - GroupTrip Ledger</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-lowest": "#130924",
+              "surface-container-highest": "#3a304c",
+              "primary-fixed": "#ffdcc6",
+              "on-primary-fixed": "#301400",
+              "on-secondary-container": "#c3abff",
+              "tertiary": "#e2c2ff",
+              "background": "#180e29",
+              "on-secondary": "#3b0191",
+              "on-surface": "#ebdcff",
+              "primary": "#ffc198",
+              "inverse-on-surface": "#362b48",
+              "on-error-container": "#ffdad6",
+              "surface": "#180e29",
+              "tertiary-fixed": "#f0dbff",
+              "on-tertiary-fixed-variant": "#62259b",
+              "secondary-fixed-dim": "#d0bcff",
+              "secondary-fixed": "#e9ddff",
+              "on-primary-fixed-variant": "#713700",
+              "secondary-container": "#552daa",
+              "on-background": "#ebdcff",
+              "secondary": "#d0bcff",
+              "on-surface-variant": "#dbc2b3",
+              "inverse-surface": "#ebdcff",
+              "surface-bright": "#3f3451",
+              "surface-dim": "#180e29",
+              "inverse-primary": "#954a00",
+              "on-primary": "#502500",
+              "on-secondary-fixed": "#23005c",
+              "on-secondary-fixed-variant": "#522aa7",
+              "primary-container": "#ff9a4d",
+              "on-tertiary-fixed": "#2c0051",
+              "on-primary-container": "#6f3500",
+              "outline-variant": "#554338",
+              "surface-container-high": "#2f2541",
+              "surface-container": "#241a36",
+              "tertiary-fixed-dim": "#ddb8ff",
+              "on-tertiary": "#490081",
+              "error": "#ffb4ab",
+              "surface-container-low": "#201632",
+              "outline": "#a38c7f",
+              "surface-tint": "#ffb785",
+              "on-tertiary-container": "#602299",
+              "primary-fixed-dim": "#ffb785",
+              "on-error": "#690005",
+              "surface-variant": "#3a304c",
+              "error-container": "#93000a",
+              "tertiary-container": "#cf9eff"
+            },
+            fontFamily: {
+              "display-hero": ["Noto Serif", "serif"],
+              "display-hero-mobile": ["Noto Serif", "serif"],
+              "headline-xl": ["Noto Serif", "serif"],
+              "headline-lg": ["Noto Serif", "serif"],
+              "headline-sm": ["Noto Serif", "serif"],
+              "body-lg": ["Plus Jakarta Sans", "sans-serif"],
+              "body-md": ["Plus Jakarta Sans", "sans-serif"],
+              "body-sm": ["Plus Jakarta Sans", "sans-serif"],
+              "label-md": ["Plus Jakarta Sans", "sans-serif"],
+              "label-sm": ["Plus Jakarta Sans", "sans-serif"]
+            },
+            animation: {
+              "fade-in": "fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+              "slide-up": "slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards"
+            },
+            keyframes: {
+              fadeIn: {
+                "0%": { opacity: "0" },
+                "100%": { opacity: "1" }
+              },
+              slideUp: {
+                "0%": { opacity: "0", transform: "translateY(12px)" },
+                "100%": { opacity: "1", transform: "translateY(0)" }
+              }
+            }
+          }
+        }
+      };
+    </script>
+    <style>
+      /* View transition smoothness */
+      .page-transition {
+        animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+      ::view-transition-old(root),
+      ::view-transition-new(root) {
+        animation-duration: 0.3s;
+      }
+    </style>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
   </head>
   <body>

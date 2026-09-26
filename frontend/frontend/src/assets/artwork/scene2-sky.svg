@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="nightSky2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#080814"/>
+      <stop offset="40%" stop-color="#0f1124"/>
+      <stop offset="80%" stop-color="#171936"/>
+      <stop offset="100%" stop-color="#211d45"/>
+    </linearGradient>
+
+    <radialGradient id="waterfallGlow" cx="85%" cy="30%" r="50%">
+      <stop offset="0%" stop-color="#c084fc" stop-opacity="0.35"/>
+      <stop offset="50%" stop-color="#60a5fa" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#080814" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1920" height="1080" fill="url(#nightSky2)"/>
+  <rect width="1920" height="1080" fill="url(#waterfallGlow)"/>
+
+  <!-- Top Dark Forest Canopy framing matching reference 2 -->
+  <path d="M-50,0 Q300,120 700,60 Q1100,140 1500,50 Q1750,110 1970,0 L1970,0 L-50,0 Z" fill="#04050a" opacity="0.9"/>
+</svg>

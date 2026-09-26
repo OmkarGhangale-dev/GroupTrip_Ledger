@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTrip } from "./context/TripContext";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
 import AIChatBot from "./components/AIChatBot";
+import ParallaxScrollWorld from "./components/landing/ParallaxScrollWorld";
 
 // Views
 import DashboardView from "./views/DashboardView";
@@ -14,6 +15,7 @@ import SettlementsView from "./views/SettlementsView";
 import ItineraryView from "./views/ItineraryView";
 import SettingsView from "./views/SettingsView";
 import LoginView from "./views/LoginView";
+import InviteAcceptView from "./views/InviteAcceptView";
 
 // Modals
 import TripModal from "./components/modals/TripModal";
@@ -28,8 +30,23 @@ import ToastContainer from "./components/modals/Toast";
 export default function App() {
   const { loading, error, trip, itinerary, addItineraryItem } = useTrip();
   const [activeTab, setActiveTab] = useState(() => {
-    return localStorage.getItem("token") ? "dashboard" : "login";
+    return localStorage.getItem("token") ? "dashboard" : "landing";
   });
+  const [isDark, setIsDark] = useState(true);
+
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.classList.remove("light");
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      document.documentElement.classList.add("light");
+    }
+  }, [isDark]);
+
+  const toggleTheme = () => {
+    setIsDark((prev) => !prev);
+  };
 
   // Modal states
   const [tripModal, setTripModal] = useState({ isOpen: false, data: null });
@@ -64,10 +81,33 @@ export default function App() {
     setTargetPlaceQuery(placeName);
     setActiveTab("itinerary");
   };
+  const inviteToken = new URLSearchParams(window.location.search).get("invite");
+  if (inviteToken) {
+    return (
+      <div className="app-layout view-login">
+        <ToastContainer />
+        <InviteAcceptView token={inviteToken} />
+      </div>
+    );
+  }
+
+  if (activeTab === "landing") {
+    return (
+      <div className="min-h-screen bg-background text-on-surface">
+        <ToastContainer />
+        <ParallaxScrollWorld
+          onOpenLogin={() => setActiveTab("login")}
+          onOpenRegister={() => setActiveTab("login")}
+          isDark={isDark}
+          toggleTheme={toggleTheme}
+        />
+      </div>
+    );
+  }
 
   if (activeTab === "login") {
     return (
-      <div className="app-layout view-login">
+      <div className="min-h-screen bg-gradient-to-br from-surface-container-lowest via-surface-dim to-background">
         <ToastContainer />
         <LoginView
           onLoginSuccess={() => {
@@ -80,112 +120,117 @@ export default function App() {
   }
 
   return (
-    <div className={`app-layout view-${activeTab}`}>
+    <div className="min-h-screen bg-gradient-to-br from-surface-container-lowest via-surface-dim to-background text-on-surface selection:bg-primary-container selection:text-on-primary-container">
       {/* GLOBAL TOAST ALERTS */}
       <ToastContainer />
 
       {/* SIDEBAR NAVIGATION */}
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      <div className="main-wrapper">
+      <div className="pl-64 min-h-screen">
         {/* NAVBAR */}
         <Navbar
           onOpenNewTripModal={() => setTripModal({ isOpen: true, data: null })}
           onOpenLogin={() => setActiveTab("login")}
+          onLogout={() => setActiveTab("landing")}
+          isDark={isDark}
+          toggleTheme={toggleTheme}
         />
 
-        {/* MAIN ROUTED VIEW */}
-        <main className="main-content-area">
+        {/* MAIN ROUTED VIEW WITH SMOOTH PAGE TRANSITIONS */}
+        <main className="w-full pt-16">
           {error && (
-            <div className="global-error-banner">
+            <div className="mx-6 mt-4 p-4 rounded-xl bg-error-container text-on-error-container">
               <span>{error}</span>
             </div>
           )}
 
-          {activeTab === "dashboard" && (
-            <DashboardView
-              onOpenExpenseModal={(data = null) =>
-                setExpenseModal({ isOpen: true, data })
-              }
-              onOpenParticipantModal={(data = null) =>
-                setParticipantModal({ isOpen: true, data })
-              }
-              onOpenBookingModal={(data = null) =>
-                setBookingModal({ isOpen: true, data })
-              }
-              onOpenPaymentModal={(data = null) =>
-                setPaymentModal({ isOpen: true, data })
-              }
-              onOpenItineraryModal={(data = null) =>
-                setItineraryModal({ isOpen: true, data })
-              }
-              onOpenTripModal={(data = null) =>
-                setTripModal({ isOpen: true, data })
-              }
-              setActiveTab={setActiveTab}
-            />
-          )}
+          <div key={activeTab} className="page-transition w-full">
+            {activeTab === "dashboard" && (
+              <DashboardView
+                onOpenExpenseModal={(data = null) =>
+                  setExpenseModal({ isOpen: true, data })
+                }
+                onOpenParticipantModal={(data = null) =>
+                  setParticipantModal({ isOpen: true, data })
+                }
+                onOpenBookingModal={(data = null) =>
+                  setBookingModal({ isOpen: true, data })
+                }
+                onOpenPaymentModal={(data = null) =>
+                  setPaymentModal({ isOpen: true, data })
+                }
+                onOpenItineraryModal={(data = null) =>
+                  setItineraryModal({ isOpen: true, data })
+                }
+                onOpenTripModal={(data = null) =>
+                  setTripModal({ isOpen: true, data })
+                }
+                setActiveTab={setActiveTab}
+              />
+            )}
 
-          {activeTab === "participants" && (
-            <ParticipantsView
-              onOpenParticipantModal={(data = null) =>
-                setParticipantModal({ isOpen: true, data })
-              }
-            />
-          )}
+            {activeTab === "participants" && (
+              <ParticipantsView
+                onOpenParticipantModal={(data = null) =>
+                  setParticipantModal({ isOpen: true, data })
+                }
+              />
+            )}
 
-          {activeTab === "expenses" && (
-            <ExpensesView
-              onOpenExpenseModal={(data = null) =>
-                setExpenseModal({ isOpen: true, data })
-              }
-            />
-          )}
+            {activeTab === "expenses" && (
+              <ExpensesView
+                onOpenExpenseModal={(data = null) =>
+                  setExpenseModal({ isOpen: true, data })
+                }
+              />
+            )}
 
-          {activeTab === "bookings" && (
-            <BookingsView
-              onOpenBookingModal={(data = null) =>
-                setBookingModal({ isOpen: true, data })
-              }
-              onOpenRefundModal={(booking) =>
-                setRefundModal({ isOpen: true, booking })
-              }
-            />
-          )}
+            {activeTab === "bookings" && (
+              <BookingsView
+                onOpenBookingModal={(data = null) =>
+                  setBookingModal({ isOpen: true, data })
+                }
+                onOpenRefundModal={(booking) =>
+                  setRefundModal({ isOpen: true, booking })
+                }
+              />
+            )}
 
-          {activeTab === "payments" && (
-            <PaymentsView
-              onOpenPaymentModal={(data = null) =>
-                setPaymentModal({ isOpen: true, data })
-              }
-            />
-          )}
+            {activeTab === "payments" && (
+              <PaymentsView
+                onOpenPaymentModal={(data = null) =>
+                  setPaymentModal({ isOpen: true, data })
+                }
+              />
+            )}
 
-          {activeTab === "settlements" && (
-            <SettlementsView
-              onOpenPaymentModal={(data = null) =>
-                setPaymentModal({ isOpen: true, data })
-              }
-            />
-          )}
+            {activeTab === "settlements" && (
+              <SettlementsView
+                onOpenPaymentModal={(data = null) =>
+                  setPaymentModal({ isOpen: true, data })
+                }
+              />
+            )}
 
-          {activeTab === "itinerary" && (
-            <ItineraryView
-              onOpenItineraryModal={(data = null) =>
-                setItineraryModal({ isOpen: true, data })
-              }
-              targetPlaceQuery={targetPlaceQuery}
-              initialTab={targetPlaceQuery ? "map" : "timeline"}
-            />
-          )}
+            {activeTab === "itinerary" && (
+              <ItineraryView
+                onOpenItineraryModal={(data = null) =>
+                  setItineraryModal({ isOpen: true, data })
+                }
+                targetPlaceQuery={targetPlaceQuery}
+                initialTab={targetPlaceQuery ? "map" : "timeline"}
+              />
+            )}
 
-          {activeTab === "settings" && (
-            <SettingsView
-              onOpenTripModal={(data = null) =>
-                setTripModal({ isOpen: true, data })
-              }
-            />
-          )}
+            {activeTab === "settings" && (
+              <SettingsView
+                onOpenTripModal={(data = null) =>
+                  setTripModal({ isOpen: true, data })
+                }
+              />
+            )}
+          </div>
         </main>
       </div>
 
