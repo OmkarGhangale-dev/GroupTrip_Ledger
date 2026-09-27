@@ -31,12 +31,36 @@ def _active(p):
     return str(getattr(p.status, "value", p.status)).lower() == "active"
 
 
+async def resolve_location(db: AsyncSession, trip):
+    """Destination text -> trip name -> average of coordinates saved on itinerary items / bookings."""
+    geo = (await weather_service.geocode(trip.destination or "", trip.currency)
+           or await weather_service.geocode(trip.name or "", trip.currency))
+    if geo:
+        return geo
+    pts = []
+    rows = (await db.execute(select(ItineraryItem.latitude, ItineraryItem.longitude)
+                             .where(ItineraryItem.trip_id == trip.id,
+                                    ItineraryItem.latitude.is_not(None),
+                                    ItineraryItem.longitude.is_not(None)))).all()
+    pts += [(a, b) for a, b in rows]
+    rows = (await db.execute(select(Booking.latitude, Booking.longitude)
+                             .where(Booking.trip_id == trip.id,
+                                    Booking.latitude.is_not(None),
+                                    Booking.longitude.is_not(None)))).all()
+    pts += [(a, b) for a, b in rows]
+    if not pts:
+        return None
+    return {"lat": sum(float(a) for a, _ in pts) / len(pts),
+            "lng": sum(float(b) for _, b in pts) / len(pts),
+            "label": trip.destination or trip.name or "Trip location"}
+
+
 async def build_state(db: AsyncSession, trip, scenario: dict | None = None):
     scenario = scenario or {}
     its, bks, exps, parts, st = await _load(db, trip)
 
     # --- location & live weather ---------------------------------------
-    geo = await weather_service.geocode(trip.destination or "", trip.currency)
+    geo = await resolve_location(db, trip)
     lat = scenario.get("lat") if scenario.get("lat") is not None else (geo or {}).get("lat")
     lng = scenario.get("lng") if scenario.get("lng") is not None else (geo or {}).get("lng")
     moved = scenario.get("lat") is not None and scenario.get("lng") is not None

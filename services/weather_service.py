@@ -1,4 +1,6 @@
 """Live weather via Open-Meteo (free, no API key). Results cached 10 min."""
+import asyncio
+import re
 import time
 import httpx
 
@@ -16,6 +18,57 @@ CURRENCY_COUNTRY = {
 _UA = {"User-Agent": "GroupTripLedger/1.0 (hackathon project)"}
 
 
+# Built-in destinations: checked first so common trips work offline and never hit rate limits.
+KNOWN = {
+    # Indian states / regions
+    "rajasthan": (26.9124, 75.7873, "Rajasthan, India"), "kerala": (10.8505, 76.2711, "Kerala, India"),
+    "goa": (15.2993, 74.1240, "Goa, India"), "himachal": (31.1048, 77.1734, "Himachal Pradesh, India"),
+    "uttarakhand": (30.0668, 79.0193, "Uttarakhand, India"), "kashmir": (34.0837, 74.7973, "Srinagar, Kashmir, India"),
+    "ladakh": (34.1526, 77.5770, "Leh, Ladakh, India"), "sikkim": (27.5330, 88.5122, "Sikkim, India"),
+    "gujarat": (23.0225, 72.5714, "Gujarat, India"), "maharashtra": (19.0760, 72.8777, "Maharashtra, India"),
+    "karnataka": (12.9716, 77.5946, "Karnataka, India"), "tamil nadu": (13.0827, 80.2707, "Tamil Nadu, India"),
+    "andaman": (11.6234, 92.7265, "Andaman, India"), "meghalaya": (25.5788, 91.8933, "Shillong, Meghalaya, India"),
+    "punjab": (31.6340, 74.8723, "Punjab, India"), "assam": (26.1445, 91.7362, "Assam, India"),
+    # Indian cities / tourist spots
+    "jaipur": (26.9124, 75.7873, "Jaipur, India"), "udaipur": (24.5854, 73.7125, "Udaipur, India"),
+    "jodhpur": (26.2389, 73.0243, "Jodhpur, India"), "jaisalmer": (26.9157, 70.9083, "Jaisalmer, India"),
+    "pushkar": (26.4899, 74.5511, "Pushkar, India"), "mumbai": (19.0760, 72.8777, "Mumbai, India"),
+    "pune": (18.5204, 73.8567, "Pune, India"), "delhi": (28.6139, 77.2090, "Delhi, India"),
+    "agra": (27.1767, 78.0081, "Agra, India"), "varanasi": (25.3176, 82.9739, "Varanasi, India"),
+    "rishikesh": (30.0869, 78.2676, "Rishikesh, India"), "manali": (32.2396, 77.1887, "Manali, India"),
+    "shimla": (31.1048, 77.1734, "Shimla, India"), "dharamshala": (32.2190, 76.3234, "Dharamshala, India"),
+    "darjeeling": (27.0360, 88.2627, "Darjeeling, India"), "gangtok": (27.3389, 88.6065, "Gangtok, India"),
+    "kolkata": (22.5726, 88.3639, "Kolkata, India"), "chennai": (13.0827, 80.2707, "Chennai, India"),
+    "bengaluru": (12.9716, 77.5946, "Bengaluru, India"), "bangalore": (12.9716, 77.5946, "Bengaluru, India"),
+    "hyderabad": (17.3850, 78.4867, "Hyderabad, India"), "kochi": (9.9312, 76.2673, "Kochi, India"),
+    "munnar": (10.0889, 77.0595, "Munnar, India"), "alleppey": (9.4981, 76.3388, "Alleppey, India"),
+    "ooty": (11.4102, 76.6950, "Ooty, India"), "mysore": (12.2958, 76.6394, "Mysuru, India"),
+    "hampi": (15.3350, 76.4600, "Hampi, India"), "pondicherry": (11.9416, 79.8083, "Puducherry, India"),
+    "amritsar": (31.6340, 74.8723, "Amritsar, India"), "leh": (34.1526, 77.5770, "Leh, India"),
+    "srinagar": (34.0837, 74.7973, "Srinagar, India"), "lonavala": (18.7546, 73.4062, "Lonavala, India"),
+    "mahabaleshwar": (17.9237, 73.6586, "Mahabaleshwar, India"), "nashik": (19.9975, 73.7898, "Nashik, India"),
+    "ahmedabad": (23.0225, 72.5714, "Ahmedabad, India"), "kutch": (23.7337, 69.8597, "Kutch, India"),
+    "ranthambore": (26.0173, 76.5026, "Ranthambore, India"), "mount abu": (24.5926, 72.7156, "Mount Abu, India"),
+    # International
+    "bangkok": (13.7563, 100.5018, "Bangkok, Thailand"), "phuket": (7.8804, 98.3923, "Phuket, Thailand"),
+    "thailand": (13.7563, 100.5018, "Thailand"), "bali": (-8.4095, 115.1889, "Bali, Indonesia"),
+    "singapore": (1.3521, 103.8198, "Singapore"), "dubai": (25.2048, 55.2708, "Dubai, UAE"),
+    "maldives": (4.1755, 73.5093, "Maldives"), "paris": (48.8566, 2.3522, "Paris, France"),
+    "london": (51.5072, -0.1276, "London, UK"), "new york": (40.7128, -74.0060, "New York, USA"),
+    "tokyo": (35.6762, 139.6503, "Tokyo, Japan"), "sri lanka": (7.8731, 80.7718, "Sri Lanka"),
+    "nepal": (27.7172, 85.3240, "Kathmandu, Nepal"), "bhutan": (27.4728, 89.6390, "Thimphu, Bhutan"),
+}
+
+
+def _known(name: str):
+    low = re.sub(r"[^a-z ]", " ", (name or "").lower())
+    for k in sorted(KNOWN, key=len, reverse=True):          # longest match wins ("mount abu" before "abu")
+        if re.search(r"\b" + re.escape(k) + r"\b", low):
+            lat, lng, label = KNOWN[k]
+            return {"lat": lat, "lng": lng, "label": label}
+    return None
+
+
 async def _nominatim(client, q, cc):
     params = {"q": q, "format": "jsonv2", "limit": 1, "addressdetails": 1}
     if cc:
@@ -31,23 +84,46 @@ async def _nominatim(client, q, cc):
 
 
 async def geocode(name: str, currency: str | None = None):
-    """Trip destination -> coordinates. Uses OpenStreetMap search, biased by the trip currency's country."""
+    """Trip destination -> coordinates. Tries the full text, then its parts, then single words."""
     cc = CURRENCY_COUNTRY.get((currency or "").upper())
-    key = ("geo", name.lower(), cc)
+    full = (name or "").strip()
+    key = ("geo", full.lower(), cc)
     if key in _CACHE:
         return _CACHE[key]
+    if not full:
+        return None
+    hit = _known(full)
+    if hit:
+        _CACHE[key] = hit
+        return hit
+
+    variants = []
+    parts = [p.strip() for p in re.split(r"[,\-/|()]", full) if p.strip()]
+    words = [w for w in re.split(r"[\s,]+", full) if len(w) >= 4]
+    for v in [full] + parts + words:
+        if v and v.lower() not in [x.lower() for x in variants]:
+            variants.append(v)
+
     out = None
-    try:
-        async with httpx.AsyncClient(timeout=10) as c:
-            out = await _nominatim(c, name, cc) or await _nominatim(c, name, None)
-            if not out:                                   # last resort: Open-Meteo search
-                r = await c.get(GEO, params={"name": name.split(",")[0], "count": 1})
-                res = (r.json().get("results") or [None])[0]
-                if res:
-                    out = {"lat": res["latitude"], "lng": res["longitude"],
-                           "label": ", ".join(v for v in (res["name"], res.get("admin1"), res.get("country")) if v)}
-    except Exception:
-        out = None
+    async with httpx.AsyncClient(timeout=10) as c:
+        for i, v in enumerate(variants[:6]):
+            if i:
+                await asyncio.sleep(1.1)              # be polite to the free geocoder
+            try:
+                out = await _nominatim(c, v, cc) or (await _nominatim(c, v, None) if cc else None)
+            except Exception:
+                out = None
+            if not out:
+                try:
+                    r = await c.get(GEO, params={"name": v.split(",")[0], "count": 1})
+                    res = (r.json().get("results") or [None])[0]
+                    if res:
+                        out = {"lat": res["latitude"], "lng": res["longitude"],
+                               "label": ", ".join(x for x in (res["name"], res.get("admin1"), res.get("country")) if x)}
+                except Exception:
+                    out = None
+            if out:
+                break
     if out:
         _CACHE[key] = out
     return out
@@ -66,6 +142,7 @@ async def fetch_forecast(lat: float, lng: float):
                 "current": "temperature_2m,precipitation,wind_speed_10m,wind_gusts_10m,weather_code",
                 "hourly": "temperature_2m,precipitation,wind_gusts_10m,precipitation_probability",
             })
+            r.raise_for_status()
             j = r.json()
         h = j["hourly"]
         days: dict = {}
@@ -87,8 +164,9 @@ async def fetch_forecast(lat: float, lng: float):
                "fetched_at": time.time()}
         _CACHE[key] = (time.time(), out)
         return out
-    except Exception:
-        return None
+    except Exception as e:
+        print("weather forecast fetch failed:", repr(e))
+        return hit[1] if hit else None
 
 
 def demo_forecast(start_date: str, n: int = 7):
@@ -120,6 +198,7 @@ async def fetch_dashboard(lat: float, lng: float):
                 "daily": ("weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,"
                           "precipitation_probability_max,wind_gusts_10m_max,sunrise,sunset,uv_index_max"),
             })
+            r.raise_for_status()
             j = r.json()
             aqi = None
             try:
@@ -145,5 +224,27 @@ async def fetch_dashboard(lat: float, lng: float):
                "timezone": j.get("timezone"), "source": "open-meteo"}
         _CACHE[key] = (time.time(), out)
         return out
-    except Exception:
-        return None
+    except Exception as e:
+        print("weather dashboard fetch failed:", repr(e))
+        hit = _CACHE.get(key)
+        return hit[1] if hit else None
+
+
+def demo_dashboard(lat: float, lng: float):
+    """Used only when the live feed is unreachable. Clearly labelled so nobody mistakes it for real data."""
+    import datetime as dt
+    now = dt.datetime.now().replace(minute=0, second=0, microsecond=0)
+    hourly = [{"time": (now + dt.timedelta(hours=i)).strftime("%Y-%m-%dT%H:%M"),
+               "temp": round(27 + 4 * (1 if 6 <= (now.hour + i) % 24 <= 17 else -1) * 0.7, 1),
+               "pop": 20 + (i * 7) % 40, "rain": 0.0, "code": 2} for i in range(24)]
+    today = dt.date.today()
+    daily = [{"date": (today + dt.timedelta(days=i)).isoformat(), "code": 2 if i % 3 else 61,
+              "tmax": 32.0 - (i % 3), "tmin": 24.0, "rain": 1.5 * (i % 3), "pop": 30 + 10 * (i % 4),
+              "gust": 30.0, "sunrise": f"{today}T06:10", "sunset": f"{today}T18:40", "uv": 7}
+             for i in range(7)]
+    cur = {"time": now.strftime("%Y-%m-%dT%H:%M"), "temperature_2m": 29.0, "apparent_temperature": 31.0,
+           "relative_humidity_2m": 60, "precipitation": 0.0, "weather_code": 2, "cloud_cover": 40,
+           "surface_pressure": 1008, "wind_speed_10m": 10, "wind_direction_10m": 200,
+           "wind_gusts_10m": 20, "is_day": 1}
+    return {"current": cur, "hourly": hourly, "daily": daily, "air": None,
+            "timezone": None, "source": "sample data (live weather feed unreachable)"}

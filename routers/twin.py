@@ -43,12 +43,12 @@ async def live_weather(trip_id: uuid.UUID, db: AsyncSession = Depends(get_db),
     """Real-time weather for the trip's destination (Open-Meteo, no API key)."""
     from services import weather_service
     trip = await _trip(db, trip_id, user)
-    geo = await weather_service.geocode(trip.destination or "", trip.currency)
+    geo = await twin.resolve_location(db, trip)
     if not geo:
-        raise HTTPException(404, f'Could not find "{trip.destination}" on the map. Try a simpler place name.')
+        raise HTTPException(404, f'Could not locate "{trip.destination}". Edit the trip and use a simple place name like "Goa, India".')
     data = await weather_service.fetch_dashboard(geo["lat"], geo["lng"])
     if not data:
-        raise HTTPException(502, "Weather service is not reachable right now.")
+        data = weather_service.demo_dashboard(geo["lat"], geo["lng"])   # labelled as sample
     return {"place": geo["label"], "lat": geo["lat"], "lng": geo["lng"],
             "trip_start": str(trip.start_date) if trip.start_date else None,
             "trip_end": str(trip.end_date) if trip.end_date else None, **data}

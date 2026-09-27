@@ -52,7 +52,7 @@ export default function WeatherDashboard({ tripId: tripIdProp, onSimulate }) {
       <div className="tw-row" style={{ justifyContent: "space-between" }}>
         <div>
           <h3 style={{ margin: 0 }}>Live weather · {w.place}</h3>
-          <div className="tw-warn">Open-Meteo · updated {at?.toLocaleTimeString()} · auto-refresh 60 s</div>
+          <div className="tw-warn">{w.source === "open-meteo" ? "Open-Meteo (live)" : w.source} · updated {at?.toLocaleTimeString()} · auto-refresh 60 s</div>
         </div>
         {onSimulate && <button className="tw-btn ghost" onClick={onSimulate}>Run what-if simulation</button>}
       </div>
