@@ -1,8 +1,14 @@
 import uuid
+from sqlalchemy import delete
+from models.twin import TwinModelState
+from models.invite import TripInvite
 from typing import List, Optional
 from datetime import datetime, timezone
 from sqlalchemy import select, or_
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import delete, text
+from models.twin import TwinModelState
+from models.invite import TripInvite
 
 from models.trip import Trip
 from models.participant import Participant
@@ -131,7 +137,34 @@ async def delete_trip(
     if not trip:
         return False
 
-    await db.delete(trip)
+    p = {"tid": trip_id}
+    people = "(SELECT id FROM participants WHERE trip_id = :tid)"
+    trip_expenses = (
+        "(SELECT id FROM expenses WHERE trip_id = :tid OR paid_by_id IN " + people + ")"
+    )
+    trip_bookings = "(SELECT id FROM bookings WHERE trip_id = :tid)"
+
+    await db.execute(text(
+        f"DELETE FROM refunds WHERE booking_id IN {trip_bookings} OR expense_id IN {trip_expenses}"), p)
+    await db.execute(text(
+        f"DELETE FROM expense_splits WHERE expense_id IN {trip_expenses} OR participant_id IN {people}"), p)
+    await db.execute(text(
+        f"DELETE FROM expenses WHERE trip_id = :tid OR paid_by_id IN {people}"), p)
+    await db.execute(text(
+        f"DELETE FROM payments WHERE trip_id = :tid OR from_participant_id IN {people} "
+        f"OR to_participant_id IN {people}"), p)
+    await db.execute(text(
+        f"DELETE FROM settlements WHERE trip_id = :tid OR from_participant_id IN {people} "
+        f"OR to_participant_id IN {people}"), p)
+    await db.execute(text("DELETE FROM itinerary_items WHERE trip_id = :tid"), p)
+    await db.execute(text("DELETE FROM bookings WHERE trip_id = :tid"), p)
+    await db.execute(delete(TwinModelState).where(TwinModelState.trip_id == trip_id))
+    await db.execute(delete(TripInvite).where(TripInvite.trip_id == trip_id))
+    await db.execute(text("DELETE FROM notifications WHERE trip_id = :tid"), p)
+    await db.execute(text("DELETE FROM participants WHERE trip_id = :tid"), p)
+    await db.execute(text("DELETE FROM trips WHERE id = :tid"), p)
+
     await db.commit()
+    db.expunge_all()
 
     return True

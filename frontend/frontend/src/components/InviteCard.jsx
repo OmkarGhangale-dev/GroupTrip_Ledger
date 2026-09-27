@@ -163,7 +163,7 @@ export default function InviteCard() {
           <button
             type="submit"
             disabled={busy !== "" || !email.trim()}
-            className="px-6 py-3 rounded-xl bg-primary-container hover:bg-primary text-on-primary-container font-label-md text-label-md font-bold disabled:opacity-50 cursor-pointer"
+            className="px-6 py-3 rounded-xl bg-black hover:bg-slate-800 text-white font-label-md text-label-md font-bold disabled:opacity-50 cursor-pointer"
           >
             {busy === "email" ? "Sending..." : "Send"}
           </button>

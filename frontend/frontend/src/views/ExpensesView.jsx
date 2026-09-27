@@ -38,19 +38,16 @@ export default function ExpensesView({ onOpenExpenseModal }) {
         <div className="absolute top-1/3 -left-20 w-[420px] h-[280px] bg-secondary-container/25 rounded-full blur-3xl pointer-events-none"></div>
         <div className="relative z-10 max-w-7xl mx-auto flex flex-col gap-10">
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
-            <div className="flex flex-col max-w-2xl">
-              <div className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-secondary-container/40 backdrop-blur-md w-fit mb-4">
-                <span className="w-1.5 h-1.5 rounded-full bg-primary animate-ping"></span>
-                <span className="font-label-sm text-label-sm uppercase tracking-widest text-primary font-bold">GROUP EXPENSES</span>
-                <span className="text-secondary/60 text-xs">•</span>
-                <span className="font-label-sm text-label-sm text-secondary">GOA EXPEDITION '24</span>
+            <div className="flex flex-col items-start gap-2.5 max-w-2xl">
+              <div className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-black/5 border border-black/10 text-black font-label-sm text-xs uppercase tracking-widest font-semibold">
+                <span className="w-1.5 h-1.5 rounded-full bg-black animate-ping"></span>
+                <span>GROUP EXPENSES</span>
+                <span>•</span>
+                <span>GOA EXPEDITION '24</span>
               </div>
-              <h1 className="font-headline-xl text-headline-xl text-on-surface tracking-tight leading-none mb-3">
+              <h1 className="font-instrument text-5xl md:text-6xl text-on-surface font-normal tracking-tight leading-none">
                 Expenses &amp; Splits
               </h1>
-              <p className="font-body-md text-body-md text-on-surface-variant max-w-xl">
-                Track group costs, see who paid, and review split allocations under the twilight ledger. Clear debits and smooth settlements in real time.
-              </p>
             </div>
             <div className="flex flex-wrap items-center gap-4 sm:self-start lg:self-end">
               <div className="flex items-center gap-3.5 px-5 py-3 rounded-xl bg-surface-container/60 backdrop-blur-xl shadow-lg border border-white/5">
@@ -63,7 +60,7 @@ export default function ExpensesView({ onOpenExpenseModal }) {
                 </div>
               </div>
               <button
-                className="group flex items-center gap-3 px-6 py-3.5 rounded-xl bg-primary-container hover:bg-primary text-on-primary-container font-label-md text-label-md transition-all duration-300 shadow-[0_0_24px_rgba(255,154,77,0.32)] hover:shadow-[0_0_32px_rgba(255,154,77,0.48)] transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
+                className="group flex items-center gap-3 px-6 py-3.5 rounded-xl bg-black hover:bg-slate-800 text-white font-label-md text-label-md transition-all duration-300 shadow-md transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
                 onClick={() => onOpenExpenseModal()}
               >
                 <span className="font-bold tracking-wide">+ Add Expense</span>
@@ -223,16 +220,12 @@ export default function ExpensesView({ onOpenExpenseModal }) {
               <table className="w-full text-left border-collapse">
                 <thead className="bg-[#F4F4F5]">
                   <tr className="border-b border-black/10 bg-[#F4F4F5] text-black font-semibold text-[10px] uppercase tracking-wider">
-<thead className="!bg-[#F4F4F5]">
-  <tr className="border-b border-black/10 !bg-[#F4F4F5] !text-black font-semibold text-[10px] uppercase tracking-wider">
-    <th className="py-4 px-6 !text-black font-bold">EXPENSE</th>
-    <th className="py-4 px-6 !text-black font-bold">CATEGORY</th>
-    <th className="py-4 px-6 !text-black font-bold">PAID BY</th>
-    <th className="py-4 px-6 !text-black font-bold">SPLIT METHOD</th>
-    <th className="py-4 px-6 !text-black font-bold">AMOUNT</th>
-    <th className="py-4 px-6 text-right !text-black font-bold">ACTIONS</th>
-  </tr>
-</thead>
+                    <th className="py-4 px-6 text-black font-bold">EXPENSE</th>
+                    <th className="py-4 px-6 text-black font-bold">CATEGORY</th>
+                    <th className="py-4 px-6 text-black font-bold">PAID BY</th>
+                    <th className="py-4 px-6 text-black font-bold">SPLIT METHOD</th>
+                    <th className="py-4 px-6 text-black font-bold">AMOUNT</th>
+                    <th className="py-4 px-6 text-right text-black font-bold">ACTIONS</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-black/5 font-inter text-xs text-black">

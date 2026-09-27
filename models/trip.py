@@ -87,29 +87,35 @@ class Trip(Base, TimestampMixin):
     participants = relationship(
         "Participant",
         back_populates="trip",
+        cascade="all, delete-orphan",
     )
 
     bookings = relationship(
         "Booking",
         back_populates="trip",
+        cascade="all, delete-orphan",
     )
 
     expenses = relationship(
         "Expense",
         back_populates="trip",
+        cascade="all, delete-orphan",
     )
 
     payments = relationship(
         "Payment",
         back_populates="trip",
+        cascade="all, delete-orphan",
     )
 
     settlements = relationship(
         "Settlement",
         back_populates="trip",
+        cascade="all, delete-orphan",
     )
 
     itinerary_items = relationship(
         "ItineraryItem",
         back_populates="trip",
+        cascade="all, delete-orphan",
     )

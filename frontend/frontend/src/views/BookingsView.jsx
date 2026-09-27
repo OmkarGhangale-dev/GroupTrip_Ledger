@@ -97,33 +97,17 @@ export default function BookingsView({ onOpenBookingModal, onOpenRefundModal }) 
 
         <div className="relative z-10 p-8 md:p-10 flex flex-col justify-between gap-8">
           <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high/80 backdrop-blur-md shadow-sm border border-white/5">
-                <span className="material-symbols-outlined text-primary text-base">confirmation_number</span>
-                <span className="font-label-sm text-label-sm text-primary uppercase tracking-widest font-bold">TRIP RESERVATIONS</span>
-              </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-container/40 backdrop-blur-md">
-                <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
-                <span className="font-label-sm text-label-sm text-secondary tracking-wider uppercase font-semibold">Route: Goa '24</span>
-              </span>
+          <div className="flex flex-col items-start gap-2.5 max-w-2xl">
+            <div className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-black/5 border border-black/10 text-black font-label-sm text-xs uppercase tracking-widest font-semibold">
+              <span className="w-1.5 h-1.5 rounded-full bg-black animate-ping"></span>
+              <span>RESERVATIONS &amp; VOUCHERS</span>
+              <span>•</span>
+              <span>EXPEDITION LEDGER</span>
             </div>
-            <div className="hidden sm:flex items-center gap-4 text-on-surface-variant">
-              <div className="flex items-center gap-1.5">
-                <span className="material-symbols-outlined text-sm text-primary">navigation</span>
-                <span className="font-label-sm text-label-sm tracking-widest uppercase">15.2993° N, 74.1240° E</span>
-              </div>
-              <span className="text-outline-variant">•</span>
-              <span className="font-label-sm text-label-sm uppercase tracking-widest text-secondary font-bold">Expedition Ledger</span>
-            </div>
-          </div>
-
-          <div className="max-w-2xl">
-            <h1 className="font-instrument text-5xl md:text-6xl text-on-surface font-normal tracking-tight leading-none mb-3">
+            <h1 className="font-instrument text-5xl md:text-6xl text-on-surface font-normal tracking-tight leading-none">
               Bookings &amp; Refunds
             </h1>
-            <p className="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
-              Organize flights, hotels, tours, and transport reservations with refund tracking and synchronised split payments across travelers.
-            </p>
+          </div>
           </div>
 
           <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-white/5">
@@ -148,7 +132,7 @@ export default function BookingsView({ onOpenBookingModal, onOpenRefundModal }) 
               </div>
             </div>
             <button
-              className="group flex items-center gap-3 px-5 py-3 rounded-xl bg-primary-container hover:bg-primary text-on-primary-container shadow-[0_0_24px_rgba(255,154,77,0.35)] transition-all duration-200 cursor-pointer"
+              className="group flex items-center gap-3 px-5 py-3 rounded-xl bg-black hover:bg-slate-800 text-white shadow-md transition-all duration-200 cursor-pointer"
               onClick={() => onOpenBookingModal()}
               type="button"
             >
@@ -230,7 +214,7 @@ export default function BookingsView({ onOpenBookingModal, onOpenRefundModal }) 
           </div>
           <div className="relative z-10 flex flex-col sm:flex-row items-center gap-4">
             <button
-              className="group flex items-center gap-3 px-6 py-3.5 rounded-xl bg-primary-container hover:bg-primary text-on-primary-container font-label-md text-label-md font-bold uppercase tracking-wider shadow-[0_0_28px_rgba(255,154,77,0.4)] transition-all duration-200 cursor-pointer"
+              className="group flex items-center gap-3 px-6 py-3.5 rounded-xl bg-black hover:bg-slate-800 text-white font-label-md text-label-md font-bold uppercase tracking-wider shadow-md transition-all duration-200 cursor-pointer"
               onClick={() => onOpenBookingModal()}
               type="button"
             >
@@ -343,7 +327,7 @@ export default function BookingsView({ onOpenBookingModal, onOpenRefundModal }) 
                             <button
                               type="button"
                               onClick={() => openUse(b)}
-                              className="px-3 py-1.5 rounded-lg bg-primary-container hover:bg-primary text-on-primary-container font-label-md text-label-md font-bold text-xs cursor-pointer"
+                              className="px-3 py-1.5 rounded-lg bg-black hover:bg-slate-800 text-white font-label-md text-label-md font-bold text-xs cursor-pointer"
                             >
                               Mark as used
                             </button>
@@ -467,7 +451,7 @@ export default function BookingsView({ onOpenBookingModal, onOpenRefundModal }) 
                 type="button"
                 onClick={handleMarkAsUsed}
                 disabled={!selectedPayer || markingUsed}
-                className="px-5 py-2.5 rounded-xl bg-primary-container hover:bg-primary text-on-primary-container font-label-md text-label-md font-bold disabled:opacity-50 cursor-pointer"
+                className="px-5 py-2.5 rounded-xl bg-black hover:bg-slate-800 text-white font-label-md text-label-md font-bold disabled:opacity-50 cursor-pointer"
               >
                 {markingUsed ? "Saving..." : "Confirm & add expense"}
               </button>

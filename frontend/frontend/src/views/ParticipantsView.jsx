@@ -41,38 +41,33 @@ export default function ParticipantsView({ onOpenParticipantModal }) {
     <div className="w-full min-h-screen px-6 lg:px-12 py-8 font-inter text-black">
       <div className="max-w-7xl mx-auto flex flex-col gap-8">
         {/* HEADER SECTION */}
-        <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-2">
-            <span className="px-3 py-1 rounded-full bg-black/5 border border-black/10 text-black font-label-sm text-xs uppercase tracking-widest font-semibold">
-              • TRIP MEMBERS • {trip?.name || "GOA TRIP"}
-            </span>
-          </div>
-
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
-            <div className="space-y-2 max-w-2xl">
-              <h1 className="font-instrument text-5xl md:text-6xl text-black tracking-tight leading-none font-normal">
-                Participants <em className="italic text-black/60">({participants.length})</em>
-              </h1>
-              <p className="text-sm text-black/60 leading-relaxed">
-                Manage everyone travelling in this trip, their roles, and automated settlement balances across the journey.
-              </p>
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+          <div className="flex flex-col items-start gap-2.5 max-w-2xl">
+            <div className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-black/5 border border-black/10 text-black font-label-sm text-xs uppercase tracking-widest font-semibold">
+              <span className="w-1.5 h-1.5 rounded-full bg-black animate-ping"></span>
+              <span>TRIP MEMBERS</span>
+              <span>•</span>
+              <span>{trip?.name || "GOA TRIP"}</span>
             </div>
-
-            <button
-              type="button"
-              onClick={() =>
-                document
-                  .getElementById("invite-card")
-                  ?.scrollIntoView({ behavior: "smooth" })
-              }
-              className="group flex items-center bg-black text-white text-xs font-semibold uppercase tracking-wider rounded-full overflow-hidden shadow-md hover:scale-105 transition-all cursor-pointer self-start lg:self-auto"
-            >
-              <span className="px-5 py-3 font-bold">+ Invite Member</span>
-              <span className="w-10 h-10 bg-white/20 flex items-center justify-center text-white group-hover:translate-x-0.5 transition-transform">
-                <span className="material-symbols-outlined text-base">arrow_forward</span>
-              </span>
-            </button>
+            <h1 className="font-instrument text-5xl md:text-6xl text-black tracking-tight leading-none font-normal">
+              Participants <em className="italic text-black/60">({participants.length})</em>
+            </h1>
           </div>
+
+          <button
+            type="button"
+            onClick={() =>
+              document
+                .getElementById("invite-card")
+                ?.scrollIntoView({ behavior: "smooth" })
+            }
+            className="group flex items-center bg-black hover:bg-slate-800 text-white text-xs font-bold uppercase tracking-wider rounded-full overflow-hidden shadow-md hover:scale-105 transition-all cursor-pointer self-start lg:self-auto"
+          >
+            <span className="px-5 py-3 font-bold">+ Invite Member</span>
+            <span className="w-10 h-10 bg-white/20 flex items-center justify-center text-white group-hover:translate-x-0.5 transition-transform">
+              <span className="material-symbols-outlined text-base">arrow_forward</span>
+            </span>
+          </button>
         </div>
 
         {/* METRIC SUMMARY DECK */}

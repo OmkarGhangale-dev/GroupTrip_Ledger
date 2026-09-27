@@ -709,7 +709,7 @@ export default function ReceiptScanner() {
               type="button"
               onClick={handleSave}
               disabled={!canSave || saving}
-              className="px-5 py-2.5 rounded-xl bg-primary-container hover:bg-primary text-on-primary-container font-label-md text-label-md font-bold disabled:opacity-50 cursor-pointer"
+              className="px-5 py-2.5 rounded-xl bg-black hover:bg-slate-800 text-white font-label-md text-label-md font-bold disabled:opacity-50 cursor-pointer"
             >
               {saving ? "Saving..." : "Add expense"}
             </button>

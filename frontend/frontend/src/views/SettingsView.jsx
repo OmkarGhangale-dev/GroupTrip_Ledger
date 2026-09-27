@@ -69,19 +69,16 @@ export default function SettingsView({ onOpenTripModal }) {
       {/* Immersive Hero Header */}
       <div className="relative w-full overflow-hidden -mt-16 pt-24 pb-14 px-6 md:px-12 bg-gradient-to-b from-surface-container-lowest via-surface-container-low to-background">
         <div className="absolute -top-24 right-1/4 w-[520px] h-[340px] bg-gradient-to-br from-primary-container/20 to-tertiary-container/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div className="relative z-10 max-w-7xl mx-auto flex flex-col gap-4">
-          <div className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-secondary-container/40 backdrop-blur-md w-fit">
-            <span className="w-1.5 h-1.5 rounded-full bg-primary animate-ping"></span>
-            <span className="font-label-sm text-label-sm uppercase tracking-widest text-primary font-bold">CONFIGURATION</span>
-            <span className="text-secondary/60 text-xs">•</span>
-            <span className="font-label-sm text-label-sm text-secondary">GOA EXPEDITION '24</span>
+        <div className="relative z-10 max-w-7xl mx-auto flex flex-col items-start gap-2.5">
+          <div className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-black/5 border border-black/10 text-black font-label-sm text-xs uppercase tracking-widest font-semibold">
+            <span className="w-1.5 h-1.5 rounded-full bg-black animate-ping"></span>
+            <span>CONFIGURATION</span>
+            <span>•</span>
+            <span>GOA EXPEDITION '24</span>
           </div>
           <h1 className="font-instrument text-5xl md:text-6xl text-on-surface font-normal tracking-tight leading-none">
             Trip Settings
           </h1>
-          <p className="font-body-md text-body-md text-on-surface-variant max-w-xl">
-            Update trip information, budget targets, dates, or manage expedition parameters.
-          </p>
         </div>
       </div>
 
@@ -187,7 +184,7 @@ export default function SettingsView({ onOpenTripModal }) {
             <div className="pt-2">
               <button
                 type="submit"
-                className="px-6 py-3.5 rounded-xl bg-primary-container hover:bg-primary text-on-primary-container font-label-md text-label-md font-bold shadow-[0_0_24px_rgba(255,154,77,0.35)] transition-all cursor-pointer disabled:opacity-50"
+                className="px-6 py-3.5 rounded-xl bg-black hover:bg-slate-800 text-white font-label-md text-label-md font-bold shadow-md transition-all cursor-pointer disabled:opacity-50"
                 disabled={saving}
               >
                 {saving ? "Saving Changes..." : "Save Changes"}
@@ -198,31 +195,15 @@ export default function SettingsView({ onOpenTripModal }) {
 
         {/* Info & Danger Side Column */}
         <div className="flex flex-col gap-6">
-          <div className="p-6 rounded-2xl bg-surface-container-low/70 backdrop-blur-xl shadow-xl border border-white/5">
-            <h3 className="font-headline-sm text-headline-sm text-on-surface font-semibold mb-4">Database Info</h3>
-            <div className="flex flex-col gap-3 font-body-sm text-body-sm">
-              <div>
-                <small className="text-on-surface-variant uppercase tracking-wider text-[10px] font-bold block mb-1">Trip ID (UUID):</small>
-                <code className="px-3 py-1.5 rounded-lg bg-surface-container-lowest text-primary text-xs font-mono block overflow-x-auto border border-white/5">{trip.id}</code>
-              </div>
-              <div>
-                <small className="text-on-surface-variant uppercase tracking-wider text-[10px] font-bold block mb-1">Created At:</small>
-                <span className="text-on-surface font-medium">
-                  {trip.created_at ? new Date(trip.created_at).toLocaleString("en-IN") : "N/A"}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div className="p-6 rounded-2xl bg-rose-950/30 backdrop-blur-xl shadow-xl border border-rose-500/20">
-            <h3 className="font-headline-sm text-headline-sm text-rose-400 font-semibold mb-2">Danger Zone</h3>
-            <p className="font-body-sm text-body-sm text-on-surface-variant mb-4 leading-relaxed">
+          <div className="p-6 rounded-2xl bg-white border border-black/10 shadow-sm">
+            <h3 className="font-instrument text-2xl text-black font-bold mb-2">Danger Zone</h3>
+            <p className="text-xs text-black/60 mb-5 leading-relaxed">
               Deleting a trip will permanently remove all associated participants, expenses, splits, bookings, and itinerary records.
             </p>
 
             <button
               type="button"
-              className="w-full py-3 px-4 rounded-xl bg-rose-600/20 hover:bg-rose-600 text-rose-300 hover:text-white font-label-md text-label-md font-bold border border-rose-500/40 transition-all cursor-pointer"
+              className="w-full py-3.5 px-4 rounded-full bg-black hover:bg-slate-800 text-white font-bold text-xs shadow-md hover:scale-[1.02] transition-all cursor-pointer"
               onClick={handleDeleteTrip}
             >
               Delete This Trip

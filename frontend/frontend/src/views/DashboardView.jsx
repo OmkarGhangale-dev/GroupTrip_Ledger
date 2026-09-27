@@ -35,7 +35,7 @@ export default function DashboardView({
           </p>
           <button
             onClick={() => onOpenTripModal()}
-            className="px-6 py-3 rounded-full bg-black text-white font-label-md text-label-md font-bold uppercase tracking-wider shadow-md hover:scale-105 transition-transform cursor-pointer"
+            className="px-6 py-3 rounded-full bg-black hover:bg-slate-800 text-white font-label-md text-label-md font-bold uppercase tracking-wider shadow-md hover:scale-105 transition-transform cursor-pointer"
           >
             + Create First Expedition
           </button>
@@ -82,28 +82,39 @@ export default function DashboardView({
   }, 0);
 
   // 3. Compute Category Expenses Breakdown dynamically
-  const categoryTotals = (expenses || []).reduce(
-    (acc, exp) => {
-      const cat = String(exp.category || "other").toLowerCase();
-      const amt = Number(exp.amount || 0);
-      if (cat.includes("food") || cat.includes("dining")) acc.food += amt;
-      else if (cat.includes("hotel") || cat.includes("stay") || cat.includes("accommodation")) acc.accommodation += amt;
-      else if (cat.includes("transport") || cat.includes("scooter") || cat.includes("flight")) acc.transport += amt;
-      else if (cat.includes("activity") || cat.includes("tour") || cat.includes("excursion")) acc.activities += amt;
-      else acc.other += amt;
-      return acc;
-    },
-    { food: 0, accommodation: 0, transport: 0, activities: 0, other: 0 }
-  );
+  const categoriesList = [
+    { key: "accommodation", label: "Accommodation", color: "#000000", match: ["hotel", "stay", "accommodation", "booking", "resort"] },
+    { key: "food", label: "Food & Dining", color: "#2563eb", match: ["food", "dining", "meal", "drink", "groceries", "restaurant"] },
+    { key: "transport", label: "Transportation", color: "#059669", match: ["transport", "scooter", "flight", "cab", "taxi", "fuel", "transit", "train"] },
+    { key: "activities", label: "Activities", color: "#7c3aed", match: ["activity", "tour", "excursion", "ticket", "sightseeing", "event"] },
+    { key: "other", label: "General & Other", color: "#64748b", match: [] },
+  ];
 
-  const grandExpenseTotal = totalExpenses || 1;
-  const catPct = {
-    food: Math.round((categoryTotals.food / grandExpenseTotal) * 100),
-    accommodation: Math.round((categoryTotals.accommodation / grandExpenseTotal) * 100),
-    transport: Math.round((categoryTotals.transport / grandExpenseTotal) * 100),
-    activities: Math.round((categoryTotals.activities / grandExpenseTotal) * 100),
-    other: Math.round((categoryTotals.other / grandExpenseTotal) * 100),
-  };
+  const categoryTotals = (expenses || []).reduce((acc, exp) => {
+    const cat = String(exp.category || "other").toLowerCase();
+    const amt = Number(exp.amount || 0);
+    const matched = categoriesList.find((c) => c.match.some((m) => cat.includes(m)));
+    const key = matched ? matched.key : "other";
+    acc[key] = (acc[key] || 0) + amt;
+    return acc;
+  }, { accommodation: 0, food: 0, transport: 0, activities: 0, other: 0 });
+
+  const grandExpenseTotal = (expenses || []).reduce((sum, exp) => sum + Number(exp.amount || 0), 0);
+
+  const categoryBreakdown = categoriesList.map((c) => {
+    const amt = categoryTotals[c.key] || 0;
+    const pct = grandExpenseTotal > 0 ? Math.round((amt / grandExpenseTotal) * 100) : 0;
+    return { ...c, amt, pct };
+  });
+
+  let cumulativePct = 0;
+  const donutSegments = categoryBreakdown
+    .filter((c) => c.pct > 0)
+    .map((c) => {
+      const offset = cumulativePct;
+      cumulativePct += c.pct;
+      return { ...c, offset };
+    });
 
   // 4. Filter dynamic optimal settlements
   const myPendingSettlements = (settlements || []).filter(
@@ -117,22 +128,16 @@ export default function DashboardView({
     <div className="w-full min-h-screen px-6 lg:px-12 py-6 flex flex-col gap-8 font-inter text-black">
       {/* HEADER BAR & TITLE */}
       <div className="max-w-7xl mx-auto w-full flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-black/10 pb-6">
-        <div className="flex flex-col gap-1">
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-bold uppercase tracking-widest text-primary">
-              EXPEDITION LEDGER
-            </span>
-            <span className="text-xs text-black/40">•</span>
-            <span className="text-xs font-semibold uppercase tracking-wider text-black/60">
-              {trip.destination || "GOA EXPEDITION '24"}
-            </span>
+        <div className="flex flex-col items-start gap-2.5">
+          <div className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-black/5 border border-black/10 text-black font-label-sm text-xs uppercase tracking-widest font-semibold">
+            <span className="w-1.5 h-1.5 rounded-full bg-black animate-ping"></span>
+            <span>EXPEDITION LEDGER</span>
+            <span>•</span>
+            <span>{trip.destination || "GOA EXPEDITION '24"}</span>
           </div>
           <h1 className="font-instrument text-5xl md:text-6xl text-black font-normal tracking-tight leading-none">
             {trip.name} <em className="italic text-black/70">Overview</em>
           </h1>
-          <p className="text-sm text-black/60 max-w-xl mt-1 leading-relaxed">
-            Real-time financial transparency, expense splits, and settlement matrix for {trip.destination || trip.name}.
-          </p>
         </div>
 
         {/* Action Controls */}
@@ -324,33 +329,21 @@ export default function DashboardView({
                   fill="none"
                   d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                 />
-                {catPct.food > 0 && (
+                {donutSegments.map((seg) => (
                   <path
-                    className="text-black"
-                    strokeDasharray={`${catPct.food}, 100`}
+                    key={seg.key}
+                    strokeDasharray={`${seg.pct}, 100`}
+                    strokeDashoffset={`-${seg.offset}`}
                     strokeWidth="4.5"
-                    strokeLinecap="round"
-                    stroke="currentColor"
+                    stroke={seg.color}
                     fill="none"
                     d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                   />
-                )}
-                {catPct.accommodation > 0 && (
-                  <path
-                    className="text-gray-500"
-                    strokeDasharray={`${catPct.accommodation}, 100`}
-                    strokeDashoffset={`-${catPct.food}`}
-                    strokeWidth="4.5"
-                    strokeLinecap="round"
-                    stroke="currentColor"
-                    fill="none"
-                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                  />
-                )}
+                ))}
               </svg>
               <div className="absolute flex flex-col items-center justify-center text-center">
                 <span className="font-instrument text-2xl font-bold text-black">
-                  {money(totalExpenses)}
+                  {money(grandExpenseTotal)}
                 </span>
                 <span className="text-[10px] uppercase tracking-wider text-black/50 font-bold">
                   TOTAL SPEND
@@ -359,47 +352,22 @@ export default function DashboardView({
             </div>
 
             {/* Category Breakdown List */}
-            <div className="space-y-3 pt-2 border-t border-black/5">
-              <div className="flex items-center justify-between text-xs">
-                <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-black"></span>
-                  <span className="font-medium text-black">Food &amp; Dining</span>
+            <div className="space-y-3 pt-3 border-t border-black/5">
+              {categoryBreakdown.map((cat) => (
+                <div key={cat.key} className="flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-2.5">
+                    <span
+                      className="w-3 h-3 rounded-full shrink-0"
+                      style={{ backgroundColor: cat.color }}
+                    ></span>
+                    <span className="font-semibold text-black">{cat.label}</span>
+                  </div>
+                  <div className="text-right">
+                    <span className="font-bold text-black block">{money(cat.amt)}</span>
+                    <span className="text-[10px] text-black/50">({cat.pct}%)</span>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <span className="font-bold text-black block">{money(categoryTotals.food)}</span>
-                  <span className="text-[10px] text-black/50">({catPct.food}%)</span>
-                </div>
-              </div>
-              <div className="flex items-center justify-between text-xs">
-                <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-gray-500"></span>
-                  <span className="font-medium text-black">Accommodation</span>
-                </div>
-                <div className="text-right">
-                  <span className="font-bold text-black block">{money(categoryTotals.accommodation)}</span>
-                  <span className="text-[10px] text-black/50">({catPct.accommodation}%)</span>
-                </div>
-              </div>
-              <div className="flex items-center justify-between text-xs">
-                <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-gray-400"></span>
-                  <span className="font-medium text-black">Transportation</span>
-                </div>
-                <div className="text-right">
-                  <span className="font-bold text-black block">{money(categoryTotals.transport)}</span>
-                  <span className="text-[10px] text-black/50">({catPct.transport}%)</span>
-                </div>
-              </div>
-              <div className="flex items-center justify-between text-xs">
-                <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-gray-300"></span>
-                  <span className="font-medium text-black">Activities</span>
-                </div>
-                <div className="text-right">
-                  <span className="font-bold text-black block">{money(categoryTotals.activities)}</span>
-                  <span className="text-[10px] text-black/50">({catPct.activities}%)</span>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
 
@@ -470,7 +438,7 @@ export default function DashboardView({
                         </span>
                         <button
                           onClick={() => onOpenPaymentModal(s)}
-                          className="px-3 py-1.5 rounded-full bg-black text-white text-[11px] font-semibold hover:scale-105 transition-transform cursor-pointer"
+                          className="px-3.5 py-1.5 rounded-full bg-black hover:bg-slate-800 text-white text-xs font-bold shadow-sm hover:scale-105 transition-all cursor-pointer"
                         >
                           Settle Up
                         </button>

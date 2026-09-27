@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import ChatbotLogo from "./common/ChatbotLogo";
 
 const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY || "";
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
@@ -325,7 +326,7 @@ export default function AIChatBot({
         onClick={() => setIsOpen(true)}
         title="Open TravelBot AI"
       >
-        <span className="chatbot-fab-icon">🤖</span>
+        <ChatbotLogo size={32} className="chatbot-fab-logo" />
         <span className="chatbot-fab-badge">AI</span>
         <div className="chatbot-fab-pulse"></div>
       </button>
@@ -340,7 +341,7 @@ export default function AIChatBot({
       <div className="chatbot-header">
         <div className="chatbot-header-left">
           <div className="chatbot-avatar">
-            <span>🤖</span>
+            <ChatbotLogo size={28} />
             <span className="chatbot-online-dot"></span>
           </div>
           <div className="chatbot-header-info">
@@ -410,7 +411,9 @@ export default function AIChatBot({
                 } ${msg.isError ? "chatbot-message-error" : ""}`}
               >
                 {msg.role === "assistant" && (
-                  <div className="chatbot-msg-avatar">🤖</div>
+                  <div className="chatbot-msg-avatar">
+                    <ChatbotLogo size={26} />
+                  </div>
                 )}
                 <div className="chatbot-msg-bubble">
                   <div
@@ -504,7 +507,9 @@ export default function AIChatBot({
 
             {loading && (
               <div className="chatbot-message chatbot-message-bot">
-                <div className="chatbot-msg-avatar">🤖</div>
+                <div className="chatbot-msg-avatar">
+                  <ChatbotLogo size={26} />
+                </div>
                 <div className="chatbot-msg-bubble chatbot-typing-bubble">
                   <div className="chatbot-typing-dots">
                     <span></span>

@@ -107,22 +107,22 @@ export default function ItineraryView({
         <div className="absolute -top-24 right-1/4 w-[520px] h-[340px] bg-gradient-to-br from-primary-container/20 to-tertiary-container/10 rounded-full blur-3xl pointer-events-none"></div>
         <div className="relative z-10 max-w-7xl mx-auto flex flex-col gap-10">
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
-            <div className="flex flex-col max-w-2xl">
-              <div className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-secondary-container/40 backdrop-blur-md w-fit mb-4">
-                <span className="w-1.5 h-1.5 rounded-full bg-primary animate-ping"></span>
-                <span className="font-label-sm text-label-sm uppercase tracking-widest text-primary font-bold">DAY-BY-DAY SCHEDULE</span>
-                <span className="text-secondary/60 text-xs">•</span>
-                <span className="font-label-sm text-label-sm text-secondary">GOA EXPEDITION '24</span>
+            <div className="flex flex-col items-start gap-2.5 max-w-2xl">
+              <div className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-black/5 border border-black/10 text-black font-label-sm text-xs uppercase tracking-widest font-semibold">
+                <span className="w-1.5 h-1.5 rounded-full bg-black animate-ping"></span>
+                <span>DAY-BY-DAY SCHEDULE</span>
+                <span>•</span>
+                <span>GOA EXPEDITION '24</span>
               </div>
-              <h1 className="font-instrument text-5xl md:text-6xl text-on-surface font-normal tracking-tight leading-none mb-3">
-                Trip Itinerary <span className="text-primary italic font-normal text-3xl">({itinerary.length} Events)</span>
+              <h1 className="font-instrument text-5xl md:text-6xl text-on-surface font-normal tracking-tight leading-none">
+                Trip Itinerary
               </h1>
-              <p className="font-body-md text-body-md text-on-surface-variant max-w-xl">
-                Planning itinerary for {trip?.name || "group trip"} ({trip?.destination || "destination"}) under the twilight skyline.
-              </p>
+              <span className="text-xs font-bold uppercase tracking-wider text-black/60">
+                {itinerary.length} Event{itinerary.length === 1 ? "" : "s"} Scheduled
+              </span>
             </div>
             <button
-              className="group flex items-center gap-3 px-6 py-3.5 rounded-xl bg-primary-container hover:bg-primary text-on-primary-container font-label-md text-label-md transition-all duration-300 shadow-[0_0_24px_rgba(255,154,77,0.32)] hover:shadow-[0_0_32px_rgba(255,154,77,0.48)] cursor-pointer sm:self-start lg:self-end"
+              className="group flex items-center gap-3 px-6 py-3.5 rounded-xl bg-black hover:bg-slate-800 text-white font-label-md text-label-md transition-all duration-300 shadow-md cursor-pointer sm:self-start lg:self-end"
               onClick={() => onOpenItineraryModal()}
             >
               <span className="font-bold tracking-wide">+ Add Schedule Item</span>
@@ -176,17 +176,17 @@ export default function ItineraryView({
           <div className="flex flex-col gap-6">
             {/* Day Filter Pills */}
             {tripDays.length > 0 && (
-              <div className="flex items-center gap-2 overflow-x-auto py-1">
-                <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold mr-2 shrink-0">
+              <div className="flex items-center gap-2.5 overflow-x-auto py-2 border-b border-black/5 pb-4 mb-2 scrollbar-thin">
+                <span className="text-xs font-bold uppercase tracking-wider text-black/60 shrink-0 mr-1">
                   Filter by Day:
                 </span>
                 <button
                   type="button"
                   onClick={() => setSelectedDayFilter("ALL")}
-                  className={`px-4 py-2 rounded-full font-label-md text-label-md transition-all cursor-pointer ${
+                  className={`px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                     selectedDayFilter === "ALL"
-                      ? "bg-secondary-container text-on-surface font-semibold shadow-[0_0_16px_rgba(85,45,170,0.4)]"
-                      : "bg-surface-container-high/40 hover:bg-surface-container-high text-on-surface-variant"
+                      ? "bg-black text-white shadow-sm"
+                      : "bg-black/5 hover:bg-black/10 text-black/70 border border-black/10"
                   }`}
                 >
                   All Days ({itinerary.length})
@@ -196,13 +196,13 @@ export default function ItineraryView({
                     key={d.dateStr}
                     type="button"
                     onClick={() => setSelectedDayFilter(d.dateStr)}
-                    className={`px-4 py-2 rounded-full font-label-md text-label-md transition-all cursor-pointer ${
+                    className={`px-4 py-2 rounded-full text-xs transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                       selectedDayFilter === d.dateStr
-                        ? "bg-secondary-container text-on-surface font-semibold shadow-[0_0_16px_rgba(85,45,170,0.4)]"
-                        : "bg-surface-container-high/40 hover:bg-surface-container-high text-on-surface-variant"
+                        ? "bg-black text-white font-bold shadow-sm"
+                        : "bg-black/5 hover:bg-black/10 text-black/70 border border-black/10"
                     }`}
                   >
-                    Day {d.dayNum} ({d.formatted})
+                    Day {d.dayNum} • {d.formatted}
                   </button>
                 ))}
               </div>
@@ -219,7 +219,7 @@ export default function ItineraryView({
                 </p>
                 <div className="flex flex-wrap items-center justify-center gap-3 mt-2">
                   <button
-                    className="px-6 py-3 rounded-xl bg-primary-container hover:bg-primary text-on-primary-container font-label-md text-label-md font-bold shadow-[0_0_20px_rgba(255,154,77,0.3)] transition-all cursor-pointer"
+                    className="px-6 py-3 rounded-xl bg-black hover:bg-slate-800 text-white font-label-md text-label-md font-bold shadow-md transition-all cursor-pointer"
                     onClick={() => onOpenItineraryModal()}
                   >
                     + Add First Event

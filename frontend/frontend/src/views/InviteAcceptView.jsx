@@ -120,7 +120,7 @@ export default function InviteAcceptView({ token }) {
         <button
           onClick={handleAccept}
           disabled={busy}
-          className="px-5 py-3 rounded-xl bg-primary-container hover:bg-primary text-on-primary-container font-bold disabled:opacity-50 cursor-pointer"
+          className="px-5 py-3 rounded-xl bg-black hover:bg-slate-800 text-white font-bold disabled:opacity-50 cursor-pointer"
         >
           {busy ? "Joining..." : "Join trip"}
         </button>

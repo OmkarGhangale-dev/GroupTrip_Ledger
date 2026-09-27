@@ -105,7 +105,7 @@ export default function Navbar({ onOpenNewTripModal, onOpenLogin, onLogout, isDa
             className="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-black text-white text-xs font-medium hover:scale-105 transition-transform cursor-pointer shadow-sm"
           >
             <span className="material-symbols-outlined text-sm">add</span>
-            <span>+ New Trip</span>
+            <span>New Trip</span>
           </button>
 
           {/* User Profile Pill */}

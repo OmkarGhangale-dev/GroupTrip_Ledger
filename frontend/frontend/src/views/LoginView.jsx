@@ -235,7 +235,7 @@ export default function LoginView({ onLoginSuccess }) {
 
           <button
             type="submit"
-            className="w-full py-3.5 rounded-xl bg-primary-container hover:bg-primary text-on-primary-container font-label-md text-label-md font-bold shadow-[0_0_24px_rgba(255,154,77,0.35)] transition-all cursor-pointer disabled:opacity-50 mt-2"
+            className="w-full py-3.5 rounded-xl bg-black hover:bg-slate-800 text-white font-label-md text-label-md font-bold shadow-md transition-all cursor-pointer disabled:opacity-50 mt-2"
             disabled={loading}
           >
             {loading

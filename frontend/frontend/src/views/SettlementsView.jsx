@@ -13,19 +13,16 @@ export default function SettlementsView({ onOpenPaymentModal }) {
         <div className="absolute -top-24 right-1/4 w-[520px] h-[340px] bg-gradient-to-br from-primary-container/20 to-tertiary-container/10 rounded-full blur-3xl pointer-events-none"></div>
         <div className="relative z-10 max-w-7xl mx-auto flex flex-col gap-10">
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
-            <div className="flex flex-col max-w-2xl">
-              <div className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-secondary-container/40 backdrop-blur-md w-fit mb-4">
-                <span className="w-1.5 h-1.5 rounded-full bg-primary animate-ping"></span>
-                <span className="font-label-sm text-label-sm uppercase tracking-widest text-primary font-bold">OPTIMAL DEBT SIMPLIFICATION</span>
-                <span className="text-secondary/60 text-xs">•</span>
-                <span className="font-label-sm text-label-sm text-secondary">GOA EXPEDITION '24</span>
+            <div className="flex flex-col items-start gap-2.5 max-w-2xl">
+              <div className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-black/5 border border-black/10 text-black font-label-sm text-xs uppercase tracking-widest font-semibold">
+                <span className="w-1.5 h-1.5 rounded-full bg-black animate-ping"></span>
+                <span>OPTIMAL DEBT SIMPLIFICATION</span>
+                <span>•</span>
+                <span>GOA EXPEDITION '24</span>
               </div>
-              <h1 className="font-instrument text-5xl md:text-6xl text-on-surface font-normal tracking-tight leading-none mb-3">
+              <h1 className="font-instrument text-5xl md:text-6xl text-on-surface font-normal tracking-tight leading-none">
                 Smart Settlements
               </h1>
-              <p className="font-body-md text-body-md text-on-surface-variant max-w-xl">
-                Our debt minimization algorithm collapses circular debits down to the minimum possible number of direct peer transfers.
-              </p>
             </div>
             <button
               className="flex items-center gap-2 px-5 py-3 rounded-xl bg-surface-container-high hover:bg-surface-bright text-on-surface font-label-md text-label-md transition-all shadow-md cursor-pointer sm:self-start lg:self-end border border-white/5"
@@ -66,52 +63,52 @@ export default function SettlementsView({ onOpenPaymentModal }) {
               </span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className={`grid grid-cols-1 ${settlements.length > 1 ? "md:grid-cols-2" : "max-w-2xl"} gap-6`}>
               {settlements.map((s, idx) => (
-                <div key={idx} className="p-6 rounded-2xl bg-surface-container-low/70 backdrop-blur-md shadow-xl border border-white/5 flex flex-col justify-between gap-6">
+                <div key={idx} className="p-7 rounded-3xl bg-white border border-black/10 shadow-sm flex flex-col justify-between gap-6">
                   <div className="flex items-center justify-between">
-                    <span className="font-label-sm text-label-sm font-bold tracking-widest text-primary uppercase">
+                    <span className="text-xs font-bold tracking-widest text-black/60 uppercase">
                       STEP {idx + 1} OF {settlements.length}
                     </span>
-                    <span className="material-symbols-outlined text-secondary text-base">hub</span>
+                    <span className="material-symbols-outlined text-black/40 text-lg">hub</span>
                   </div>
 
-                  <div className="flex items-center justify-between gap-3 my-2">
+                  <div className="flex items-center justify-between gap-4 py-4 px-6 rounded-2xl bg-black/5 border border-black/5">
                     {/* FROM USER */}
                     <div className="flex flex-col items-center text-center">
-                      <div className="w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 font-bold flex items-center justify-center text-lg mb-2 shadow-[0_0_16px_rgba(248,113,113,0.3)] border border-rose-500/30">
+                      <div className="w-14 h-14 rounded-full bg-rose-50 text-rose-600 font-bold flex items-center justify-center text-xl mb-2 border border-rose-200 shadow-sm">
                         {s.from_name.charAt(0).toUpperCase()}
                       </div>
-                      <strong className="text-on-surface font-semibold text-sm">{s.from_name}</strong>
-                      <span className="text-[10px] text-rose-400 font-bold uppercase tracking-wider mt-0.5">Owes</span>
+                      <strong className="text-black font-bold text-sm">{s.from_name}</strong>
+                      <span className="text-[10px] text-rose-600 font-bold uppercase tracking-wider mt-0.5">Owes</span>
                     </div>
 
                     {/* TRANSFER GRAPHIC */}
                     <div className="flex flex-col items-center flex-1">
-                      <span className="px-3 py-1 rounded-full bg-primary-container text-on-primary-container font-bold text-xs shadow-[0_0_12px_rgba(255,154,77,0.4)]">
+                      <span className="px-3.5 py-1.5 rounded-full bg-black text-white font-bold text-xs shadow-sm">
                         {money(s.amount)}
                       </span>
-                      <span className="material-symbols-outlined text-primary text-xl my-1">east</span>
-                      <span className="text-[10px] text-on-surface-variant/70 uppercase tracking-widest">Direct</span>
+                      <span className="material-symbols-outlined text-black/40 text-xl my-1">east</span>
+                      <span className="text-[10px] text-black/40 font-bold uppercase tracking-widest">Direct</span>
                     </div>
 
                     {/* TO USER */}
                     <div className="flex flex-col items-center text-center">
-                      <div className="w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold flex items-center justify-center text-lg mb-2 shadow-[0_0_16px_rgba(52,211,153,0.3)] border border-emerald-500/30">
+                      <div className="w-14 h-14 rounded-full bg-emerald-50 text-emerald-600 font-bold flex items-center justify-center text-xl mb-2 border border-emerald-200 shadow-sm">
                         {s.to_name.charAt(0).toUpperCase()}
                       </div>
-                      <strong className="text-on-surface font-semibold text-sm">{s.to_name}</strong>
-                      <span className="text-[10px] text-emerald-400 font-bold uppercase tracking-wider mt-0.5">Gets Paid</span>
+                      <strong className="text-black font-bold text-sm">{s.to_name}</strong>
+                      <span className="text-[10px] text-emerald-600 font-bold uppercase tracking-wider mt-0.5">Gets Paid</span>
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-white/5 flex items-center justify-between gap-3">
-                    <p className="font-body-sm text-body-sm text-on-surface-variant">
-                      Transfer <strong className="text-on-surface">{money(s.amount)}</strong> to <strong className="text-on-surface">{s.to_name}</strong>
+                  <div className="pt-4 border-t border-black/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <p className="text-xs text-black/70">
+                      Transfer <strong className="text-black font-bold">{money(s.amount)}</strong> to <strong className="text-black font-bold">{s.to_name}</strong>
                     </p>
 
                     <button
-                      className="px-4 py-2 rounded-xl bg-primary-container hover:bg-primary text-on-primary-container font-label-md text-label-md font-bold shadow-[0_0_16px_rgba(255,154,77,0.3)] transition-all cursor-pointer shrink-0"
+                      className="px-5 py-2.5 rounded-full bg-black hover:bg-slate-800 text-white font-bold text-xs shadow-sm hover:scale-105 transition-all cursor-pointer shrink-0 self-start sm:self-auto"
                       onClick={() =>
                         onOpenPaymentModal({
                           from_participant_id: s.from_participant_id,

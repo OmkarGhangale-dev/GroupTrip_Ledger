@@ -69,8 +69,8 @@ export default function AetheraHero({
       <HeroVideoBackground />
 
       {/* HEADER / NAVIGATION */}
-      <header className="relative z-10">
-        <nav className="flex justify-between items-center px-8 py-6 max-w-7xl mx-auto">
+      <header className="relative z-10 w-full">
+        <nav className="flex justify-between items-center px-6 sm:px-10 lg:px-12 py-6 w-full">
           {/* Logo */}
           <span
             className="font-instrument text-3xl tracking-tight select-none cursor-pointer"

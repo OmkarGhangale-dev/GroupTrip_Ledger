@@ -92,7 +92,7 @@ export default function QuickAddExpense() {
         <button
           type="submit"
           disabled={busy || !text.trim() || !trip}
-          className="px-6 py-3.5 rounded-xl bg-primary-container hover:bg-primary text-on-primary-container font-label-md text-label-md font-bold transition-all disabled:opacity-50 cursor-pointer"
+          className="px-6 py-3.5 rounded-xl bg-black hover:bg-slate-800 text-white font-label-md text-label-md font-bold transition-all disabled:opacity-50 cursor-pointer"
         >
           {busy ? "Reading..." : "Add"}
         </button>
@@ -162,7 +162,7 @@ export default function QuickAddExpense() {
               type="button"
               onClick={handleConfirm}
               disabled={busy}
-              className="px-5 py-2.5 rounded-xl bg-primary-container hover:bg-primary text-on-primary-container font-label-md text-label-md font-bold disabled:opacity-50 cursor-pointer"
+              className="px-5 py-2.5 rounded-xl bg-black hover:bg-slate-800 text-white font-label-md text-label-md font-bold disabled:opacity-50 cursor-pointer"
             >
               {busy ? "Saving..." : "Add expense"}
             </button>

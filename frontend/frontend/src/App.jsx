@@ -232,16 +232,9 @@ export default function App() {
                 }
               />
             )}
-          </div>
-                    {activeTab === "settings" && (
-            <SettingsView
-              onOpenTripModal={(data = null) =>
-                setTripModal({ isOpen: true, data })
-              }
-            />
-          )}
 
-          {activeTab === "twin" && <TwinView />}
+            {activeTab === "twin" && <TwinView />}
+          </div>
         </main>
         
       </div>

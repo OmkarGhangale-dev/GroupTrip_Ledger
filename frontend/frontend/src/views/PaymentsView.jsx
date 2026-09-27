@@ -27,21 +27,18 @@ export default function PaymentsView({ onOpenPaymentModal }) {
       <div className="max-w-7xl mx-auto w-full flex flex-col gap-8">
         {/* HEADER SECTION */}
         <div className="flex flex-col gap-4 border-b border-black/10 pb-6">
-          <div className="flex items-center gap-2">
-            <span className="px-3 py-1 rounded-full bg-black/5 border border-black/10 text-black font-label-sm text-xs uppercase tracking-widest font-semibold">
-              • FINANCIAL TRANSFERS •
-            </span>
-          </div>
-
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
-            <div className="space-y-2 max-w-2xl">
-              <h1 className="font-instrument text-5xl md:text-6xl text-black font-normal tracking-tight leading-none">
-                Payments &amp; <em className="italic text-black/60">Balances</em>
-              </h1>
-              <p className="text-sm text-black/60 leading-relaxed">
-                Live net balances and history of peer-to-peer payments and debt settlements under the ledger.
-              </p>
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+          <div className="flex flex-col items-start gap-2.5 max-w-2xl">
+            <div className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-black/5 border border-black/10 text-black font-label-sm text-xs uppercase tracking-widest font-semibold">
+              <span className="w-1.5 h-1.5 rounded-full bg-black animate-ping"></span>
+              <span>FINANCIAL TRANSFERS</span>
+              <span>•</span>
+              <span>EXPEDITION LEDGER</span>
             </div>
+            <h1 className="font-instrument text-5xl md:text-6xl text-black font-normal tracking-tight leading-none">
+              Payments &amp; <em className="italic text-black/60">Balances</em>
+            </h1>
+          </div>
 
             <div className="flex flex-wrap items-center gap-4">
               <div className="flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-white border border-black/10 shadow-sm">
@@ -52,7 +49,7 @@ export default function PaymentsView({ onOpenPaymentModal }) {
                 </div>
               </div>
               <button
-                className="flex items-center gap-2 px-5 py-3 rounded-full bg-black text-white text-xs font-semibold uppercase tracking-wider shadow-md hover:scale-105 transition-all cursor-pointer disabled:opacity-50"
+                className="flex items-center gap-2 px-5 py-3 rounded-full bg-black hover:bg-slate-800 text-white text-xs font-bold uppercase tracking-wider shadow-md hover:scale-105 transition-all cursor-pointer disabled:opacity-50"
                 onClick={() => onOpenPaymentModal()}
                 disabled={participants.length < 2}
               >
@@ -122,7 +119,7 @@ export default function PaymentsView({ onOpenPaymentModal }) {
                     <div className="h-9 flex items-center">
                       {isNegative ? (
                         <button
-                          className="w-full py-2 px-3 rounded-full bg-black text-white text-xs font-semibold hover:scale-[1.02] transition-all cursor-pointer shadow-sm"
+                          className="w-full py-2 px-3 rounded-full bg-black hover:bg-slate-800 text-white text-xs font-bold shadow-sm hover:scale-[1.02] transition-all cursor-pointer"
                           onClick={() =>
                             onOpenPaymentModal({
                               from_participant_id: b.participant_id,
@@ -160,7 +157,7 @@ export default function PaymentsView({ onOpenPaymentModal }) {
                 When someone settles up via cash or UPI, record the transaction here to update balances.
               </p>
               <button
-                className="mt-2 px-6 py-2.5 rounded-full bg-black text-white text-xs font-semibold hover:scale-105 transition-all cursor-pointer disabled:opacity-50"
+                className="mt-2 px-6 py-2.5 rounded-full bg-black hover:bg-slate-800 text-white text-xs font-bold shadow-md hover:scale-105 transition-all cursor-pointer disabled:opacity-50"
                 onClick={() => onOpenPaymentModal()}
                 disabled={participants.length < 2}
               >
