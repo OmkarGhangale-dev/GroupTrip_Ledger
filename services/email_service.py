@@ -2,6 +2,8 @@ import asyncio
 import smtplib
 import ssl
 from email.message import EmailMessage
+import httpx
+from app.config import settings
 
 import httpx
 
@@ -44,3 +46,17 @@ async def send_email(to: str, subject: str, text: str, html_body: str) -> None:
         return
 
     raise RuntimeError("Email is not configured on the server (set SMTP_* in .env)")
+
+async def _send_brevo(to_email: str, subject: str, html: str):
+    async with httpx.AsyncClient(timeout=15) as c:
+        r = await c.post(
+            "https://api.brevo.com/v3/smtp/email",
+            headers={"api-key": settings.BREVO_API_KEY, "accept": "application/json"},
+            json={
+                "sender": {"email": settings.EMAIL_FROM, "name": "Pomaii"},
+                "to": [{"email": to_email}],
+                "subject": subject,
+                "htmlContent": html,
+            },
+        )
+        r.raise_for_status()
