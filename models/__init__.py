@@ -13,3 +13,4 @@ from models.associations import (
 from models.user import User
 from models.notification import Notification
 from models.invite import TripInvite  # noqa: F401
+from models.twin import TwinModelState  # noqa: F401

@@ -9,18 +9,7 @@ export default function LandingNavbar({ onOpenLogin, onOpenRegister, isDark, tog
       </div>
 
       <div className="notosan-nav-right flex items-center gap-3">
-        {toggleTheme && (
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="p-2 rounded-xl bg-surface-container/60 hover:bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer flex items-center justify-center"
-            title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
-          >
-            <span className="material-symbols-outlined text-xl text-primary">
-              {isDark ? "light_mode" : "dark_mode"}
-            </span>
-          </button>
-        )}
+
         <button className="btn-outlined-notosan cursor-pointer" onClick={onOpenLogin}>
           Sign In
         </button>

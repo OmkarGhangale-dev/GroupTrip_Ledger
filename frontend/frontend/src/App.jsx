@@ -27,6 +27,7 @@ import PaymentModal from "./components/modals/PaymentModal";
 import RefundModal from "./components/modals/RefundModal";
 import ItineraryModal from "./components/modals/ItineraryModal";
 import ToastContainer from "./components/modals/Toast";
+import TwinView from "./views/TwinView";// inside <main>: 
 
 export default function App() {
   const { loading, error, trip, itinerary, addItineraryItem } = useTrip();
@@ -232,7 +233,17 @@ export default function App() {
               />
             )}
           </div>
+                    {activeTab === "settings" && (
+            <SettingsView
+              onOpenTripModal={(data = null) =>
+                setTripModal({ isOpen: true, data })
+              }
+            />
+          )}
+
+          {activeTab === "twin" && <TwinView />}
         </main>
+        
       </div>
 
       {/* AI TRAVEL CHATBOT - Global Floating Widget */}

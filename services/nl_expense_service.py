@@ -28,6 +28,11 @@ CATEGORIES = [
 ]
 
 SELF_WORDS = {"me", "i", "myself", "my", "self"}
+WIDE_RE = re.compile(
+    r"\b(all|everyone|everybody|each of us|entire group|whole group|"
+    r"all members|rest of (?:the )?(?:group|us|them))\b",
+    re.I,
+)
 
 SYSTEM_PROMPT = f"""You extract expense details from one sentence.
 Reply with ONLY a JSON object, no markdown, no explanation, with these keys:
@@ -42,9 +47,23 @@ Reply with ONLY a JSON object, no markdown, no explanation, with these keys:
 - items: array of {{"name": string, "amount": number, "for": [names]}} for separately listed line items. "for" is the people who had that item; [] means shared by everyone in the split. [] if the bill is not itemised.
 - fixed_amounts: object name -> exact amount that person owes, ONLY when the sentence states that person's own share ("Rahul's share was 500"). {{}} otherwise. Never put the total here.
 - split_method: "equal" (the server decides the real method)
+- items: an EXTRA amount on top of the shared split for a person or a group. "Omkar had a beer for 1000" -> {{"name":"Beer","amount":1000,"for":["Omkar"]}}. The rest of the bill is then shared by remainder_among.
+- fixed_amounts: ONLY when a person's WHOLE share is stated ("Rahul's share was 500", "Rahul owes 500"). That person is then left out of the rest split.
+- percentages: object name -> percent of the WHOLE bill that person owes ("Rahul pays 30%"). {{}} if none. That person is then left out of the rest split.
+- exclude: names left out entirely ("everyone except Aman", "Aman didn't have any"). [] if none.
+- remainder_among: who shares whatever is left after items / fixed_amounts / percentages. Use "all" for everyone / all participants / the rest of the group / all of us, a list of names when specific people are named, or "" when the whole bill is simply split among "participants".
+- amount: if a TOTAL / bill is stated, use it exactly. Never add the items to it.
+- Never put the total in fixed_amounts.
 
-Example: "Dinner 1500 for me, Rahul and Aman. Pizza 600, Aman's beer 250, split the rest" ->
-{{"amount":1500,"items":[{{"name":"Pizza","amount":600,"for":[]}},{{"name":"Beer","amount":250,"for":["Aman"]}}],"participants":["me","Rahul","Aman"]}}
+Examples:
+"Omkar bought a beer for 1000 and total bill was 4000, rest split equally among all the participants" ->
+{{"amount":4000,"title":"Dinner","payer":"Omkar","participants":[],"items":[{{"name":"Beer","amount":1000,"for":["Omkar"]}}],"remainder_among":"all"}}
+"Dinner 1500 for me, Rahul and Aman. Pizza 600, Aman's beer 250, split the rest" ->
+{{"amount":1500,"participants":["me","Rahul","Aman"],"items":[{{"name":"Pizza","amount":600,"for":[]}},{{"name":"Beer","amount":250,"for":["Aman"]}}],"remainder_among":""}}
+"Taxi 900 paid by Priya, everyone except Rahul" ->
+{{"amount":900,"payer":"Priya","participants":[],"exclude":["Rahul"],"remainder_among":"all"}}
+"Hotel 8000, Rahul pays 50%, rest split equally among everyone else" ->
+{{"amount":8000,"percentages":{{"Rahul":50}},"remainder_among":"all"}}
 """
 
 
@@ -106,7 +125,7 @@ async def _ask_llm(text: str) -> dict:
                     json={
                         "model": model,
                         "temperature": 0,
-                        "max_tokens": 500,
+                        "max_tokens": 1200,
                         "messages": [
                             {"role": "system", "content": SYSTEM_PROMPT},
                             {"role": "user", "content": text},
@@ -154,7 +173,9 @@ async def parse_expense(
 
     # ---- who is in the split -------------------------------------------
     names = data.get("participants") or []
-    chosen: list[Participant] = [] if names else list(people)
+    if not isinstance(names, list):
+        names = []
+    chosen: list[Participant] = []
 
     def add(p):
         if p and p.id not in {c.id for c in chosen}:
@@ -164,6 +185,29 @@ async def parse_expense(
         add(find(n))
 
     payer = find(data.get("payer") or "me")
+
+    excluded_ids = set()
+    for n in data.get("exclude") or []:
+        p = find(n)
+        if p:
+            excluded_ids.add(p.id)
+
+    # who shares "the rest": everyone, named people, or the listed participants
+    ra = data.get("remainder_among")
+    rest_group: list[Participant] = []
+    if isinstance(ra, list) and ra:
+        rest_group = [p for p in (find(n) for n in ra) if p]
+    elif isinstance(ra, str) and ra.strip().lower() in ("all", "everyone", "everybody"):
+        rest_group = list(people)
+    elif not names:
+        rest_group = list(people)
+    elif ra is None and WIDE_RE.search(text or ""):
+        rest_group = list(people)
+    if not rest_group:
+        rest_group = list(chosen) if chosen else list(people)
+    rest_group = [p for p in rest_group if p.id not in excluded_ids]
+    for p in rest_group:
+        add(p)
 
     # ---- weights and households ----------------------------------------
     weights: dict = {}
@@ -188,7 +232,7 @@ async def parse_expense(
                 add(m)
                 weights.setdefault(m.id, 1 / len(members))
 
-    # ---- items ----------------------------------------------------------
+    # ---- items (extras on top of the shared split) ---------------------
     items = []
     raw_items = data.get("items") or []
     if isinstance(raw_items, list):
@@ -204,18 +248,38 @@ async def parse_expense(
                 add(p)
             items.append((str(it.get("name") or "Item"), a, who))
 
-    # ---- fixed amounts (ignored when the bill is itemised) --------------
-    fixed: dict = {}
+    # ---- amount ---------------------------------------------------------
+    try:
+        amount = float(data["amount"])
+    except (KeyError, TypeError, ValueError):
+        amount = sum(a for _, a, _ in items) / 100 if items else 0
+    if amount <= 0:
+        raise HTTPException(422, "I couldn't find an amount in that sentence.")
+    total = round(amount * 100)
+
+    # ---- whole-share claims: fixed amounts and percentages -------------
+    claimed: dict = {}
     raw_f = data.get("fixed_amounts") or {}
-    if isinstance(raw_f, dict) and not items:
+    if isinstance(raw_f, dict):
         for n, v in raw_f.items():
             p = find(n)
             try:
                 c = round(float(v) * 100)
             except (TypeError, ValueError):
                 continue
+            if p and c > 0 and c < total:      # a "share" equal to the total is a mistake
+                claimed[p.id] = c
+                add(p)
+    raw_p = data.get("percentages") or {}
+    if isinstance(raw_p, dict):
+        for n, v in raw_p.items():
+            p = find(n)
+            try:
+                c = round(total * float(v) / 100)
+            except (TypeError, ValueError):
+                continue
             if p and c > 0:
-                fixed[p.id] = c
+                claimed[p.id] = c
                 add(p)
 
     if unresolved:
@@ -227,14 +291,8 @@ async def parse_expense(
             "login email is added as a participant.",
         )
 
-    # ---- amount ---------------------------------------------------------
-    try:
-        amount = float(data["amount"])
-    except (KeyError, TypeError, ValueError):
-        amount = sum(a for _, a, _ in items) / 100 if items else 0
-    if amount <= 0:
-        raise HTTPException(422, "I couldn't find an amount in that sentence.")
-    total = round(amount * 100)
+    chosen = [p for p in chosen if p.id not in excluded_ids]
+    rest_group = [p for p in rest_group if p.id not in excluded_ids]
 
     # ---- calculate ------------------------------------------------------
     per = {p.id: 0 for p in chosen}
@@ -243,71 +301,56 @@ async def parse_expense(
     def w_for(group):
         return {p.id: weights.get(p.id, 1.0) for p in group}
 
-    if items:
-        spent = sum(a for _, a, _ in items)
-        if spent > total:
-            raise HTTPException(
-                422, "The listed items add up to more than the total amount."
-            )
-        for name, a, who in items:
-            group = who or chosen
-            for pid, c in _allocate(a, w_for(group)).items():
-                per[pid] += c
-            notes.append(
-                f"{name} ₹{a / 100:.2f} → "
-                + (", ".join(p.name for p in who) if who else "everyone")
-            )
-        rest = total - spent
-        if rest > 0:
-            for pid, c in _allocate(rest, w_for(chosen)).items():
-                per[pid] += c
-            notes.append(f"Remaining ₹{rest / 100:.2f} shared by everyone")
-
-    elif fixed:
-        remaining = total - sum(fixed.values())
-        rest_people = [p for p in chosen if p.id not in fixed]
-        if remaining < 0:
-            raise HTTPException(
-                422, "The stated shares add up to more than the total amount."
-            )
-        if rest_people:
-            if remaining <= 0:
-                raise HTTPException(
-                    422,
-                    "The stated shares use up the whole amount, so nothing is "
-                    "left to split with "
-                    + ", ".join(p.name for p in rest_people) + ".",
-                )
-            for pid, c in _allocate(remaining, w_for(rest_people)).items():
-                per[pid] = c
-        elif remaining != 0:
-            raise HTTPException(
-                422,
-                f"The shares add up to ₹{sum(fixed.values()) / 100:.2f} "
-                f"but the total is ₹{amount:.2f}.",
-            )
-        per.update(fixed)
-        notes.append(
-            "Stated shares: "
-            + ", ".join(
-                f"{p.name} ₹{fixed[p.id] / 100:.2f}"
-                for p in chosen if p.id in fixed
-            )
+    spent = sum(a for _, a, _ in items)
+    claimed_total = sum(claimed.values())
+    if spent + claimed_total > total:
+        raise HTTPException(
+            422, "The listed items and stated shares add up to more than the total amount."
         )
 
-    else:
-        for pid, c in _allocate(total, w_for(chosen)).items():
-            per[pid] = c
+    for name, a, who in items:
+        group = [p for p in (who or rest_group) if p.id not in claimed]
+        if not group:
+            group = who or rest_group
+        for pid, c in _allocate(a, w_for(group)).items():
+            per[pid] = per.get(pid, 0) + c
+        notes.append(
+            f"{name} ₹{a / 100:.2f} → "
+            + (", ".join(p.name for p in who) if who else "everyone")
+        )
+
+    for pid, c in claimed.items():
+        per[pid] = per.get(pid, 0) + c
+    if claimed:
+        notes.append(
+            "Stated shares: "
+            + ", ".join(f"{p.name} ₹{claimed[p.id] / 100:.2f}" for p in chosen if p.id in claimed)
+        )
+
+    rest = total - spent - claimed_total
+    rest_people = [p for p in rest_group if p.id not in claimed]
+    if rest > 0:
+        if not rest_people:
+            raise HTTPException(
+                422,
+                f"₹{rest / 100:.2f} is left over but I can't tell who shares it. "
+                "Say who splits the rest, e.g. 'rest split equally among everyone'.",
+            )
+        for pid, c in _allocate(rest, w_for(rest_people)).items():
+            per[pid] = per.get(pid, 0) + c
+        if items or claimed:
+            notes.append(
+                f"Remaining ₹{rest / 100:.2f} split among "
+                + ("everyone" if len(rest_people) == len(people) else ", ".join(p.name for p in rest_people))
+            )
 
     if any(weights.get(p.id, 1.0) != 1.0 for p in chosen):
         notes.append(
             "Shares: "
-            + ", ".join(
-                f"{p.name} ×{weights.get(p.id, 1.0):.2g}" for p in chosen
-            )
+            + ", ".join(f"{p.name} ×{weights.get(p.id, 1.0):.2g}" for p in chosen)
         )
 
-    uneven = bool(items or fixed) or any(
+    uneven = bool(items or claimed) or any(
         weights.get(p.id, 1.0) != 1.0 for p in chosen
     )
     split_method = "custom" if uneven else "equal"
@@ -319,6 +362,12 @@ async def parse_expense(
     ]
     if not splits:
         raise HTTPException(422, "Nobody ended up owing anything.")
+    if len(splits) == 1 and splits[0].participant_id == payer.id and len(people) > 1:
+        raise HTTPException(
+            422,
+            "That would leave only the payer owing everything. Say who shares the bill, "
+            "e.g. 'split equally among everyone'.",
+        )
 
     category = data.get("category")
     if category not in CATEGORIES:

@@ -1,0 +1,53 @@
+.twin{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;color:inherit;max-width:100%;min-width:0;position:relative;z-index:0}
+.twin h2{margin:0;font-size:22px}
+.twin .tw-sub{opacity:.7;font-size:13px;margin-top:2px}
+.tw-grid{display:grid;grid-template-columns:2fr 1fr;gap:16px}
+@media(max-width:1000px){.tw-grid{grid-template-columns:1fr}}
+.tw-card{background:rgba(255,255,255,.04);border:1px solid rgba(128,128,128,.25);border-radius:14px;padding:16px}
+.tw-card h3{margin:0 0 10px;font-size:14px;letter-spacing:.04em;text-transform:uppercase;opacity:.8}
+.tw-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.tw-chip{padding:6px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.4);background:transparent;color:inherit;cursor:pointer;font-size:13px}
+.tw-chip.on{background:#2563eb;color:#fff;border-color:#2563eb}
+.tw-badge{padding:3px 10px;border-radius:999px;font-size:12px;font-weight:600;color:#fff}
+.tw-low{background:#22c55e}.tw-moderate{background:#eab308}.tw-high{background:#f97316}.tw-extreme{background:#dc2626}
+.tw-slider{display:grid;grid-template-columns:120px 1fr 70px;gap:8px;align-items:center;margin:8px 0;font-size:13px}
+.tw-slider input[type=range]{width:100%}
+.tw-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.tw-kpi{border:1px solid rgba(128,128,128,.25);border-radius:12px;padding:10px}
+.tw-kpi small{opacity:.65;display:block}
+.tw-kpi b{font-size:20px}
+.tw-up{color:#dc2626}.tw-down{color:#16a34a}
+.tw-days{display:flex;gap:6px;align-items:flex-end;height:110px}
+.tw-day{flex:1;text-align:center;font-size:11px}
+.tw-bar{border-radius:6px 6px 0 0;min-height:4px}
+.tw-post{font-size:13px;padding:8px 0;border-bottom:1px solid rgba(128,128,128,.2)}
+.tw-post small{opacity:.6}
+.tw-list{display:grid;gap:6px;max-height:280px;overflow:auto}
+.tw-item{display:flex;justify-content:space-between;gap:8px;font-size:13px;padding:6px 8px;border-radius:8px;border:1px solid rgba(128,128,128,.2)}
+.tw-btn{padding:8px 14px;border-radius:10px;border:0;background:#2563eb;color:#fff;cursor:pointer;font-weight:600}
+.tw-btn.ghost{background:transparent;border:1px solid rgba(128,128,128,.5);color:inherit}
+.tw-warn{font-size:12px;opacity:.75}
+
+/* weather dashboard */
+.wd-now{display:flex;gap:20px;align-items:center;margin:14px 0}
+.wd-big{font-size:44px;font-weight:700}
+.wd-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px}
+.wd-hour{min-width:64px;text-align:center;border:1px solid rgba(128,128,128,.25);border-radius:12px;padding:8px 4px;display:grid;gap:2px;justify-items:center}
+.wd-bar{width:6px;border-radius:4px;background:#2563eb}
+.wd-days{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px}
+.wd-day{border:1px solid rgba(128,128,128,.25);border-radius:12px;padding:10px;text-align:center;display:grid;gap:2px}
+.wd-day.trip{border-color:#2563eb;background:rgba(37,99,235,.08)}
+
+/* layout fixes */
+.twin>*{min-width:0}
+.tw-grid>*,.tw-kpis>*{min-width:0}
+.twin .leaflet-container{z-index:0;isolation:isolate;position:relative}
+.twin .tw-card{overflow:hidden;position:relative}
+.tw-post{overflow-wrap:anywhere;word-break:break-word}
+.tw-post a{color:inherit}
+.wd-scroll{max-width:100%}
+
+/* steady layout: cards keep their own height */
+.tw-grid{align-items:start}
+.tw-social{max-height:380px;overflow-y:auto;padding-right:4px}
+.tw-post{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}

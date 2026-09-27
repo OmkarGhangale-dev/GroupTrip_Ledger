@@ -13,6 +13,7 @@ export default function Sidebar({ activeTab, setActiveTab }) {
     { id: "settlements", label: "Smart Settlements", iconName: "hub" },
     { id: "itinerary", label: "Itinerary", iconName: "explore", count: itinerary.length },
     { id: "settings", label: "Trip Settings", iconName: "tune" },
+    { id: "twin", label: "Weather Twin", icon: <span>⛈</span> },
   ];
 
   return (

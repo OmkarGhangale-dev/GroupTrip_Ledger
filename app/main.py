@@ -11,7 +11,7 @@ from app.database import get_db
 # Import all models so metadata is populated before create_all_tables
 import models  # noqa: F401
 
-from routers import trips, participants, bookings, expenses, payments, itinerary, auth
+from routers import trips, participants, bookings, expenses, payments, itinerary, auth, twin
 
 
 
@@ -73,6 +73,7 @@ app.include_router(expenses.router, prefix="/api/v1")
 app.include_router(payments.router, prefix="/api/v1")
 app.include_router(itinerary.router, prefix="/api/v1")
 app.include_router(invites.router, prefix="/api/v1")
+app.include_router(twin.router, prefix="/api/v1")
 # ---------------------------------------------------------------------------
 # New integration routers
 # ---------------------------------------------------------------------------
@@ -118,3 +119,4 @@ async def database_health(
             "database": "PostgreSQL",
             "error": str(e),
         }
+

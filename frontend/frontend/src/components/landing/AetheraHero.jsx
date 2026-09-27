@@ -93,36 +93,12 @@ export default function AetheraHero({
             >
               Home
             </a>
-            {["Studio", "About", "Journal", "Reach Us"].map((item) => (
-              <a
-                key={item}
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setSelectedInfo(item);
-                }}
-                className="text-sm transition-colors hover:text-black font-inter cursor-pointer"
-                style={{ color: "#6F6F6F" }}
-              >
-                {item}
-              </a>
-            ))}
+
           </div>
 
           {/* Right Action Controls */}
           <div className="flex items-center gap-3">
-            {/* Theme Toggle Button */}
-            <button
-              onClick={toggleTheme}
-              className="w-10 h-10 rounded-full flex items-center justify-center transition-colors hover:bg-black/5 cursor-pointer"
-              style={{ color: "#6F6F6F" }}
-              title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
-              aria-label="Toggle theme"
-            >
-              <span className="material-symbols-outlined text-xl">
-                {isDark ? "light_mode" : "dark_mode"}
-              </span>
-            </button>
+
 
             {/* Begin Journey Header CTA */}
             <button
@@ -145,15 +121,13 @@ export default function AetheraHero({
           className="animate-fade-rise font-instrument font-normal text-5xl sm:text-7xl md:text-8xl max-w-7xl"
           style={{ lineHeight: 0.95, letterSpacing: "-2.46px" }}
         >
-          Beyond <em>silence,</em> we build <em>the eternal.</em>
+          Beyond <em>journeys,</em> we build <em> clarity </em>
         </h1>
         <p
           className="animate-fade-rise-delay text-base sm:text-lg max-w-2xl mt-8 leading-relaxed font-inter"
           style={{ color: "#6F6F6F" }}
         >
-          Building platforms for brilliant minds, fearless makers, and thoughtful
-          souls. Through the noise, we craft digital havens for deep work and pure
-          flows.
+          Multi-Vendor Group Travel Coordination & Settlement
         </p>
         <button
           className="animate-fade-rise-delay-2 rounded-full px-14 py-5 text-base font-medium mt-12 transition-transform hover:scale-[1.03] cursor-pointer"

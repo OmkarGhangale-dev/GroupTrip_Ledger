@@ -97,19 +97,7 @@ export default function Navbar({ onOpenNewTripModal, onOpenLogin, onLogout, isDa
             <span className="w-1.5 h-1.5 rounded-full bg-black absolute top-2.5 right-2.5"></span>
           </button>
 
-          {/* Theme Toggle Button */}
-          {toggleTheme && (
-            <button
-              aria-label="Toggle theme"
-              onClick={toggleTheme}
-              className="w-9 h-9 rounded-full flex items-center justify-center text-black/60 hover:text-black hover:bg-black/5 transition-colors cursor-pointer"
-              title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
-            >
-              <span className="material-symbols-outlined text-lg">
-                {isDark ? "light_mode" : "dark_mode"}
-              </span>
-            </button>
-          )}
+
 
           {/* + New Trip Button */}
           <button

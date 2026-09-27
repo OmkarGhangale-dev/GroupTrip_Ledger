@@ -82,7 +82,8 @@ export default function PaymentsView({ onOpenPaymentModal }) {
                 const isNegative = b.net_balance < -0.01;
 
                 return (
-                  <div key={b.participant_id} className="p-5 rounded-2xl bg-white border border-black/10 shadow-sm flex flex-col justify-between gap-4">
+                  <div key={b.participant_id} className="p-5 rounded-2xl bg-white border border-black/10 shadow-sm flex flex-col justify-between h-[210px]">
+                    {/* Header Slot */}
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2.5">
                         <div className="w-8 h-8 rounded-full bg-black/10 text-black font-bold flex items-center justify-center text-xs">
@@ -101,8 +102,9 @@ export default function PaymentsView({ onOpenPaymentModal }) {
                       </span>
                     </div>
 
-                    <div>
-                      <div className={`font-instrument text-2xl font-bold ${
+                    {/* Middle Body Slot */}
+                    <div className="my-auto">
+                      <div className={`font-instrument text-3xl font-bold ${
                         isPositive ? "text-emerald-700" : isNegative ? "text-rose-600" : "text-black"
                       }`}>
                         {isPositive ? `+${money(b.net_balance)}` : money(b.net_balance)}
@@ -116,19 +118,24 @@ export default function PaymentsView({ onOpenPaymentModal }) {
                       </p>
                     </div>
 
-                    {isNegative && (
-                      <button
-                        className="w-full py-2 px-3 rounded-full bg-black text-white text-xs font-semibold hover:scale-105 transition-all cursor-pointer shadow-sm"
-                        onClick={() =>
-                          onOpenPaymentModal({
-                            from_participant_id: b.participant_id,
-                            amount: Math.abs(b.net_balance),
-                          })
-                        }
-                      >
-                        Pay Debt
-                      </button>
-                    )}
+                    {/* Bottom Action Slot */}
+                    <div className="h-9 flex items-center">
+                      {isNegative ? (
+                        <button
+                          className="w-full py-2 px-3 rounded-full bg-black text-white text-xs font-semibold hover:scale-[1.02] transition-all cursor-pointer shadow-sm"
+                          onClick={() =>
+                            onOpenPaymentModal({
+                              from_participant_id: b.participant_id,
+                              amount: Math.abs(b.net_balance),
+                            })
+                          }
+                        >
+                          Pay Debt
+                        </button>
+                      ) : (
+                        <div className="w-full h-full"></div>
+                      )}
+                    </div>
                   </div>
                 );
               })}

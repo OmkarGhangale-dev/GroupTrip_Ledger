@@ -223,12 +223,16 @@ export default function ExpensesView({ onOpenExpenseModal }) {
               <table className="w-full text-left border-collapse">
                 <thead className="bg-[#F4F4F5]">
                   <tr className="border-b border-black/10 bg-[#F4F4F5] text-black font-semibold text-[10px] uppercase tracking-wider">
-                    <th className="py-4 px-6 text-black font-bold">EXPENSE</th>
-                    <th className="py-4 px-6 text-black font-bold">CATEGORY</th>
-                    <th className="py-4 px-6 text-black font-bold">PAID BY</th>
-                    <th className="py-4 px-6 text-black font-bold">SPLIT METHOD</th>
-                    <th className="py-4 px-6 text-black font-bold">AMOUNT</th>
-                    <th className="py-4 px-6 text-right text-black font-bold">ACTIONS</th>
+<thead className="!bg-[#F4F4F5]">
+  <tr className="border-b border-black/10 !bg-[#F4F4F5] !text-black font-semibold text-[10px] uppercase tracking-wider">
+    <th className="py-4 px-6 !text-black font-bold">EXPENSE</th>
+    <th className="py-4 px-6 !text-black font-bold">CATEGORY</th>
+    <th className="py-4 px-6 !text-black font-bold">PAID BY</th>
+    <th className="py-4 px-6 !text-black font-bold">SPLIT METHOD</th>
+    <th className="py-4 px-6 !text-black font-bold">AMOUNT</th>
+    <th className="py-4 px-6 text-right !text-black font-bold">ACTIONS</th>
+  </tr>
+</thead>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-black/5 font-inter text-xs text-black">
